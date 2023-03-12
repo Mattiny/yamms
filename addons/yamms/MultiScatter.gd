@@ -157,7 +157,22 @@ func do_generate():
 					# Generate random 2D coordinates in the range of min max
 					var x = _random.randf_range(min_x, max_x)
 					var y = _random.randf_range(min_y, max_y)
-
+					
+					# Generate random rotation
+					var _rotation = Vector3()
+					if entry["RandomRotation"]:
+						var max_rotation = entry["MaxRotation"]
+						_rotation.x = _random.randf_range(0, max_rotation.x)
+						_rotation.y = _random.randf_range(0, max_rotation.y)
+						_rotation.z = _random.randf_range(0, max_rotation.z)
+						
+					var _scale = Vector3(1.0, 1.0, 1.0)
+					if entry["RandomScale"]:
+						var max_scale = entry["MaxScale"]
+						_scale.x = _random.randf_range(1.0, max_scale.x)
+						_scale.y = _random.randf_range(1.0, max_scale.y)
+						_scale.z = _random.randf_range(1.0, max_scale.z)
+						
 					# Check if the coordinates are inside the polygon.
 					var pos : Vector2 = Vector2(x ,y)
 			
@@ -169,23 +184,28 @@ func do_generate():
 						# considered to be inside the polygon.
 						var excludes = _get_exclude_data()
 						var excluded = false
+
 						for ex in excludes:
-							var multiScatterExclude : MultiScatterExclude = ex
-							var global_pos = pos + Vector2(global_position.x, global_position.z)
-							is_point_in_polygon = not multiScatterExclude.is_point_in_polygon(global_pos)
-							
+							if is_point_in_polygon: # only check if point still is regarded as in polygon
+								var multiScatterExclude : MultiScatterExclude = ex
+								var global_pos = pos + Vector2(global_position.x, global_position.z)
+								is_point_in_polygon = not multiScatterExclude.is_point_in_polygon(global_pos)
+
+		
 						if is_point_in_polygon:
 							var pos_3D = Vector3(pos.x, 0, pos.y)
 							if placement_mode == PlacementMode.FLAT:
 								# Distribute ScatterItems flat - on average level
 								pos_3D.y = avg_height
-								scatter_item.set_pos(index, pos_3D)
+								var transform = _create_transform(pos_3D, _rotation, _scale)
+								scatter_item.do_transform(index, transform)
 							
 							if placement_mode == PlacementMode.FLOATING:
 								# Distribute ScatterItems floating - height is 
 								# just a random number
 								pos_3D.y = _random.randf_range(-floating_min_max_y, floating_min_max_y)
-								scatter_item.set_pos(index, pos_3D)
+								var transform = _create_transform(pos_3D, _rotation, _scale)
+								scatter_item.do_transform(index, transform)
 							
 							if placement_mode == PlacementMode.DROP_ON_FLOOR:
 								# Distribute ScatterItems dropped on ground.
@@ -205,13 +225,23 @@ func do_generate():
 									var hit_pos = hit["position"]
 									var multimesh_scatter_pos = get_global_position()
 									hit_pos = hit_pos - multimesh_scatter_pos
-									scatter_item.set_pos(index, hit_pos)
-
+									var transform = _create_transform(hit_pos, _rotation, _scale)
+									scatter_item.do_transform(index, transform)
 			
 	else:
 		print("You need to set up a polygon with at least 3 points.")
 
-		
+
+# Create the transform of the Mesh
+# - apply rotation, scale and position		
+func _create_transform(pos : Vector3, rotation : Vector3, scale : Vector3):
+	var transform = Transform3D(Basis(), Vector3())\
+		.rotated(Vector3.RIGHT, rotation.x)\
+		.rotated(Vector3.FORWARD, rotation.y)\
+		.rotated(Vector3.UP, rotation.z)\
+		.scaled(scale)\
+		.translated(pos)
+	return transform
 	
 # Gets all data from the child ScatterItems.
 # Returns an array with Dictionary entries:

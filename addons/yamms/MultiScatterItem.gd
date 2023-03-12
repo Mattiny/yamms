@@ -48,7 +48,7 @@ class_name MultiScatterItem
 
 @export_group("Random Scale")
 @export var randomize_scale : bool = false
-@export var max_scale : Vector3 
+@export var max_scale : Vector3 = Vector3(1.0, 1.0, 1.0)
 
 
 
@@ -59,11 +59,13 @@ func _ready():
 func set_amount(number):
 	self.multimesh.instance_count = number
 
-# sets the position of one instance of the multimesh
+# sets the transform of one instance of the multimesh
 # - index - The index of the mesh
-# - pos   - the coordinates of the mesh where it shall be placed.
-func set_pos(index : int, pos : Vector3):
-	self.multimesh.set_instance_transform(index, Transform3D(Basis(), pos))
+# - transform - The transform containing position, rotation and scale.
+func do_transform(index : int, transform : Transform3D):
+
+	self.multimesh.set_instance_transform(index, transform)
+	#self.multimesh.set_instance_transform(index, Transform3D(Basis(), pos))
 	
 
 func check_configuration() -> bool:
