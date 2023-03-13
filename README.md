@@ -50,7 +50,7 @@ The MultiScatterItem keeps information about one type of meshes in the MultiMesh
 - Click at the new MultiMesh: The MultiMesh parameters open and are editable
 - set "Transform Format" to "3D"
 - Drag & Drop a mesh from your file system into the inspector property "Mesh"
-- If necessary: Drag & Drop a meterial for this mesh to inspector property "Geometry / Material override"
+- If necessary: Drag & Drop a material for this mesh to inspector property "Geometry / Material override"
 ![Set up MultScatterItem](https://user-images.githubusercontent.com/127634166/224749498-f22a347a-2520-4899-a6f1-3f294d2dec3c.png)
 
 
@@ -60,7 +60,7 @@ a child node of MultiScatter. There can be more than one MultiScatterExclude in 
 
 As done for MultiScatter: set up points of the area polygon. It only makes sense to place the polygon inside (or at least overlap) the area of the MultiScatter.
 - Do not place a MultiScatterExclude completely outside the MultiScatter area (Well, if you want to: do it. But it won't have any effect then.)
-- Do not cover the whole MultiScatter area with MultiScatterExclude areas. This way to meshes will be generated because there is no room for the meshes.
+- Do not cover the whole MultiScatter area with MultiScatterExclude areas. This way no meshes will be generated because there is no room for the meshes.
 ![Excluded Area](https://user-images.githubusercontent.com/127634166/224751430-f9619a4e-5bd7-4df0-ba8f-5e94289a7a4f.png)
 ### Generate
 Once the MultiScatter set up has been completed, select the MultiScatter node again. Right next to the buttons which let you draw the polygon there is a "Generate" button.
