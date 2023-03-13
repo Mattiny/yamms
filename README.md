@@ -1,3 +1,4 @@
+![Yamms logo](https://raw.githubusercontent.com/Mattiny/yamms/main/icon.svg)
 # YAMMS - Yet Another MultiMesh Scatter
 ## A plugin for Godot to place MultiMesh meshes into the game world.
 
