@@ -42,7 +42,7 @@ The MultiScatterItem keeps information about one type of meshes in the MultiMesh
 - Select the MultiScatterItem.
 - Set up parameters:
     - **Proportion**: The amount proportion for this mesh. The exact amount depends on the "Amount" property of the parent MultiScatter and the proportion of sibling MultiScatterItems.
-    - **Random Rotaion**: if activated: The max angle of the random rotation of each mesh.
+    - **Random Rotation**: if activated: The max angle of the random rotation of each mesh.
     - **Random Scale**: if activated: The max random scale of each mesh.
 
 #### Set up a MultiMeshInstance3D (standard Godot behaviour)
