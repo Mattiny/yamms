@@ -3,7 +3,7 @@
 ## A plugin for Godot to place MultiMesh meshes into the game world.
 
 Author: Mattiny
-Youtube: https://www.youtube.com/@Mattiny
+Youtube: https://youtu.be/783reAHkYFc
 
 Note: This plugin is only compatible with Godot 4.0
 ![Screenshot_01](https://user-images.githubusercontent.com/127634166/224740362-c7ddbf76-da05-48d6-a1a2-7aacbeb36a8a.png)
