@@ -129,7 +129,7 @@ func do_generate():
 		var data = _get_scatter_items_data()
 		for entry in data:
 			# Calculate the amount of mesh items depending on the amount and proportion
-			var percentage = (100 * entry["Proportion"]) / _sum_proportion
+			var percentage : float = (float(100) * entry["Proportion"]) / _sum_proportion
 			var amount_for_proportion : int = float(amount) / 100 * percentage
 
 			# set the spawn data to the MultiMeshItem to prepare generation
