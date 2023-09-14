@@ -23,7 +23,10 @@
 extends PlacementMode
 class_name PMDropOnFloor
 
-
+func _debug(message):
+	if _debug_messages:
+		print("YAMMS: PMDropOnFloor:  " + message)
+		
 func place_item(
 		scatter_item,
 		index : int,
@@ -50,13 +53,14 @@ func place_item(
 	# Did the raycast hit something?
 	if hit.is_empty():
 		# Raycast did not hit anything. Item cannot be placed.
+		_debug("Raycast did not hit a collision object.")
 		return false
 	else:
 		# Raycast hit a collision object. Placing it there.
 		var hit_pos = hit["position"]
 		var multimesh_scatter_pos = global_position
 		hit_pos = hit_pos - multimesh_scatter_pos
-		
+		_debug("Found position: %s" %hit_pos)
 		var transform = create_transform(hit_pos, rotation, scale)
 		scatter_item.do_transform(index, transform)
 		return true
