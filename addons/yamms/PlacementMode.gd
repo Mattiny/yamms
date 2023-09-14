@@ -33,13 +33,26 @@ var _coll_mask
 var _min_offset_y : float
 var _max_offset_y : float
 
+var _debug_messages : bool = false
+
 # helper to calculate the proportion percentage.
 var _sum_proportion = 0
 
 func _init():
 	_random = RandomNumberGenerator.new()
 
-func init_placement(curve : Curve3D, seed : int, collision_mask, min_offset_y : float, max_offset_y : float):
+func _debug(message):
+	if _debug_messages:
+		print("YAMMS: PlacementMode:  " + message)
+
+func init_placement(
+		curve : Curve3D, 
+		seed : int, 
+		collision_mask, 
+		min_offset_y : float, 
+		max_offset_y : float,
+		debug_messages : bool):
+	_debug_messages = debug_messages
 	_seed = seed
 	_random.state = 0
 	_curve = curve
@@ -47,6 +60,7 @@ func init_placement(curve : Curve3D, seed : int, collision_mask, min_offset_y : 
 	_coll_mask = collision_mask
 	_min_offset_y = min_offset_y
 	_max_offset_y = max_offset_y
+	_debug("Nr of points in polygon: %s" %_nr_points)
 
 func _check_polygon_nr() -> bool:
 	return (_nr_points > 2)
@@ -73,6 +87,7 @@ func do_generate(
 		global_position,
 		space):
 	if _check_polygon_nr():
+		_debug("Starting to generate.")
 		# Get the coordinates from the first point as reference for the min max
 		# values.
 		var point = _curve.get_point_position(0)
@@ -108,15 +123,24 @@ func do_generate(
 
 		# get the average of the height
 		avg_height = avg_height / _nr_points
+		_debug("Average height: %s" %avg_height)
 		
+		_debug("Generating positions for %s MultiScatterItems." %scatterData.size())
 		for entry in scatterData:
+			var scatter_item = entry["ScatterItem"] as MultiScatterItem
+			_debug("--- MultiScatterItem %s" %scatter_item.name)
+			
 			# Calculate the amount of mesh items depending on the amount and proportion
-			var percentage : float = (float(100) * entry["Proportion"]) / sum_proportion
+			var proportion = entry["Proportion"]
+			_debug("MultiScatter Proportion: %s" %proportion)
+			var percentage : float = (float(100) * proportion) / sum_proportion
+			_debug("Percentage for MultiScatterItem: %s" %percentage)
 			var amount_for_proportion : int = float(amount) / 100 * percentage
+			_debug("Amount for MultiScatterItem: %s" %amount_for_proportion)
 			
 			# set the spawn data to the MultiMeshItem to prepare generation
 			# of meshes.
-			var scatter_item = entry["ScatterItem"] as MultiScatterItem
+			
 
 			scatter_item.set_amount(amount_for_proportion)
 			
@@ -130,6 +154,7 @@ func do_generate(
 				while not is_point_in_polygon:
 					attempts += 1
 					if attempts == 100:
+						_debug("Cannot drop MultiMesh. Please check: 1) Is the polygon area large enough? 2) Is the whole polygon area hidden by an exclude area? 3) Drop on Floor: is there a large object with collision object underneath?")
 						push_warning("Cannot drop MultiMesh. Please check: " \
 							+ "1) Is the polygon area large enough? " \
 							+ "2) Is the whole polygon area hidden by an exclude area? " \
@@ -189,7 +214,7 @@ func do_generate(
 									_max_offset_y,
 									_coll_mask, 
 									space)
-									
+			_debug("MultiMesh instances have been set.")						
 	else:
 		print("You need to set up a polygon with at least 3 points.")
 

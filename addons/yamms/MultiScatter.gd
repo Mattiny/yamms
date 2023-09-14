@@ -26,6 +26,8 @@ extends Path3D
 # to set up the area where the MultiMeshes shall spawn.
 class_name  MultiScatter
 
+# import the PlacementMode class
+const PlacementMode = preload("res://addons/yamms/PlacementMode.gd") 
 
 # The amount of multimeshes 
 @export var amount : int = 100
@@ -34,15 +36,8 @@ class_name  MultiScatter
 # positions of each mesh deterministical.
 @export var seed : int = 0
 
-# PlacemoenModes:
-# - Flat - generates all Meshes on a flat plane area inside the polygon
-# - Floating - generates all Meshes floating in space inside the polygon with a 
-#              range of the height.
-# - Drop on floor - generates all meshes on a ground. Precondition: there is
-#                   a large object with collision shape underneath it so that it
-#                   can hold the meshes.
-enum PlacementMode {FLAT, DROP_ON_FLOOR, FLOATING}
-@export var placement_mode : PlacementMode = PlacementMode.DROP_ON_FLOOR
+# PlacementModes - Default = Drop on Floor:
+@export var placement_mode : PlacementMode.Mode = PlacementMode.Mode.DROP_ON_FLOOR
 
 # the min-max value how high / deep the meshes are floating (if floating)
 @export var floating_min_max_y : float = 50.0
@@ -50,186 +45,67 @@ enum PlacementMode {FLAT, DROP_ON_FLOOR, FLOATING}
 # helper to calculate the proportion percentage.
 var _sum_proportion = 0
 
-# The random number generator to generate the mesh's position
-var _random : RandomNumberGenerator
-
 # Properties used for rayCast to calculate the height of the mesh Instance if it
 # shall be dropped on floor.
 
 # Physics Space to perform the raycast
 @onready var _space: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
 
+
 # collision mask to select the layer of the ray cast.
 @export_flags_3d_physics var collision_mask := 0x1:
 	get: return collision_mask
 	set(value):
 		collision_mask = value
+		
+@export_group("Debug")
+@export var debugMessages = false
 
 func _ready():
 	self.curve_changed.connect(_on_curve_changed)
-	_random = RandomNumberGenerator.new()
 	do_generate()
-
-func do_generate():
-	# To spawn Multimesh objects:
-	# - Generate random x-z coordinates within range (min max) of the set up
-	#   polygon coordinates
-	# - Check if the coordinates are inside the polygon (x-z) (y (height) is
-	#   ignored)
-	# - Check if the coordinates are NOT inside an Exclude-Item.
-	# - Calculate the initial y coordinate (height) from the average of all polygon's
-	#   height (y)
-	# - if floating: generate radom height
-	# - if dropped on floor: raycast down and calculate the height of the surface
-	#   where the raycast hit something. 
-
-
-	# Only generate if the polygon check is ok.
-	# Note: if statement does the same as _check_polygon. But we need the nr
-
-	_random.state = 0   # reset random number generator
-	_random.seed = seed # set seed for random number generator
 	
-	var nr_points = curve.get_point_count ()
-	if _check_polygon_nr(nr_points):
+func _debug(message):
+	if debugMessages:
+		print("YAMMS: MultiScatter:  " + message)
+	
+func do_generate():
+	_debug("Starting to generate.")
+	_debug("Amount: %s" %amount)
+	_debug("Seed: %s" %seed)
+	_debug("Floating Min Max: %s" %floating_min_max_y)
+	_debug("Collision Mask: %s" %collision_mask)
+	var pm : PlacementMode
 
-		# Get the coordinates from the first point as reference for the min max
-		# values.
-		var point = curve.get_point_position(0)
-		var min_x = point.x
-		var max_x = point.x
-		var min_y = point.z
-		var max_y = point.z
+	if placement_mode == PlacementMode.Mode.FLAT:
+		pm = PMFlat.new()
+		_debug("PlacementMode: FLAT")	
+	elif placement_mode == PlacementMode.Mode.FLOATING:
+		pm = PMFloating.new()
+		_debug("PlacementMode: FLOATING")	
+	elif placement_mode == PlacementMode.Mode.DROP_ON_FLOOR:
+		pm = PMDropOnFloor.new()
+		_debug("PlacementMode: DROP_ON_FLOOR")
 		
-		var avg_height = 0.0
-		
-		# Save all point coordinates in a 2D Polygon for the "inside polygon check"
-		var polygon = []
-		
-		# Get the min max value of the x-z coordinates in 3D space.
-		# and append to 2D polygon
-		# and add height to average height.
-		for i in nr_points:
-			point = curve.get_point_position(i)
-			avg_height += point.y
-			polygon.append(Vector2(point.x, point.z))
-			if point.x < min_x:
-				min_x = point.x
-			if point.x > max_x:
-				max_x = point.x
-			if point.z < min_y:
-				min_y = point.z
-			if point.z > max_y:
-				max_y = point.z
-
-		# get the average of the height
-		avg_height = avg_height / nr_points
-		
-		# Get the Scatter Item Data to determine which items shall be spawned in the area
-		var data = _get_scatter_items_data()
-		for entry in data:
-			# Calculate the amount of mesh items depending on the amount and proportion
-			var percentage : float = (float(100) * entry["Proportion"]) / _sum_proportion
-			var amount_for_proportion : int = float(amount) / 100 * percentage
-
-			# set the spawn data to the MultiMeshItem to prepare generation
-			# of meshes.
-			var scatter_item = entry["ScatterItem"] as MultiScatterItem
-
-			scatter_item.set_amount(amount_for_proportion)
-			
-			# Now generate new coordinates for each mesh in the MultiMeshInstance.
-			for index in range(amount_for_proportion):
-			
-				# Do as long until the random 2D coordinates are inside the polygon.
-				var is_point_in_polygon = false
-				
-				var attempts : int = 0 # Nr of attempts to place mesh inside of the polygon
-				while not is_point_in_polygon:
-					attempts += 1
-					if attempts == 100:
-						push_warning("Cannot drop MultiMesh. Please check: " \
-							+ "1) Is the polygon area large enough? " \
-							+ "2) Is the whole polygon area hidden by an exclude area? " \
-							+ "3) Drop on Floor: is there a large object with collision object underneath?")
-						return
-				
-					# Generate random 2D coordinates in the range of min max
-					var x = _random.randf_range(min_x, max_x)
-					var y = _random.randf_range(min_y, max_y)
-					
-					# Generate random rotation
-					var _rotation = Vector3()
-					if entry["RandomRotation"]:
-						var max_rotation = entry["MaxRotation"]
-						_rotation.x = _random.randf_range(0, max_rotation.x)
-						_rotation.y = _random.randf_range(0, max_rotation.y)
-						_rotation.z = _random.randf_range(0, max_rotation.z)
-						
-					var _scale = Vector3(1.0, 1.0, 1.0)
-					if entry["RandomScale"]:
-						var max_scale = entry["MaxScale"]
-						_scale.x = _random.randf_range(1.0, max_scale.x)
-						_scale.y = _random.randf_range(1.0, max_scale.y)
-						_scale.z = _random.randf_range(1.0, max_scale.z)
-						
-					# Check if the coordinates are inside the polygon.
-					var pos : Vector2 = Vector2(x ,y)
-			
-					is_point_in_polygon = Geometry2D.is_point_in_polygon(pos, polygon)
-					if is_point_in_polygon:
-						
-						# it is inside the polygon. But also check if it is inside an
-						# exclude area. If it is in the exclude area, it is NOT
-						# considered to be inside the polygon.
-						var excludes = _get_exclude_data()
-						var excluded = false
-
-						for ex in excludes:
-							if is_point_in_polygon: # only check if point still is regarded as in polygon
-								var multiScatterExclude : MultiScatterExclude = ex
-								var global_pos = pos + Vector2(global_position.x, global_position.z)
-								is_point_in_polygon = not multiScatterExclude.is_point_in_polygon(global_pos)
-
-		
-						if is_point_in_polygon:
-							var pos_3D = Vector3(pos.x, 0, pos.y)
-							if placement_mode == PlacementMode.FLAT:
-								# Distribute ScatterItems flat - on average level
-								pos_3D.y = avg_height
-								var transform = _create_transform(pos_3D, _rotation, _scale)
-								scatter_item.do_transform(index, transform)
-							
-							if placement_mode == PlacementMode.FLOATING:
-								# Distribute ScatterItems floating - height is 
-								# just a random number
-								pos_3D.y = _random.randf_range(-floating_min_max_y, floating_min_max_y)
-								var transform = _create_transform(pos_3D, _rotation, _scale)
-								scatter_item.do_transform(index, transform)
-							
-							if placement_mode == PlacementMode.DROP_ON_FLOOR:
-								# Distribute ScatterItems dropped on ground.
-								# Do a raycast down
-								pos_3D.y = avg_height
-								
-								var ray := PhysicsRayQueryParameters3D.create(
-									pos_3D + global_position,
-									pos_3D + global_position + Vector3.DOWN * 10000,
-									collision_mask)
-								var hit := _space.intersect_ray(ray)
-								if hit.is_empty():
-									# Raycast did not hit anything.
-									# So treat it like it was not inside the polygon.
-									is_point_in_polygon = false
-								else:
-									var hit_pos = hit["position"]
-									var multimesh_scatter_pos = get_global_position()
-									hit_pos = hit_pos - multimesh_scatter_pos
-									var transform = _create_transform(hit_pos, _rotation, _scale)
-									scatter_item.do_transform(index, transform)
-			
-	else:
-		print("You need to set up a polygon with at least 3 points.")
+	_debug("Calling PlacementMode.init_placement")
+	pm.init_placement(
+		curve,
+		seed,
+		collision_mask,
+		-floating_min_max_y,
+		floating_min_max_y,
+		debugMessages
+	)
+	
+	_debug("Calling PlacementMode.do_generate")
+	pm.do_generate(
+		_get_scatter_items_data(),
+		amount,
+		_sum_proportion,
+		_get_exclude_data(),
+		global_position, 
+		_space
+	)
 
 
 # Create the transform of the Mesh
