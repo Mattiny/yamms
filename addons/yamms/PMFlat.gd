@@ -23,6 +23,7 @@
 extends PlacementMode
 class_name PMFlat
 
+
 func _debug(message):
 	if _debug_messages:
 		print("YAMMS: PMFlat:  " + message)
@@ -38,7 +39,9 @@ func place_item(
 		min_y,
 		max_y,
 		collision_mask, 
-		space) -> bool:
+		space,
+		additionalScene,
+		targetNode) -> bool:
 
 	# Distribute ScatterItems on a flat plane: 
 	# Average height of the MultiScatter polygon.
@@ -47,5 +50,6 @@ func place_item(
 	_debug("Set position for index %s to %s" %[index, pos_3D])
 	var transform = create_transform(pos_3D, rotation, scale)
 	scatter_item.do_transform(index, transform)
+	_place_additional_scene(additionalScene, targetNode, transform)
 	return true
 

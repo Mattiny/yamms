@@ -76,15 +76,15 @@ func do_generate():
 	_debug("Floating Min Max: %s" %floating_min_max_y)
 	_debug("Collision Mask: %s" %collision_mask)
 	var pm : PlacementMode
-
+	
 	if placement_mode == PlacementMode.Mode.FLAT:
-		pm = PMFlat.new()
+		pm = PMFlat.new(self)
 		_debug("PlacementMode: FLAT")	
 	elif placement_mode == PlacementMode.Mode.FLOATING:
-		pm = PMFloating.new()
+		pm = PMFloating.new(self)
 		_debug("PlacementMode: FLOATING")	
 	elif placement_mode == PlacementMode.Mode.DROP_ON_FLOOR:
-		pm = PMDropOnFloor.new()
+		pm = PMDropOnFloor.new(self)
 		_debug("PlacementMode: DROP_ON_FLOOR")
 		
 	_debug("Calling PlacementMode.init_placement")
@@ -143,7 +143,10 @@ func _get_scatter_items_data():
 			entry["RandomScale"] = scatter_item.randomize_scale
 			entry["MaxRotation"] = scatter_item.max_degrees
 			entry["MaxScale"] = scatter_item.max_scale
+			entry["targetNode"] = scatter_item.targetNode
+			entry["additionalScene"] = scatter_item.additionalScene
 			entry["ScatterItem"] = scatter_item
+			
 			result.append(entry)
 			_sum_proportion += scatter_item.proportion
 	return result

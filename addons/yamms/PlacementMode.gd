@@ -37,9 +37,11 @@ var _debug_messages : bool = false
 
 # helper to calculate the proportion percentage.
 var _sum_proportion = 0
+var _multiScatter
 
-func _init():
+func _init(multiscatter):
 	_random = RandomNumberGenerator.new()
+	_multiScatter = multiscatter
 
 func _debug(message):
 	if _debug_messages:
@@ -128,7 +130,13 @@ func do_generate(
 		_debug("Generating positions for %s MultiScatterItems." %scatterData.size())
 		for entry in scatterData:
 			var scatter_item = entry["ScatterItem"] as MultiScatterItem
+			var targetNode = entry["targetNode"]
+			var additionalScene = entry["additionalScene"]
 			_debug("--- MultiScatterItem %s" %scatter_item.name)
+			
+			# Remove all children of the targetNode because locations will be 
+			# generated in a new run.
+			_clear_target_node(targetNode)
 			
 			# Calculate the amount of mesh items depending on the amount and proportion
 			var proportion = entry["Proportion"]
@@ -213,7 +221,9 @@ func do_generate(
 									_min_offset_y,
 									_max_offset_y,
 									_coll_mask, 
-									space)
+									space,
+									additionalScene,
+									targetNode)
 			_debug("MultiMesh instances have been set.")						
 	else:
 		print("You need to set up a polygon with at least 3 points.")
@@ -241,5 +251,36 @@ func place_item (
 		min_offset_y,
 		max_offset_y,
 		collision_mask, 
-		space) -> bool:
+		space,
+		additionalScene,
+		targetNode) -> bool:
 	return false
+
+# Clear the node where the additional scenes shall be dropped.
+# (targetNode). Will be called for each "Generate"-Run.
+func _clear_target_node(targetNode):
+	if targetNode != null:
+		_debug("Clear targetNode")
+		for child in targetNode.get_children():
+			targetNode.remove_child(child)
+			child.queue_free()
+	
+
+# Places the additional scene underneath as child of the targetNode.
+# at specific position (transform).
+# Transform is supposed to be the position of the multiMesh object so that
+# the additional scene appears at the same location.
+func _place_additional_scene(additionalScene, targetNode, transform):
+	
+	if (additionalScene != null and targetNode != null):
+		_debug("Placing Additional Scene")
+		targetNode.transform = _multiScatter.global_transform
+		var instance = additionalScene.instantiate()
+		instance.transform  = transform
+		
+		targetNode.add_child(instance)
+		var root = _multiScatter.get_tree().get_edited_scene_root()
+		instance.set_owner(root)
+		instance.set_name(targetNode.get_name())
+	else:
+		_debug("Not placing Additional Scene. No targetNode and/or additionalScene is set.")
