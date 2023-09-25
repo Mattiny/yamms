@@ -86,6 +86,9 @@ func do_generate():
 	elif placement_mode == PlacementMode.Mode.DROP_ON_FLOOR:
 		pm = PMDropOnFloor.new(self)
 		_debug("PlacementMode: DROP_ON_FLOOR")
+	elif placement_mode == PlacementMode.Mode.DROP_ON_CEILING:
+		pm = PMDropOnCeiling.new(self)
+		_debug("PlacementMode: DROP_ON_Ceiling")
 		
 	_debug("Calling PlacementMode.init_placement")
 	pm.init_placement(

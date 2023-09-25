@@ -22,7 +22,7 @@
 @tool
 extends Node
 class_name PlacementMode
-enum Mode {FLAT, DROP_ON_FLOOR, FLOATING}
+enum Mode {FLAT, DROP_ON_FLOOR, FLOATING, DROP_ON_CEILING}
 
 var _seed : int = 0
 var _random : RandomNumberGenerator
@@ -166,7 +166,8 @@ func do_generate(
 						push_warning("Cannot drop MultiMesh. Please check: " \
 							+ "1) Is the polygon area large enough? " \
 							+ "2) Is the whole polygon area hidden by an exclude area? " \
-							+ "3) Drop on Floor: is there a large object with collision object underneath?")
+							+ "3) Drop on Floor: is there a large object with collision object underneath?" \
+							+ "4) Drop on Ceiling: is there a large object with collision object above?")
 						return
 				
 					# Generate random 2D coordinates in the range of min max
