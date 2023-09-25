@@ -51,6 +51,7 @@ class_name MultiScatterItem
 @export var max_scale : Vector3 = Vector3(1.0, 1.0, 1.0)
 
 @export_group("Additional Scene")
+@export var enableAdditionalScene : bool = false
 @export var targetNode: Node3D
 @export var additionalScene: PackedScene
 

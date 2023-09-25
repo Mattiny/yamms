@@ -143,9 +143,15 @@ func _get_scatter_items_data():
 			entry["RandomScale"] = scatter_item.randomize_scale
 			entry["MaxRotation"] = scatter_item.max_degrees
 			entry["MaxScale"] = scatter_item.max_scale
-			entry["targetNode"] = scatter_item.targetNode
-			entry["additionalScene"] = scatter_item.additionalScene
+
 			entry["ScatterItem"] = scatter_item
+			if scatter_item.enableAdditionalScene == true:
+				entry["additionalScene"] = scatter_item.additionalScene
+				entry["targetNode"] = scatter_item.targetNode
+			else:
+				entry["additionalScene"] = null
+				entry["targetNode"] = null
+			
 			
 			result.append(entry)
 			_sum_proportion += scatter_item.proportion
