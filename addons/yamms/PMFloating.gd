@@ -23,6 +23,9 @@
 extends PlacementMode
 class_name PMFloating
 
+
+
+
 func _debug(message):
 	if _debug_messages:
 		print("YAMMS: PMFloating:  " + message)
@@ -38,7 +41,9 @@ func place_item(
 		min_offset_y,
 		max_offset_y,
 		collision_mask, 
-		space) -> bool:
+		space,
+		additionalScene,
+		targetNode) -> bool:
 
 	# Distribute ScatterItems floating: 
 	# some random height between min and max y.
@@ -46,4 +51,5 @@ func place_item(
 	_debug("Set position for index %s to %s" %[index, pos_3D])
 	var transform = create_transform(pos_3D, rotation, scale)
 	scatter_item.do_transform(index, transform)
+	_place_additional_scene(additionalScene, targetNode, transform)
 	return true

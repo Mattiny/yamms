@@ -50,6 +50,10 @@ class_name MultiScatterItem
 @export var randomize_scale : bool = false
 @export var max_scale : Vector3 = Vector3(1.0, 1.0, 1.0)
 
+@export_group("Additional Scene")
+@export var enableAdditionalScene : bool = false
+@export var targetNode: Node3D
+@export var additionalScene: PackedScene
 
 
 func _ready():
@@ -67,16 +71,13 @@ func do_transform(index : int, transform : Transform3D):
 	self.multimesh.set_instance_transform(index, transform)
 	#self.multimesh.set_instance_transform(index, Transform3D(Basis(), pos))
 	
-
-func check_configuration() -> bool:
-	if not self.multimesh or not self.multimesh.mesh:
-		return false
-	else:
-		return true
-		
 func _get_configuration_warnings() -> PackedStringArray:
-	if not check_configuration():
+	if not self.multimesh or not self.multimesh.mesh:
 		return ["No MultiMesh is set up."]
 	else:
+		if (targetNode == null and additionalScene != null):
+			return ["Additional scene is set up, but no target node."]	
+		if (targetNode != null and additionalScene == null):
+			return ["Target node is set up, but no additional scene."]	
 		return []
 
