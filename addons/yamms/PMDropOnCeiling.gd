@@ -42,8 +42,8 @@ func place_item(
 		space,
 		additionalScene,
 		targetNode) -> bool:
-	# Distribute ScatterItems dropped on ground.
-	# Do a raycast down
+	# Distribute ScatterItems dropped on ceiling.
+	# Do a raycast up
 	pos_3D.y = avg_height
 	
 	var ray := PhysicsRayQueryParameters3D.create(
