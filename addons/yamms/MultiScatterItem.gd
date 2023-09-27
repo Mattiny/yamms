@@ -41,6 +41,10 @@ class_name MultiScatterItem
 	set(value):
 		proportion = value
 
+# import the PlacementMode class
+const PlacementMode = preload("res://addons/yamms/PlacementMode.gd") 
+# PlacementModes - Default = Drop on Floor:
+@export var placement_mode : PlacementMode.Mode = PlacementMode.Mode.DROP_ON_FLOOR
 
 @export_group("Random Rotation")
 @export var randomize_rotation : bool = false

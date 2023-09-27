@@ -26,18 +26,12 @@ extends Path3D
 # to set up the area where the MultiMeshes shall spawn.
 class_name  MultiScatter
 
-# import the PlacementMode class
-const PlacementMode = preload("res://addons/yamms/PlacementMode.gd") 
-
 # The amount of multimeshes 
 @export var amount : int = 100
 
 # Seed for the RandomNumberGenerator. Setting up the seed makes the generated
 # positions of each mesh deterministical.
 @export var seed : int = 0
-
-# PlacementModes - Default = Drop on Floor:
-@export var placement_mode : PlacementMode.Mode = PlacementMode.Mode.DROP_ON_FLOOR
 
 # the min-max value how high / deep the meshes are floating (if floating)
 @export var floating_min_max_y : float = 50.0
@@ -51,64 +45,82 @@ var _sum_proportion = 0
 # Physics Space to perform the raycast
 @onready var _space: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
 
-
 # collision mask to select the layer of the ray cast.
 @export_flags_3d_physics var collision_mask := 0x1:
 	get: return collision_mask
 	set(value):
 		collision_mask = value
-		
+	
+# Debug Messages on/off	
 @export_group("Debug")
 @export var debugMessages = false
 
 func _ready():
 	self.curve_changed.connect(_on_curve_changed)
-	do_generate()
-	
+
+# Helper function for debugging.	
 func _debug(message):
 	if debugMessages:
 		print("YAMMS: MultiScatter:  " + message)
-	
+
+# Generate the MultiScatter
 func do_generate():
 	_debug("Starting to generate.")
 	_debug("Amount: %s" %amount)
 	_debug("Seed: %s" %seed)
 	_debug("Floating Min Max: %s" %floating_min_max_y)
 	_debug("Collision Mask: %s" %collision_mask)
-	var pm : PlacementMode
+
+	# init RandomNumberGenerator for placing the MultiMeshes randomly.
+	var random = RandomNumberGenerator.new()
+	random.state = 0	
+	random.set_seed(seed)
+
+	# Retrieve data from chilren MultiScatterItems
+	var entries = _get_scatter_items_data()
 	
-	if placement_mode == PlacementMode.Mode.FLAT:
-		pm = PMFlat.new(self)
-		_debug("PlacementMode: FLAT")	
-	elif placement_mode == PlacementMode.Mode.FLOATING:
-		pm = PMFloating.new(self)
-		_debug("PlacementMode: FLOATING")	
-	elif placement_mode == PlacementMode.Mode.DROP_ON_FLOOR:
-		pm = PMDropOnFloor.new(self)
-		_debug("PlacementMode: DROP_ON_FLOOR")
-	elif placement_mode == PlacementMode.Mode.DROP_ON_CEILING:
-		pm = PMDropOnCeiling.new(self)
-		_debug("PlacementMode: DROP_ON_Ceiling")
+	# Iterate through each MultiScatterItem entry and generate
+	# the positions for the MultiMesh instances.
+	for entry in entries:
 		
-	_debug("Calling PlacementMode.init_placement")
-	pm.init_placement(
-		curve,
-		seed,
-		collision_mask,
-		-floating_min_max_y,
-		floating_min_max_y,
-		debugMessages
-	)
+		# Instantiate the required PlacementMode.
+		var pm : PlacementMode
+		var placement_mode = entry["PlacementMode"]
+		if placement_mode == PlacementMode.Mode.FLAT:
+			pm = PMFlat.new(self)
+			_debug("PlacementMode: FLAT")	
+		elif placement_mode == PlacementMode.Mode.FLOATING:
+			pm = PMFloating.new(self)
+			_debug("PlacementMode: FLOATING")	
+		elif placement_mode == PlacementMode.Mode.DROP_ON_FLOOR:
+			pm = PMDropOnFloor.new(self)
+			_debug("PlacementMode: DROP_ON_FLOOR")
+		elif placement_mode == PlacementMode.Mode.DROP_ON_CEILING:
+			pm = PMDropOnCeiling.new(self)
+			_debug("PlacementMode: DROP_ON_Ceiling")
+		
+		_debug("Calling PlacementMode.init_placement")
+		
+		# Initialize PladementMode with data.
+		pm.init_placement(
+			curve,
+			collision_mask,
+			-floating_min_max_y,
+			floating_min_max_y,
+			debugMessages,
+			random
+		)
 	
-	_debug("Calling PlacementMode.do_generate")
-	pm.do_generate(
-		_get_scatter_items_data(),
-		amount,
-		_sum_proportion,
-		_get_exclude_data(),
-		global_position, 
-		_space
-	)
+		# ..and generated
+		_debug("Calling PlacementMode.do_generate")
+		pm.do_generate(
+			entry,
+			amount,
+			_sum_proportion,
+			_get_exclude_data(),
+			global_position, 
+			_space
+		)
 
 
 # Create the transform of the Mesh
@@ -129,8 +141,11 @@ func _create_transform(pos : Vector3, rotation : Vector3, scale : Vector3):
 #  - RandomScale
 #  - MaxRotation
 #  - MaxScale
-#  - TargetScene
+#  - PlacementMode
 #  - ScatterItem
+#  - additionalScene
+#  - targetNode
+#
 #
 # Also: Sums up proportion which is being used for the calculation of the 
 # percentage of each proportion.
@@ -146,7 +161,7 @@ func _get_scatter_items_data():
 			entry["RandomScale"] = scatter_item.randomize_scale
 			entry["MaxRotation"] = scatter_item.max_degrees
 			entry["MaxScale"] = scatter_item.max_scale
-
+			entry["PlacementMode"] = scatter_item.placement_mode
 			entry["ScatterItem"] = scatter_item
 			if scatter_item.enableAdditionalScene == true:
 				entry["additionalScene"] = scatter_item.additionalScene
@@ -208,5 +223,5 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if not _check_scatter_items():
 		return_value.append("At least one MultiScatterItem is required.")
 		
-	return return_value		
+	return return_value
 
