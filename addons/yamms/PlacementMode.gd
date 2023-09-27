@@ -24,8 +24,6 @@ extends Node
 class_name PlacementMode
 enum Mode {FLAT, DROP_ON_FLOOR, FLOATING, DROP_ON_CEILING}
 
-var _seed : int = 0
-var _random : RandomNumberGenerator
 var _curve : Curve3D
 var _nr_points : int
 var _coll_mask
@@ -39,8 +37,9 @@ var _debug_messages : bool = false
 var _sum_proportion = 0
 var _multiScatter
 
+var _random : RandomNumberGenerator
+
 func _init(multiscatter):
-	_random = RandomNumberGenerator.new()
 	_multiScatter = multiscatter
 
 func _debug(message):
@@ -49,14 +48,13 @@ func _debug(message):
 
 func init_placement(
 		curve : Curve3D, 
-		seed : int, 
 		collision_mask, 
 		min_offset_y : float, 
 		max_offset_y : float,
-		debug_messages : bool):
+		debug_messages : bool, 
+		random : RandomNumberGenerator):
+	_random = random
 	_debug_messages = debug_messages
-	_seed = seed
-	_random.state = 0
 	_curve = curve
 	_nr_points = _curve.get_point_count ()
 	_coll_mask = collision_mask
@@ -90,6 +88,7 @@ func do_generate(
 		space):
 	if _check_polygon_nr():
 		_debug("Starting to generate.")
+		
 		# Get the coordinates from the first point as reference for the min max
 		# values.
 		var point = _curve.get_point_position(0)
@@ -128,104 +127,105 @@ func do_generate(
 		_debug("Average height: %s" %avg_height)
 		
 		_debug("Generating positions for %s MultiScatterItems." %scatterData.size())
-		for entry in scatterData:
-			var scatter_item = entry["ScatterItem"] as MultiScatterItem
-			var targetNode = entry["targetNode"]
-			var additionalScene = entry["additionalScene"]
-			_debug("--- MultiScatterItem %s" %scatter_item.name)
-			
-			# Remove all children of the targetNode because locations will be 
-			# generated in a new run.
-			_clear_target_node(targetNode)
-			
-			# Calculate the amount of mesh items depending on the amount and proportion
-			var proportion = entry["Proportion"]
-			_debug("MultiScatter Proportion: %s" %proportion)
-			var percentage : float = (float(100) * proportion) / sum_proportion
-			_debug("Percentage for MultiScatterItem: %s" %percentage)
-			var amount_for_proportion : int = float(amount) / 100 * percentage
-			_debug("Amount for MultiScatterItem: %s" %amount_for_proportion)
-			
-			# set the spawn data to the MultiMeshItem to prepare generation
-			# of meshes.
-			
-
-			scatter_item.set_amount(amount_for_proportion)
-			
-			# Now generate new coordinates for each mesh in the MultiMeshInstance.
-			for index in range(amount_for_proportion):
-			
-				# Do as long until the random 2D coordinates are inside the polygon.
-				var is_point_in_polygon = false
-				
-				var attempts : int = 0 # Nr of attempts to place mesh inside of the polygon
-				while not is_point_in_polygon:
-					attempts += 1
-					if attempts == 100:
-						_debug("Cannot drop MultiMesh. Please check: 1) Is the polygon area large enough? 2) Is the whole polygon area hidden by an exclude area? 3) Drop on Floor: is there a large object with collision object underneath?")
-						push_warning("Cannot drop MultiMesh. Please check: " \
-							+ "1) Is the polygon area large enough? " \
-							+ "2) Is the whole polygon area hidden by an exclude area? " \
-							+ "3) Drop on Floor: is there a large object with collision object underneath?" \
-							+ "4) Drop on Ceiling: is there a large object with collision object above?")
-						return
-				
-					# Generate random 2D coordinates in the range of min max
-					var x = generate_random(min_x, max_x)
-					var y = generate_random(min_y, max_y)
-					
-					# Generate random rotation
-					var _rotation = Vector3()
-					if entry["RandomRotation"]:
-						var max_rotation = entry["MaxRotation"]
-						_rotation.x = generate_random(0, max_rotation.x)
-						_rotation.y = generate_random(0, max_rotation.y)
-						_rotation.z = generate_random(0, max_rotation.z)
-						
-					var _scale = Vector3(1.0, 1.0, 1.0)
-					if entry["RandomScale"]:
-						var max_scale = entry["MaxScale"]
-						_scale.x = generate_random(1.0, max_scale.x)
-						_scale.y = generate_random(1.0, max_scale.y)
-						_scale.z = generate_random(1.0, max_scale.z)
-						
-					# Check if the coordinates are inside the polygon.
-					var pos : Vector2 = Vector2(x ,y)
-			
-					is_point_in_polygon = Geometry2D.is_point_in_polygon(pos, polygon)
-					if is_point_in_polygon:
-						
-						# it is inside the polygon. But also check if it is inside an
-						# exclude area. If it is in the exclude area, it is NOT
-						# considered to be inside the polygon.
-
-						var excluded = false
-
-						for ex in excludes:
-							if is_point_in_polygon: # only check if point still is regarded as in polygon
-								var multiScatterExclude : MultiScatterExclude = ex
-								var global_pos = pos + Vector2(global_position.x, global_position.z)
-								is_point_in_polygon = not multiScatterExclude.is_point_in_polygon(global_pos)
-
 		
-						if is_point_in_polygon:
-							var pos_3D = Vector3(pos.x, 0, pos.y)
+		var scatter_item = scatterData["ScatterItem"] as MultiScatterItem
+		var targetNode = scatterData["targetNode"]
+		var additionalScene = scatterData["additionalScene"]
+		_debug("--- MultiScatterItem %s" %scatter_item.name)
+			
+		# Remove all children of the targetNode because locations will be 
+		# generated in a new run.
+		_clear_target_node(targetNode)
+			
+		# Calculate the amount of mesh items depending on the amount and proportion
+		var proportion = scatterData["Proportion"]
+		_debug("MultiScatter Proportion: %s" %proportion)
+		var percentage : float = (float(100) * proportion) / sum_proportion
+		_debug("Percentage for MultiScatterItem: %s" %percentage)
+		var amount_for_proportion : int = float(amount) / 100 * percentage
+		_debug("Amount for MultiScatterItem: %s" %amount_for_proportion)
+			
+		# set the spawn data to the MultiMeshItem to prepare generation
+		# of meshes.
+		scatter_item.set_amount(amount_for_proportion)
+			
+		# Now generate new x-z coordinates for each mesh in the MultiMeshInstance.
+		# (height is calculated separately, depending on the placement mode)
+		for index in range(amount_for_proportion):
+			
+			# Do as long until the random 2D coordinates are inside the polygon.
+			var is_point_in_polygon = false
+				
+			var attempts : int = 0 # Nr of attempts to place mesh inside of the polygon
+			while not is_point_in_polygon:
+				attempts += 1
+				if attempts == 100:
+					var message = "Cannot drop MultiMesh. Please check: " \
+						+ "1) Is the polygon area large enough? " \
+						+ "2) Is the whole polygon area hidden by an exclude area? " \
+						+ "3) Drop on Floor: is there a large object with collision object underneath?" \
+						+ "4) Drop on Ceiling: is there a large object with collision object above?"
+						
+					_debug(message)
+					push_warning(message)
+					return
+				
+				# Generate random 2D coordinates in the range of min max
+				var x = generate_random(min_x, max_x)
+				var y = generate_random(min_y, max_y)
+					
+				# Generate random rotation
+				var _rotation = Vector3()
+				if scatterData["RandomRotation"]:
+					var max_rotation = scatterData["MaxRotation"]
+					_rotation.x = generate_random(0, max_rotation.x)
+					_rotation.y = generate_random(0, max_rotation.y)
+					_rotation.z = generate_random(0, max_rotation.z)
+					
+				# Generate random scale
+				var _scale = Vector3(1.0, 1.0, 1.0)
+				if scatterData["RandomScale"]:
+					var max_scale = scatterData["MaxScale"]
+					_scale.x = generate_random(1.0, max_scale.x)
+					_scale.y = generate_random(1.0, max_scale.y)
+					_scale.z = generate_random(1.0, max_scale.z)
+						
+				# Check if the 2D coordinates are inside the polygon.
+				var pos : Vector2 = Vector2(x ,y)
+			
+				is_point_in_polygon = Geometry2D.is_point_in_polygon(pos, polygon)
+				if is_point_in_polygon:
+					
+					# it is inside the polygon. But also check if it is inside an
+					# exclude area. If it is in the exclude area, it is NOT
+					# considered to be inside the polygon.
+					for ex in excludes:
+						if is_point_in_polygon: # only check if point still is regarded as in polygon
+							var multiScatterExclude : MultiScatterExclude = ex
+							var global_pos = pos + Vector2(global_position.x, global_position.z)
+							is_point_in_polygon = not multiScatterExclude.is_point_in_polygon(global_pos)
+
+					# Check again: Still in polygon?
+					if is_point_in_polygon:
+						# Yes. It is inside the polygon and in no exclude area.
+						# Place the item.
+						var pos_3D = Vector3(pos.x, 0, pos.y)
 							
-							is_point_in_polygon = place_item(
-									scatter_item, 
-									index,
-									pos_3D, 
-									avg_height, 
-									global_position, 
-									_rotation, 
-									_scale, 
-									_min_offset_y,
-									_max_offset_y,
-									_coll_mask, 
-									space,
-									additionalScene,
-									targetNode)
-			_debug("MultiMesh instances have been set.")						
+						is_point_in_polygon = place_item(
+								scatter_item, 
+								index,
+								pos_3D, 
+								avg_height, 
+								global_position, 
+								_rotation, 
+								_scale, 
+								_min_offset_y,
+								_max_offset_y,
+								_coll_mask, 
+								space,
+								additionalScene,
+								targetNode)
+		_debug("MultiMesh instances have been set.")
 	else:
 		print("You need to set up a polygon with at least 3 points.")
 
