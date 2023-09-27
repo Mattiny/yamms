@@ -199,7 +199,25 @@ func do_generate(
 					# it is inside the polygon. But also check if it is inside an
 					# exclude area. If it is in the exclude area, it is NOT
 					# considered to be inside the polygon.
-					for ex in excludes:
+					
+					# If the MultiScatterItem has defined a list of Exclude areas:
+					# only consider these Exclude areas
+					# otherwise consider all Exclude areas.
+					var excludeArray
+					if scatter_item.exclude.size() == 0:
+						excludeArray = excludes
+					else:
+						excludeArray = scatter_item.exclude
+						
+					# Now go throuh the available exclude areas and check if
+					# the generated coordinates are inside or not.
+					for ex in excludeArray:
+						if ex == null:
+							var message = "The MultiScatterItem %s contains " \
+								+"at least one empty exclude element. Please remove it or "\
+								+"assign a valid MultiScatterExclude."
+							push_error(message  % scatter_item.get_name())
+							return
 						if is_point_in_polygon: # only check if point still is regarded as in polygon
 							var multiScatterExclude : MultiScatterExclude = ex
 							var global_pos = pos + Vector2(global_position.x, global_position.z)

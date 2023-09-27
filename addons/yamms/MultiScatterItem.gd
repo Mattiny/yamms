@@ -60,6 +60,9 @@ const PlacementMode = preload("res://addons/yamms/PlacementMode.gd")
 @export var additionalScene: PackedScene
 
 
+@export_group("Excludes")
+@export var exclude : Array[MultiScatterExclude] = []
+
 func _ready():
 	pass
 
