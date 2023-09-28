@@ -70,7 +70,8 @@ As done for MultiScatter: set up points of the area polygon. It only makes sense
 - Do not place a MultiScatterExclude completely outside the MultiScatter area (Well, if you want to: do it. But it won't have any effect then.)
 - Do not cover the whole MultiScatter area with MultiScatterExclude areas. This way no meshes will be generated because there is no room for the meshes.
 - MultiScatterItems can refer to specific MultiScatterExclude instances. This can be set up in the MultiScatterItem. Then only the selected MultiScatterExclude instances apply to that MultiScatterItem.
-![Excluded Area](https://user-images.githubusercontent.com/127634166/224751430-f9619a4e-5bd7-4df0-ba8f-5e94289a7a4f.png)
+![03-ExcludeArea](https://github.com/Mattiny/yamms/assets/127634166/6333f979-e797-48a2-aaa9-e073eb04d352)
+
 ### Generate
 Once the MultiScatter set up has been completed, select the MultiScatter node again. Right next to the buttons which let you draw the polygon there is a "Generate" button.
 Hit the generate button and all meshes are generated and placed into your scene.
