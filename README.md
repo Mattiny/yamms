@@ -61,10 +61,6 @@ The MultiScatterItem keeps information about one type of meshes in the MultiMesh
 	- **Additional scene**: Reference to a PackedScene which will be instantiated and placed at the same position as the MultiMeshInstance3D.
 - **Excludes**: is an array of references to MultiScatterExclude instances. If left empty (default) all MultiScatterExclude areas underneath the MultiScatter element are considered when generating the MultiMeshInstance3D positions. But if at least one exclude-area refrence is put into the array of "excludes", then only the referenced exclude-areas are active for this MultiScatterItem.  
 
-
-
-
-
 ### MultiScatterExclude
 The MultiScatterExclude defines a sub area which is left empty without any mesh generated in it. It is expected to be 
 a child node of MultiScatter. There can be more than one MultiScatterExclude in one MultiScatter.
@@ -82,9 +78,14 @@ Hit the generate button and all meshes are generated and placed into your scene.
 You still can edit your set up (move polygons, add/remove points to polygons, add MultiScatterItems, etc). But remember: to make these changes effective you need to hit the "Generate" button again.
 ![04-Generate](https://github.com/Mattiny/yamms/assets/127634166/1df229f7-18e3-4bcf-9162-ce68de0f7078)
 
+### Common use cases
+#### Different types of MultiScatterItems
+You can set up multiple MultiScatterItems for one MultiScatter. 
+Each MultiScatterItem can have a different configuration (Proportion, Random scale and rotation, etc) which gives you a maximum control how these items will be placed into your scene.
+Rename the items in the scene tree to get a better overview of you scene.
+![05-MultipleScatterItems](https://github.com/Mattiny/yamms/assets/127634166/4b2ea495-5e03-4870-81c4-c2ac88b9d579)
+
 
 ### Placement Modes examples
-![Drop on Floor](https://user-images.githubusercontent.com/127634166/224754906-d7a9f054-8350-4a57-ab93-ec5a2359a277.png)
-![Flat](https://user-images.githubusercontent.com/127634166/224755082-7e8175ca-62d7-4bb9-b8b9-6dfef52efb96.png)
-![Floating](https://user-images.githubusercontent.com/127634166/224755268-d2387e14-3666-44a3-a031-99751856045c.png)
+
 
