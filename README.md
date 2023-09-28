@@ -25,7 +25,7 @@ Note: This plugin is only compatible with Godot 4.0 and following Godot versions
 The MultiScatter is the main node of the whole MultiMesh scatter set up.
 - In your Scene: Add the node "MultiScatter"
 - Whenever the MultiScatter node is selected: The Editor shows buttons to set up a polygon. Add at least 3 point which span an area which is large enough to hold the meshes. Best practice: Change to orthogonal top view of your scene (key "7").
-![Draw Polygon](https://user-images.githubusercontent.com/127634166/224745150-5638d22e-15f0-4249-9b09-28ddd3b9610d.png)
+![01-Initial-MultiScatter](https://github.com/Mattiny/yamms/assets/127634166/934aa284-2341-4b17-8b8b-2f2bbd2984e7)
 - In Inspector set up properties:
 	- **Amount**: the amount of meshes which are generated into the scene.
 	- **Seed**: The random number generator seed. Using a seed makes the pattern of randomly generated meshes reproducible. Change the seed until you are satisfied with the result.
