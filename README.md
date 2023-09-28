@@ -50,6 +50,7 @@ The MultiScatterItem keeps information about one type of meshes in the MultiMesh
  	- **Additional Scene**: Places an additional scene (PackedScene) at the same position as the scattered item. Can be used e.g. to put collision objects at the same position. **Note** It is a real scene, not a primitive MultiScatterItem3D. So it uses more resources at runtime than MultiMeshInstances. It is not supposed to be used with too many instances.
   		- **Target Node**: References the node where the scenes are placed in the scene tree. **Note** Don't place any other relevant Nodes of your scene underneath the referenced node. Whenever the MultiMeshInstance3D positions are generated, the target node will be deleted (without question).
   		- **Additional scene**: Reference to a PackedScene which will be instantiated and placed at the same position as the MultiMeshInstance3D.
+    	- **Excludes**: is an array of references to MultiScatterExclude instances. If left empty (default) all MultiScatterExclude areas underneath the MultiScatter element are considered when generating the MultiMeshInstance3D positions. But if at least one exclude-area refrence is put into the array of "excludes", then only the referenced exclude-areas are active for this MultiScatterItem.  
 
 
 #### Set up a MultiMeshInstance3D (standard Godot behaviour)
@@ -68,6 +69,7 @@ a child node of MultiScatter. There can be more than one MultiScatterExclude in 
 As done for MultiScatter: set up points of the area polygon. It only makes sense to place the polygon inside (or at least overlap) the area of the MultiScatter.
 - Do not place a MultiScatterExclude completely outside the MultiScatter area (Well, if you want to: do it. But it won't have any effect then.)
 - Do not cover the whole MultiScatter area with MultiScatterExclude areas. This way no meshes will be generated because there is no room for the meshes.
+- MultiScatterItems can refer to specific MultiScatterExclude instances. This can be set up in the MultiScatterItem. Then only the selected MultiScatterExclude instances apply to that MultiScatterItem.
 ![Excluded Area](https://user-images.githubusercontent.com/127634166/224751430-f9619a4e-5bd7-4df0-ba8f-5e94289a7a4f.png)
 ### Generate
 Once the MultiScatter set up has been completed, select the MultiScatter node again. Right next to the buttons which let you draw the polygon there is a "Generate" button.
