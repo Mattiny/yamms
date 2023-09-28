@@ -38,20 +38,6 @@ The MultiScatterItem keeps information about one type of meshes in the MultiMesh
 
 - In your scene: Add the node "MultiScatterItem" as a child node to a MultiScatter node.
 - Select the MultiScatterItem.
-- Set up parameters:
-	- **Proportion**: The amount proportion for this mesh. The exact amount depends on the "Amount" property of the parent MultiScatter and the proportion of sibling MultiScatterItems.
-    	- **Placement mode**: Specifies how the meshes are placed into your scene.
-		- **Flat**: all meshes are generated on a flat simple plane.
-		- **Floating**: all meshes are generated floating in 3D space
-		- **Dropped on floor**: all meshes are generated on the floor. This requires a sufficiently large object with collision shape underneath. Note: The whole polygon must be hovering ABOVE the ground.
-   	  	- **Dropped on ceiling**: all meshes are generated on the ceiling. This requires a sufficiently large object with collision shape above. Note: The whole polygon must be hovering UNDERNEATH the collision object.
-	- **Random Rotation**: if activated: The max angle of the random rotation of each mesh.
-	- **Random Scale**: if activated: The max random scale of each mesh.
- 	- **Additional Scene**: Places an additional scene (PackedScene) at the same position as the scattered item. Can be used e.g. to put collision objects at the same position. **Note** It is a real scene, not a primitive MultiScatterItem3D. So it uses more resources at runtime than MultiMeshInstances. It is not supposed to be used with too many instances.
-  		- **Target Node**: References the node where the scenes are placed in the scene tree. **Note** Don't place any other relevant Nodes of your scene underneath the referenced node. Whenever the MultiMeshInstance3D positions are generated, the target node will be deleted (without question).
-  		- **Additional scene**: Reference to a PackedScene which will be instantiated and placed at the same position as the MultiMeshInstance3D.
-    	- **Excludes**: is an array of references to MultiScatterExclude instances. If left empty (default) all MultiScatterExclude areas underneath the MultiScatter element are considered when generating the MultiMeshInstance3D positions. But if at least one exclude-area refrence is put into the array of "excludes", then only the referenced exclude-areas are active for this MultiScatterItem.  
-
 
 #### Set up a MultiMeshInstance3D (standard Godot behaviour)
 - In the inspector: Paramter "MultiMesh": Create a new MultiMesh
@@ -60,6 +46,23 @@ The MultiScatterItem keeps information about one type of meshes in the MultiMesh
 - Drag & Drop a mesh from your file system into the inspector property "Mesh"
 - If necessary: Drag & Drop a material for this mesh to inspector property "Geometry / Material override"
 ![02-SetUp-ScatterItem](https://github.com/Mattiny/yamms/assets/127634166/edaa6298-b01e-4ef7-a0c6-c9af46057575)
+
+#### Set up parameters:
+- **Proportion**: The amount proportion for this mesh. The exact amount depends on the "Amount" property of the parent MultiScatter and the proportion of sibling MultiScatterItems.
+- **Placement mode**: Specifies how the meshes are placed into your scene.
+	- **Flat**: all meshes are generated on a flat simple plane.
+	- **Floating**: all meshes are generated floating in 3D space
+	- **Dropped on floor**: all meshes are generated on the floor. This requires a sufficiently large object with collision shape underneath. Note: The whole polygon must be hovering ABOVE the ground.
+   	- **Dropped on ceiling**: all meshes are generated on the ceiling. This requires a sufficiently large object with collision shape above. Note: The whole polygon must be hovering UNDERNEATH the collision object.
+- **Random Rotation**: if activated: The max angle of the random rotation of each mesh.
+- **Random Scale**: if activated: The max random scale of each mesh.
+- **Additional Scene**: Places an additional scene (PackedScene) at the same position as the scattered item. Can be used e.g. to put collision objects at the same position. **Note** It is a real scene, not a primitive MultiScatterItem3D. So it uses more resources at runtime than MultiMeshInstances. It is not supposed to be used with too many instances.
+	- **Target Node**: References the node where the scenes are placed in the scene tree. **Note** Don't place any other relevant Nodes of your scene underneath the referenced node. Whenever the MultiMeshInstance3D positions are generated, the target node will be deleted (without question).
+	- **Additional scene**: Reference to a PackedScene which will be instantiated and placed at the same position as the MultiMeshInstance3D.
+- **Excludes**: is an array of references to MultiScatterExclude instances. If left empty (default) all MultiScatterExclude areas underneath the MultiScatter element are considered when generating the MultiMeshInstance3D positions. But if at least one exclude-area refrence is put into the array of "excludes", then only the referenced exclude-areas are active for this MultiScatterItem.  
+
+
+
 
 
 ### MultiScatterExclude
