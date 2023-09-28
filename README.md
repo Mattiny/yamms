@@ -59,7 +59,7 @@ The MultiScatterItem keeps information about one type of meshes in the MultiMesh
 - set "Transform Format" to "3D"
 - Drag & Drop a mesh from your file system into the inspector property "Mesh"
 - If necessary: Drag & Drop a material for this mesh to inspector property "Geometry / Material override"
-![02-SetUp-ScatterItem](https://github.com/Mattiny/yamms/assets/127634166/456d9b0f-0753-4fc1-8c0c-7b864f089bbb)
+![02-SetUp-ScatterItem](https://github.com/Mattiny/yamms/assets/127634166/65795c64-95f5-4e1b-96d8-6dedc921a3c1)
 
 
 ### MultiScatterExclude
