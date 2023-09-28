@@ -85,6 +85,16 @@ Each MultiScatterItem can have a different configuration (Proportion, Random sca
 Rename the items in the scene tree to get a better overview of you scene.
 ![05-MultipleScatterItems](https://github.com/Mattiny/yamms/assets/127634166/4b2ea495-5e03-4870-81c4-c2ac88b9d579)
 
+#### Exclude areas for specifc MultiScatterItems only
+You have set up a complex scene with several MultiScatterItems (e.g.: grass, flowers and some trees) and you have set up multiple exclude areas (e.g.: pathways and some houses). Now you have some areas where you want to have some of the MultiScatterItems, but not all of them (e.g.: no trees between the houses, but there shall be grass).
+
+To get this done add another MultiScatterExclude and set up the polygon for the area in which some of the items (the trees) shouldn't be drawn (between the houses). 
+
+Edit the MultiScatterItems:
+- If only some MultiScatterExclude areas apply for a MultiScatterItem (e.g.: the grass, which shall ignore the tree's exclude area): add an element in the exclude list for each MultiMeshExclude that is applicable for this MultiScatterItem and select the corresponding MultiScatterExclude.
+- If all MultiScatterExclude areas apply for a MultiScatterItem: leave it as it is. By default all MultiScatterExclude areas are applicable.
+![06-Exclude01](https://github.com/Mattiny/yamms/assets/127634166/2c5f0b7b-cbd8-4b74-9aba-efaac5f47eac)
+![06-Exclude02](https://github.com/Mattiny/yamms/assets/127634166/24e1176a-c6a6-4029-b796-8c155da3e799)
 
 ### Placement Modes examples
 
