@@ -29,8 +29,9 @@ Note: This plugin is only compatible with Godot 4.0 and following Godot versions
 
 - Place MultiMeshInstances of different types into your scene.
 - Configure the proportions of how many meshes of each type shall be placed into your scene.
+- Configure random rotation and scale individually for each item.
 - Set up an area via Path3D polygon in which the meshes shall placed.
-- Set up exclusion areas via Path3D polygons (inside your area definition) to leave these areas empty.
+- Set up exclusion areas via Path3D polygons (inside your area definition) to leave these areas empty (for some or all items).
 - Configure the height of the generated meshes: "Flat", "Floating", "Dropped on floor", "Dropped on ceiling".
 - Add additional scenes (e.g. collision objects) at the same position as the MultiMeshInstance3D instances.
 
