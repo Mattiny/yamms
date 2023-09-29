@@ -88,16 +88,28 @@ Rename the items in the scene tree to get a better overview of you scene.
 #### Exclude areas for specific MultiScatterItems only
 You have set up a complex scene with several MultiScatterItems (e.g.: grass, flowers and some trees) and you have set up multiple exclude areas (e.g.: pathways and some houses). Now you have some areas where you want to have some of the MultiScatterItems, but not all of them (e.g.: no trees between the houses, but there shall be grass).
 
-To get this done add another MultiScatterExclude and set up the polygon for the area in which some of the items (the trees) shouldn't be drawn (between the houses). 
+To get this done add another MultiScatterExclude and set up the polygon for the area in which shall be excluded for some MultiScatterItems. 
 
-Edit the MultiScatterItems:
-- If only some MultiScatterExclude areas apply for a MultiScatterItem (e.g.: the grass, which shall ignore the tree's exclude area): add an element in the exclude list for each MultiMeshExclude that is applicable for this MultiScatterItem and select the corresponding MultiScatterExclude.
+After that edit the MultiScatterItems:
+- If only some MultiScatterExclude areas apply for a MultiScatterItem (e.g.: the grass, which shall ignore the tree's exclude area): add an element in the exclude list and select the MultiScatterExclude which shall be effictive for this MultiScatterItem.
 - If all MultiScatterExclude areas apply for a MultiScatterItem: leave it as it is. By default all MultiScatterExclude areas are applicable.
-- Hit "generate" button again and the changes will be effective.
-- 
+- Select the MultiScatter element and hit "generate" button again and the changes will be effective.
+  
 ![06-Exclude01](https://github.com/Mattiny/yamms/assets/127634166/2c5f0b7b-cbd8-4b74-9aba-efaac5f47eac)
 ![06-Exclude02](https://github.com/Mattiny/yamms/assets/127634166/24e1176a-c6a6-4029-b796-8c155da3e799)
 
 #### Collision objects
-
-
+You can assign an additional scene (containing a collision object) to a MultiScatterItem. This additional scene will be placed at the same position as the MultiScatterItem.
+	- Make sure that the size, rotation and location of the collision object matches the mesh of the MultiScatterItem. Best practice here: keep mesh and collision object at the world origin of the scene (at position 0,0,0).
+ 	- Make sure that the actual number of instances of the MultiScatterItem is not too high because this will generate separated instances of the additional scene.
+- Enable the "Additional Scene" feature for the MultiScatterItem
+- Set up the "target node" by selecting the node of your scene tree where the additional scenes shall be dropped. Note: this should be an empty node. Do not place any relevant nodes of your scene into that node. All children of the node will be deleted when generating again.
+- Drop the scene containing the collision object to the field "addintional scene"
+- Select the MultiScatter element and hit "generate" button again and the changes will be effective.
+	- Collision objects are dropped into the scene
+ 	- Scene instances are located underneath the selected target node
+![07-Collision Object](https://github.com/Mattiny/yamms/assets/127634166/83e4b15e-5e2e-47bd-8839-fdc2636887f3)
+![08-TargetNode](https://github.com/Mattiny/yamms/assets/127634166/7fe4c5a2-1f90-4dd8-aae4-cef45b033703)
+![09-Reference-TargetNode](https://github.com/Mattiny/yamms/assets/127634166/16b88d4d-49ff-487d-b9fc-4d85d51aeb5e)
+![10-AssignScene](https://github.com/Mattiny/yamms/assets/127634166/cd2b8c4d-3616-4cef-a049-20b81fcc53d5)
+![11-Generate](https://github.com/Mattiny/yamms/assets/127634166/ebabd6d9-6d7a-4c68-b686-682ce6aa8c38)
