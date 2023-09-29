@@ -52,8 +52,8 @@ The MultiScatterItem keeps information about one type of meshes in the MultiMesh
 - **Placement mode**: Specifies how the meshes are placed into your scene.
 	- **Flat**: all meshes are generated on a flat simple plane.
 	- **Floating**: all meshes are generated floating in 3D space
-	- **Dropped on floor**: all meshes are generated on the floor. This requires a sufficiently large object with collision shape underneath. Note: The whole polygon must be hovering ABOVE the ground.
-   	- **Dropped on ceiling**: all meshes are generated on the ceiling. This requires a sufficiently large object with collision shape above. Note: The whole polygon must be hovering UNDERNEATH the collision object.
+	- **Dropped on floor**: all meshes are generated on the floor. This requires a sufficiently large object with collision shape underneath. Note: The whole polygon (MultiScatter) must be hovering ABOVE the ground.
+   	- **Dropped on ceiling**: all meshes are generated on the ceiling. This requires a sufficiently large object with collision shape above. Note: The whole polygon (MultiScatter) must be hovering UNDERNEATH the collision object.
 - **Random Rotation**: if activated: The max angle of the random rotation of each mesh.
 - **Random Scale**: if activated: The max random scale of each mesh.
 - **Additional Scene**: Places an additional scene (PackedScene) at the same position as the scattered item. Can be used e.g. to put collision objects at the same position. **Note** It is a real scene, not a primitive MultiScatterItem3D. So it uses more resources at runtime than MultiMeshInstances. It is not supposed to be used with too many instances.
