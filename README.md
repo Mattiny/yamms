@@ -110,7 +110,7 @@ You can assign an additional scene (containing a collision object) to a MultiSca
  	- Scene instances are located underneath the selected target node
  
   
-![07-Collision Object](https://github.com/Mattiny/yamms/assets/127634166/83e4b15e-5e2e-47bd-8839-fdc2636887f3)
+![07-Collision Object](https://github.com/Mattiny/yamms/assets/127634166/0ae5efb7-777c-49bb-9661-8f98a9005dc5)
 ![08-TargetNode](https://github.com/Mattiny/yamms/assets/127634166/7fe4c5a2-1f90-4dd8-aae4-cef45b033703)
 ![09-Reference-TargetNode](https://github.com/Mattiny/yamms/assets/127634166/16b88d4d-49ff-487d-b9fc-4d85d51aeb5e)
 ![10-AssignScene](https://github.com/Mattiny/yamms/assets/127634166/cd2b8c4d-3616-4cef-a049-20b81fcc53d5)
