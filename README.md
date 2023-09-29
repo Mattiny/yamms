@@ -108,6 +108,8 @@ You can assign an additional scene (containing a collision object) to a MultiSca
 - Select the MultiScatter element and hit "generate" button again and the changes will be effective.
 	- Collision objects are dropped into the scene
  	- Scene instances are located underneath the selected target node
+ 
+  
 ![07-Collision Object](https://github.com/Mattiny/yamms/assets/127634166/83e4b15e-5e2e-47bd-8839-fdc2636887f3)
 ![08-TargetNode](https://github.com/Mattiny/yamms/assets/127634166/7fe4c5a2-1f90-4dd8-aae4-cef45b033703)
 ![09-Reference-TargetNode](https://github.com/Mattiny/yamms/assets/127634166/16b88d4d-49ff-487d-b9fc-4d85d51aeb5e)
