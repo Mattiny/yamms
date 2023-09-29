@@ -5,8 +5,18 @@
 - [What is it?](#what-is-it)
 - [Features](#features)
 - [Installation](#installation)
-
-  
+- [Usage](#usage)
+	- [MultiScatter](#multiscatter)
+  	- [MultiScatterItem](#multiscatteritem)
+  		- [Set up a MultiMeshInstance3D](#set-up-a-multimeshinstance3d)
+  		- [Set up parameters](#set-up-parameters)
+  	- [MultiScatterExclude](#multiscatterexclude)
+  	- [Generate](#generate)
+  	- [Common use cases](#common-use-cases)
+  		- [Different types of MultiScatterItems](#different-types-of-multiscatteritems)
+  	 	- [Exclude areas for specific MultiScatterItems only](#exclude-areas-for-specific-multiscatteritems-only)
+  	  	- [Collision objects](#collision-objects)
+  	  
 ## What is it?
 Yamms (Yet another multimesh scatter) is a plugin for Godot to place MultiMesh meshes into the game world.
 
@@ -47,7 +57,7 @@ The MultiScatterItem keeps information about one type of meshes in the MultiMesh
 - In your scene: Add the node "MultiScatterItem" as a child node to a MultiScatter node.
 - Select the MultiScatterItem.
 
-#### Set up a MultiMeshInstance3D (standard Godot behaviour)
+#### Set up a MultiMeshInstance3D
 - In the inspector: Paramter "MultiMesh": Create a new MultiMesh
 - Click at the new MultiMesh: The MultiMesh parameters open and are editable
 - set "Transform Format" to "3D"
@@ -55,7 +65,7 @@ The MultiScatterItem keeps information about one type of meshes in the MultiMesh
 - If necessary: Drag & Drop a material for this mesh to inspector property "Geometry / Material override"
 ![02-SetUp-ScatterItem](https://github.com/Mattiny/yamms/assets/127634166/edaa6298-b01e-4ef7-a0c6-c9af46057575)
 
-#### Set up parameters:
+#### Set up parameters
 - **Proportion**: The amount proportion for this mesh. The exact amount depends on the "Amount" property of the parent MultiScatter and the proportion of sibling MultiScatterItems.
 - **Placement mode**: Specifies how the meshes are placed into your scene.
 	- **Flat**: all meshes are generated on a flat simple plane.
