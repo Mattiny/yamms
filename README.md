@@ -21,7 +21,7 @@
 Yamms (Yet another multimesh scatter) is a plugin for Godot to place MultiMesh meshes into the game world.
 
 Author: Mattiny
-Youtube: https://youtu.be/783reAHkYFc
+Youtube: https://youtu.be/k5mwwakNHU4
 
 Note: This plugin is only compatible with Godot 4.0 and following Godot versions.
 ![Screenshot_01](https://user-images.githubusercontent.com/127634166/224740362-c7ddbf76-da05-48d6-a1a2-7aacbeb36a8a.png)
