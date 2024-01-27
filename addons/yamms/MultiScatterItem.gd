@@ -49,6 +49,7 @@ const PlacementMode = preload("res://addons/yamms/PlacementMode.gd")
 @export_group("Random Rotation")
 @export var randomize_rotation : bool = false
 @export var max_degrees : Vector3 
+@export_range(0.0, 1.0, 0.1) var normal_influence : float
 
 @export_group("Random Scale")
 @export var randomize_scale : bool = false

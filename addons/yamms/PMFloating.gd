@@ -37,6 +37,7 @@ func place_item(
 		avg_height, 
 		global_position, 
 		rotation, 
+		normal_influence,
 		scale, 
 		min_offset_y,
 		max_offset_y,

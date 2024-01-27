@@ -139,6 +139,7 @@ func _create_transform(pos : Vector3, rotation : Vector3, scale : Vector3):
 #  - Proportion
 #  - RandomRotation
 #  - RandomScale
+#  - NormalInfluence
 #  - MaxRotation
 #  - MaxScale
 #  - PlacementMode
@@ -159,6 +160,7 @@ func _get_scatter_items_data():
 			entry["Proportion"] = scatter_item.proportion
 			entry["RandomRotation"] = scatter_item.randomize_rotation
 			entry["RandomScale"] = scatter_item.randomize_scale
+			entry["NormalInfluence"] = scatter_item.normal_influence
 			entry["MaxRotation"] = scatter_item.max_degrees
 			entry["MaxScale"] = scatter_item.max_scale
 			entry["PlacementMode"] = scatter_item.placement_mode

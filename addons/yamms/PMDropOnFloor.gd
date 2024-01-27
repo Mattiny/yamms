@@ -35,6 +35,7 @@ func place_item(
 		avg_height, 
 		global_position, 
 		rotation, 
+		normal_influence,
 		scale, 
 		min_offset_y,
 		max_offset_y,
@@ -64,7 +65,16 @@ func place_item(
 		var multimesh_scatter_pos = global_position
 		hit_pos = hit_pos - multimesh_scatter_pos
 		_debug("Set position for index %s to %s" %[index, hit_pos])
+		
+		var hit_normal = hit["normal"]
+		var normal_rot = Vector3(rad_to_deg(asin(deg_to_rad(hit_normal.z))), 0.0, -1.0 * rad_to_deg(asin(deg_to_rad(hit_normal.x))))
+		var normal_displacement = (normal_rot * normal_influence) ;
+		
 		var transform = create_transform(hit_pos, rotation, scale)
 		scatter_item.do_transform(index, transform)
+		
+		transform = create_transform(hit_pos, normal_displacement, Vector3(1.0, 1.0, 1.0))
+		scatter_item.do_transform(index, transform)
+		
 		_place_additional_scene(additionalScene, targetNode, transform)
 		return true

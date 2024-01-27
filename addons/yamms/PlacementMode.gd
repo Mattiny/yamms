@@ -181,7 +181,12 @@ func do_generate(
 					_rotation.x = generate_random(0, max_rotation.x)
 					_rotation.y = generate_random(0, max_rotation.y)
 					_rotation.z = generate_random(0, max_rotation.z)
-					
+				
+				# get the normal_influence 
+				var _normal_influence = 0.0
+				if scatterData["NormalInfluence"]:
+					_normal_influence = scatterData["NormalInfluence"]
+				
 				# Generate random scale
 				var _scale = Vector3(1.0, 1.0, 1.0)
 				if scatterData["RandomScale"]:
@@ -236,6 +241,7 @@ func do_generate(
 								avg_height, 
 								global_position, 
 								_rotation, 
+								_normal_influence,
 								_scale, 
 								_min_offset_y,
 								_max_offset_y,
@@ -266,6 +272,7 @@ func place_item (
 		avg_height, 
 		global_position, 
 		rotation, 
+		normal_influence, 
 		scale,
 		min_offset_y,
 		max_offset_y,
