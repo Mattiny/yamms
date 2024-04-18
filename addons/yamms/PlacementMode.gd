@@ -192,12 +192,9 @@ func do_generate(
 				if scatterData["RandomScale"]:
 					var max_scale = scatterData["MaxScale"]
 					var min_scale = scatterData["MinScale"]
-					var actual_scale : float = generate_random(min_scale, max_scale)
-					print("Scale ", actual_scale)
-					
-					_scale.x = actual_scale
-					_scale.y = actual_scale
-					_scale.z = actual_scale
+					var scale_curve = scatterData["ScaleCurve"]
+					var curve_sample = scale_curve.sample(generate_random(0.0,1.0))
+					_scale = Vector3.ONE * (curve_sample * (max_scale - min_scale) + min_scale)
 						
 				# Check if the 2D coordinates are inside the polygon.
 				var pos : Vector2 = Vector2(x ,y)

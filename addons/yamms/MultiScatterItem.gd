@@ -55,6 +55,7 @@ const PlacementMode = preload("res://addons/yamms/PlacementMode.gd")
 @export var randomize_scale : bool = false
 @export var max_scale : float = 1.0
 @export var min_scale : float = 0.5
+@export var scale_curve : Curve
 
 @export_group("Additional Scene")
 @export var enableAdditionalScene : bool = false

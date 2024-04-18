@@ -73,7 +73,7 @@ func place_item(
 		var transform = create_transform(hit_pos, rotation, Vector3(1.0, 1.0, 1.0))
 		scatter_item.do_transform(index, transform)
 		
-		transform = create_transform(hit_pos, normal_displacement, Vector3(1.0, 1.0, 1.0))
+		transform = create_transform(hit_pos, normal_displacement, scale)
 		scatter_item.do_transform(index, transform)
 		
 		_place_additional_scene(additionalScene, targetNode, transform)

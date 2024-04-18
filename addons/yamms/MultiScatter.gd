@@ -164,6 +164,7 @@ func _get_scatter_items_data():
 			entry["MaxRotation"] = scatter_item.max_degrees
 			entry["MaxScale"] = scatter_item.max_scale
 			entry["MinScale"] = scatter_item.min_scale
+			entry["ScaleCurve"] = scatter_item.scale_curve
 			entry["PlacementMode"] = scatter_item.placement_mode
 			entry["ScatterItem"] = scatter_item
 			if scatter_item.enableAdditionalScene == true:
