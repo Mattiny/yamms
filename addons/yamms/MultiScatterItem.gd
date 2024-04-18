@@ -53,7 +53,8 @@ const PlacementMode = preload("res://addons/yamms/PlacementMode.gd")
 
 @export_group("Random Scale")
 @export var randomize_scale : bool = false
-@export var max_scale : Vector3 = Vector3(1.0, 1.0, 1.0)
+@export var max_scale : float = 1.0
+@export var min_scale : float = 0.5
 
 @export_group("Additional Scene")
 @export var enableAdditionalScene : bool = false

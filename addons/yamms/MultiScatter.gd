@@ -163,6 +163,7 @@ func _get_scatter_items_data():
 			entry["NormalInfluence"] = scatter_item.normal_influence
 			entry["MaxRotation"] = scatter_item.max_degrees
 			entry["MaxScale"] = scatter_item.max_scale
+			entry["MinScale"] = scatter_item.min_scale
 			entry["PlacementMode"] = scatter_item.placement_mode
 			entry["ScatterItem"] = scatter_item
 			if scatter_item.enableAdditionalScene == true:

@@ -70,7 +70,7 @@ func place_item(
 		var normal_rot = Vector3(rad_to_deg(asin(deg_to_rad(hit_normal.z))), 0.0, -1.0 * rad_to_deg(asin(deg_to_rad(hit_normal.x))))
 		var normal_displacement = (normal_rot * normal_influence) ;
 		
-		var transform = create_transform(hit_pos, rotation, scale)
+		var transform = create_transform(hit_pos, rotation, Vector3(1.0, 1.0, 1.0))
 		scatter_item.do_transform(index, transform)
 		
 		transform = create_transform(hit_pos, normal_displacement, Vector3(1.0, 1.0, 1.0))
