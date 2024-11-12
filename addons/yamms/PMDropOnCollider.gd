@@ -21,16 +21,30 @@
 # SOFTWARE.
 @tool
 extends PlacementMode
-class_name PMFlat
+class_name PMDropOnCollider
+
+# collision mask to select the layer of the ray cast.
+@export_flags_3d_physics var collision_mask := 0x1:
+	get: return collision_mask
+	set(value):
+		collision_mask = value
+		
+enum direction {Up, Down}
+@export var placement_direction : direction = direction.Down
+
+@export var normal_influence : float = 1.0 
+
+var ray_cast_direction : Vector3
+var space
 
 func _debug(message):
 	if debug_messages:
-		print("YAMMS: PMFLat:  " + message)
+		print("YAMMS: PMDropOnCollider:  " + message)
 
 func generate() :
 	_debug("Generating")
 	# create Flat Transform
-	mstransform = FlatTransform.new()
+	mstransform = DropOnColliderTransform.new()
 	mstransform.debug_messages = debug_messages
 	mstransform.random = random
 	mstransform.curve = curve
@@ -39,6 +53,8 @@ func generate() :
 	mstransform.random_rotation = randomize_rotation
 	mstransform.max_rotation = max_random_rotation
 	mstransform.min_rotation = min_random_rotation
+	
+	mstransform.global_position = global_position
 	
 	# Pass scale information to transform
 	if random_scale_type == scale_type_enum.Proportional:
@@ -55,10 +71,20 @@ func generate() :
 	else:
 		mstransform.random_unprop_scale = false
 		mstransform.random_prop_scale = false
-	
-	
+
+	if placement_direction == direction.Up:
+		ray_cast_direction = Vector3.UP
+	elif placement_direction == direction.Down:
+		ray_cast_direction = Vector3.DOWN		
+	mstransform.direction = ray_cast_direction
+
+	mstransform.collisionMask = collision_mask
+
+	mstransform.normal_influence = normal_influence
+	mstransform.space = space
 	mstransform.multimesh_item = multimesh_item
 
+	
 	# generate
 	mstransform.generate_transform()
 	

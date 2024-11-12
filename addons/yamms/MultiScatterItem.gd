@@ -37,48 +37,88 @@ class_name MultiScatterItem
 # MultiScatterItem the percentage of each MultiScatterItem will be calculated. 
 # Then the percentage of the MultiScatter amount results in the actual amount 
 # for this MultiScatterItem
-@export var proportion : int = 100 :
+@export_range(0, 100) var percentage : float = 100 :
 	set(value):
-		proportion = value
-
-# import the PlacementMode class
-const PlacementMode = preload("res://addons/yamms/PlacementMode.gd") 
-# PlacementModes - Default = Drop on Floor:
-@export var placement_mode : PlacementMode.Mode = PlacementMode.Mode.DROP_ON_FLOOR
-
-@export_group("Random Rotation")
-@export var randomize_rotation : bool = false
-@export var max_degrees : Vector3 
-@export_range(0.0, 1.0, 0.1) var normal_influence : float
-
-@export_group("Random Scale")
-@export var randomize_scale : bool = false
-@export var max_scale : float = 1.0
-@export var min_scale : float = 0.5
-@export var scale_curve : Curve
+		percentage = value
 
 @export_group("Additional Scene")
 @export var enableAdditionalScene : bool = false
 @export var targetNode: Node3D
 @export var additionalScene: PackedScene
 
+# Debug messages on/off
+var debug_messages : bool = false : set = set_debug
+func set_debug(debug : bool):
+	debug_messages = debug
 
-@export_group("Excludes")
-@export var exclude : Array[MultiScatterExclude] = []
+# Setting the total amount of items to be generated. This is the 100% amount.
+var amount : int : set = set_amount
+func set_amount(number):
+	amount = number
+
+# Setting the random number generator
+var random : RandomNumberGenerator : set = set_random
+func set_random(rnd):
+	random = rnd
+
+# Sets the curve of the MultiScatter
+var curve : Curve3D : set = set_curve
+func set_curve(crv : Curve3D):
+	curve = crv
 
 func _ready():
 	pass
+	
+func _debug(message):
+	if debug_messages:
+		print("YAMMS: MultiScatterItem:  " + message)
 
-# sets the actual amount of the meshes
-func set_amount(number):
-	self.multimesh.instance_count = number
+func _prepare_multimesh():
+	multimesh.instance_count = amount
+	
+func generate(
+			global_position : Vector3,
+			space
+):
+	var actual_amount :int = amount * (percentage /100)
+	_debug("Generating %s percent of %s items: %s items" %[percentage, amount, actual_amount])
+	
+	var placement = _get_placement()
+	if placement != null:
+
+		_debug("PlacementMode: " + placement.get_class())
+		_prepare_multimesh()
+
+		placement.debug_messages = debug_messages
+		placement.amount = actual_amount
+		placement.random = random
+		placement.curve = curve
+		placement.multimesh_item = multimesh
+		
+		_debug("Setting global_position: %s" %global_position)
+		placement.global_position = global_position
+		placement.space = space
+		placement.generate()
+	else:
+		_debug("No placement set")
+
+
+
+func _get_placement() -> PlacementMode:
+	for child in get_children():
+		if child is PlacementMode:
+			_debug("is PlacementMode")
+			return child
+	return null
+			
+	
 
 # sets the transform of one instance of the multimesh
 # - index - The index of the mesh
 # - transform - The transform containing position, rotation and scale.
-func do_transform(index : int, transform : Transform3D):
+#func do_transform(index : int, transform : Transform3D):
 
-	self.multimesh.set_instance_transform(index, transform)
+#	self.multimesh.set_instance_transform(index, transform)
 	#self.multimesh.set_instance_transform(index, Transform3D(Basis(), pos))
 	
 func _get_configuration_warnings() -> PackedStringArray:
@@ -89,5 +129,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 			return ["Additional scene is set up, but no target node."]	
 		if (targetNode != null and additionalScene == null):
 			return ["Target node is set up, but no additional scene."]	
+		if (_get_placement() == null):
+			return ["No placement mode as child node."]
 		return []
-

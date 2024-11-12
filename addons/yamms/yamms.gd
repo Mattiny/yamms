@@ -26,6 +26,8 @@ extends EditorPlugin
 var MultiScatter = preload("MultiScatter.gd")
 var MultiScatterItem = preload("MultiScatterItem.gd")
 var MultiScatterExclude = preload("MultiScatterExclude.gd")
+var PlacementMode = preload("PlacementMode.gd")
+var PMFloating = preload("PMFloating.gd")
 
 var _selected_scatter : MultiScatter
 var _gui_toolbar = null
@@ -35,6 +37,11 @@ func _enter_tree():
 	add_custom_type("MultiScatter", "Path3D", MultiScatter, preload("icon.png"))
 	add_custom_type("MultiScatterItem", "MultiMeshInstance3D", MultiScatterItem, preload("iconScatterItem.png"))
 	add_custom_type("MultiScatterExclude", "Path3D", MultiScatterExclude, preload("iconExclude.png"))
+	add_custom_type("PlacmentMode", "Node", PlacementMode, preload("iconScatterItem.png"))
+	add_custom_type("PMFloating", "PlacementMode", PMFloating, preload("iconScatterItem.png"))
+	add_custom_type("PMFlat", "PlacementMode", PMFlat, preload("iconScatterItem.png"))
+	add_custom_type("PMDropOnCollider", "PlacementMode", PMDropOnCollider, preload("iconScatterItem.png"))
+	
 	
 	# Set up the toolbar and hide it. (Toolbar = the generate button)
 	_gui_toolbar = load("res://addons/yamms/MultiScatter_Toolbar.tscn").instantiate()
@@ -50,6 +57,12 @@ func _enter_tree():
 func _exit_tree():
 	remove_custom_type("MultiScatter")
 	remove_custom_type("MultiScatterItem")
+	remove_custom_type("MultiScatterExclude")
+	remove_custom_type("PMFloating")
+	remove_custom_type("PMFlat")
+	remove_custom_type("PMDropOnCollider")
+	remove_custom_type("PlacementMode")
+
 	_gui_toolbar.visible = false
 	remove_control_from_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU, _gui_toolbar)
 	_gui_toolbar.queue_free()

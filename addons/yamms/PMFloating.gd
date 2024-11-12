@@ -23,34 +23,48 @@
 extends PlacementMode
 class_name PMFloating
 
-
-
+@export var min_max_height : float = 50
 
 func _debug(message):
-	if _debug_messages:
-		print("YAMMS: PMFloating:  " + message)
+	if debug_messages:
+		print("YAMMS: PMFLoating:  " + message)
 
-func place_item(
-		scatter_item,
-		index : int,
-		pos_3D : Vector3, 
-		avg_height, 
-		global_position, 
-		rotation, 
-		normal_influence,
-		scale, 
-		min_offset_y,
-		max_offset_y,
-		collision_mask, 
-		space,
-		additionalScene,
-		targetNode) -> bool:
+func generate() :
+	_debug("Generating")
+	# create Floating Transform
+	mstransform = FloatingTransform.new()
+	mstransform.debug_messages = debug_messages
+	mstransform.random = random
+	mstransform.curve = curve
+	mstransform.amount =amount
+	mstransform.min_max_height = min_max_height
+		
+	mstransform.random_rotation = randomize_rotation
+	mstransform.max_rotation = max_random_rotation
+	mstransform.min_rotation = min_random_rotation
+	
+	
+	# Pass scale information to transform
+	if random_scale_type == scale_type_enum.Proportional:
+		mstransform.random_prop_scale= true
+		mstransform.random_unprop_scale = false
+		mstransform.max_prop_scale = max_random_scale
+		mstransform.min_prop_scale = min_random_scale
+		mstransform.scale_curve = scale_curve
+	elif random_scale_type == scale_type_enum.Unproportional:
+		mstransform.random_unprop_scale = true
+		mstransform.random_prop_scale = false
+		mstransform.max_unprop_scale = max_unproportional_scale
+		mstransform.min_unprop_scale = min_unproportional_scale
+	else:
+		mstransform.random_unprop_scale = false
+		mstransform.random_prop_scale = false
+	
+	
+	mstransform.multimesh_item = multimesh_item
 
-	# Distribute ScatterItems floating: 
-	# some random height between min and max y.
-	pos_3D.y = generate_random(min_offset_y, max_offset_y)
-	_debug("Set position for index %s to %s" %[index, pos_3D])
-	var transform = create_transform(pos_3D, rotation, scale)
-	scatter_item.do_transform(index, transform)
-	_place_additional_scene(additionalScene, targetNode, transform)
-	return true
+	# generate
+	mstransform.generate_transform()
+	
+	# delete Floating Transform
+	mstransform.queue_free()
