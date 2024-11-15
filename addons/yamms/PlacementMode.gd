@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 @tool
-extends Node
+extends Node3D
 class_name PlacementMode
 
 enum scale_type_enum {None, Proportional, Unproportional}
@@ -50,6 +50,9 @@ enum scale_type_enum {None, Proportional, Unproportional}
 @export var max_unproportional_scale : Vector3 = Vector3(1, 1, 1)
 @export var min_unproportional_scale : Vector3 = Vector3(0.5, 0.5, 0.5)
 
+
+
+var exclude_list : Array[MultiScatterExclude]
 
 #  Debug messages
 var debug_messages : bool = false : set = _set_debug
@@ -87,8 +90,9 @@ var mstransform : MultiScatterTransform : set = _set_multiscatter_transform
 func _set_multiscatter_transform(value):
 	mstransform = value
 	
-var global_position : Vector3
+var ms_global_position : Vector3
 
+var space
 
 func generate() :
 	_debug("Generating")

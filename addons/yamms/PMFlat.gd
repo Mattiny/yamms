@@ -23,6 +23,10 @@
 extends PlacementMode
 class_name PMFlat
 
+@export_group("Excludes")
+@export var exclude : Array[MultiScatterExclude] = []
+
+
 func _debug(message):
 	if debug_messages:
 		print("YAMMS: PMFLat:  " + message)
@@ -39,6 +43,9 @@ func generate() :
 	mstransform.random_rotation = randomize_rotation
 	mstransform.max_rotation = max_random_rotation
 	mstransform.min_rotation = min_random_rotation
+	mstransform.exclude_list = exclude_list
+	mstransform.specific_exclude_list = exclude
+	mstransform.global_position = ms_global_position
 	
 	# Pass scale information to transform
 	if random_scale_type == scale_type_enum.Proportional:

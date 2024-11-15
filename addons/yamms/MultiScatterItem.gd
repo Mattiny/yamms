@@ -65,6 +65,8 @@ func set_random(rnd):
 var curve : Curve3D : set = set_curve
 func set_curve(crv : Curve3D):
 	curve = crv
+	
+var excludes_list : Array[MultiScatterExclude]
 
 func _ready():
 	pass
@@ -96,8 +98,10 @@ func generate(
 		placement.multimesh_item = multimesh
 		
 		_debug("Setting global_position: %s" %global_position)
-		placement.global_position = global_position
+		placement.ms_global_position = global_position
 		placement.space = space
+		_debug("---Exclude: %s" %excludes_list.size())
+		placement.exclude_list = excludes_list
 		placement.generate()
 	else:
 		_debug("No placement set")

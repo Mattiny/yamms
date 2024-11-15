@@ -59,7 +59,7 @@ func _ready():
 # Helper function for debugging.	
 func _debug(message):
 	if debugMessages:
-		print("YAMMS: MultiScatter:  " + message)
+		print("YAMMS: MultiScatter:  %s"  %message)
 
 
 # Generate the MultiScatter
@@ -82,6 +82,7 @@ func do_generate():
 			child.amount = amount
 			child.random = random
 			child.curve = curve
+			child.excludes_list = get_excludes()
 
 			child.generate(
 				global_position,
@@ -91,7 +92,15 @@ func do_generate():
 			_debug("is Not MultiScatterItem: " + child.get_class())
 	
 	# check if Placement mode is set
-	
+
+func get_excludes() -> Array[MultiScatterExclude]:
+	var excludes : Array[MultiScatterExclude] = []
+	for child in get_children():
+		if child is MultiScatterExclude:
+			excludes.append(child)
+			
+	_debug("---Exclude: %s" %excludes.size())
+	return excludes
 	
 	# Iterate through each MultiScatterItem entry and generate
 	# the positions for the MultiMesh instances.

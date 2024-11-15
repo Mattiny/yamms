@@ -23,6 +23,7 @@
 extends PlacementMode
 class_name PMDropOnCollider
 
+
 # collision mask to select the layer of the ray cast.
 @export_flags_3d_physics var collision_mask := 0x1:
 	get: return collision_mask
@@ -34,8 +35,10 @@ enum direction {Up, Down}
 
 @export var normal_influence : float = 1.0 
 
+@export_group("Excludes")
+@export var exclude : Array[MultiScatterExclude] = []
+
 var ray_cast_direction : Vector3
-var space
 
 func _debug(message):
 	if debug_messages:
@@ -54,7 +57,9 @@ func generate() :
 	mstransform.max_rotation = max_random_rotation
 	mstransform.min_rotation = min_random_rotation
 	
-	mstransform.global_position = global_position
+	mstransform.global_position = ms_global_position
+	mstransform.exclude_list = exclude_list
+	mstransform.specific_exclude_list = exclude
 	
 	# Pass scale information to transform
 	if random_scale_type == scale_type_enum.Proportional:
