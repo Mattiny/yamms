@@ -1,12 +1,12 @@
 @tool
-extends PlaneBasedPlacement
+extends PlaneBasedTransform
 class_name DropOnColliderTransform
 
 var min_max_height : float = 0
 
 var collisionMask
 var direction : Vector3
-var global_position : Vector3
+
 var space 
 var normal_influence : float
 
