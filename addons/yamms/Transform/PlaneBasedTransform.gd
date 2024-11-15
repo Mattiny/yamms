@@ -22,7 +22,7 @@
 
 @tool
 extends MultiScatterTransform
-class_name PlaneBasedPlacement
+class_name PlaneBasedTransform
 
 # used for calculating the initial plane.
 var _min_x : float = 0.0
@@ -37,6 +37,9 @@ var _polygon = []
 
 var current_index
 
+var exclude_list : Array[MultiScatterExclude]
+var specific_exclude_list : Array[MultiScatterExclude]
+var global_position : Vector3
 
 var debug_messages : bool = false : set = _set_debug
 func _set_debug(debug) :
@@ -44,7 +47,7 @@ func _set_debug(debug) :
 
 func _debug(message):
 	if debug_messages:
-		print("YAMMS: PlaneBasedPlacement:  " + message)
+		print("YAMMS: PlaneBasedTransform:  " + message)
 
 
 
@@ -80,6 +83,10 @@ func _calc_plane_min_max() :
 	
 func _generate_plane_positions():
 	_debug("Generating plane position for %s elements." %amount)
+	
+	_debug("Excludelist: %s" %exclude_list.size())
+	_debug("Specific exclude list: %s" %specific_exclude_list.size())
+	
 	for index in amount:
 		current_index = index
 		var is_point_in_polygon = false
@@ -104,29 +111,59 @@ func _generate_plane_positions():
 			var z = generate_random(_min_z, _max_z)
 			pos = Vector2(x ,z)
 			
+			# Check if the position is inside the polygon of the multiscatter.
 			is_point_in_polygon = Geometry2D.is_point_in_polygon(pos, _polygon)
-		_debug("Position: x=%s, y=%s is in polygon: %s" %[pos.x, pos.y, is_point_in_polygon])
+			if is_point_in_polygon:
+				_debug("Point is in MultiScatter Polygon")
+				
+				# Check if the position is NOT inside an exclude Polygon
+				
+				# Choose the exclude areas:
+				# If specific exclude areas are configured for this MultiScatterITem:
+				# use ist.
+				# Otherwise use all default exclude areas.
+				var my_exclude_array : Array[MultiScatterExclude]
+				
+				if specific_exclude_list.size() > 0:
+					my_exclude_array = specific_exclude_list
+				else:
+					my_exclude_array = exclude_list 
+					
+				for exclude_to_check:MultiScatterExclude in my_exclude_array:
+					if is_point_in_polygon:
+						var global_pos = pos + Vector2(global_position.x, global_position.z)
+						var is_in_exclude = exclude_to_check.is_point_in_polygon(global_pos)
+						is_point_in_polygon = not is_in_exclude
+					else:
+						_debug("Point is NOT in MultiScatter Polygon")
+			else:
+				_debug("Is not in polygon.")
+			
+			if is_point_in_polygon:
+				_debug("Position: x=%s, y=%s is in polygon: %s" %[pos.x, pos.y, is_point_in_polygon])
 		
-		# Set up the the 3 required transform parameters:
-		position = Vector3(pos.x, _avg_height, pos.y)
+				# Set up the the 3 required transform parameters:
+				position = Vector3(pos.x, _avg_height, pos.y)
 		
-		scale = Vector3(1.0, 1.0, 1.0)
-		generate_scale()
+				is_point_in_polygon = generate_height()
+				
+				if is_point_in_polygon:
+					scale = Vector3(1.0, 1.0, 1.0)
+					generate_scale()
 		
-		rotation = Vector3(0.0, 0.0, 0.0)
-		generate_rotation()
+					rotation = Vector3(0.0, 0.0, 0.0)
+					generate_rotation()
+				
 		
-		generate_height()
-		
-		var transform : Transform3D = create_transform(
-			position,
-			rotation,
-			scale
-		)
-		_debug("Setting transform: Index = %s" %index)
-		_debug("Multimesh: %s" %multimesh_item)
-		multimesh_item.set_instance_transform(index, transform)
-		_debug("Done.")
+					var transform : Transform3D = create_transform(
+						position,
+						rotation,
+						scale
+					)
+					_debug("Setting transform: Index = %s" %index)
+					_debug("Multimesh: %s" %multimesh_item)
+					multimesh_item.set_instance_transform(index, transform)
+					_debug("Done.")
 
 	
 func generate_transform():
