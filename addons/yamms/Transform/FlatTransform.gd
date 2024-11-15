@@ -1,5 +1,6 @@
 @tool
-extends PlaneBasedPlacement
+extends PlaneBasedTransform
 class_name FlatTransform
 
-#Nothing to do here.
+func generate_height() -> bool:
+	return true
