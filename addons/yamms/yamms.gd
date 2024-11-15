@@ -33,11 +33,12 @@ var _selected_scatter : MultiScatter
 var _gui_toolbar = null
 
 func _enter_tree():
+
 	# Add thre custom types.
 	add_custom_type("MultiScatter", "Path3D", MultiScatter, preload("icon.png"))
 	add_custom_type("MultiScatterItem", "MultiMeshInstance3D", MultiScatterItem, preload("iconScatterItem.png"))
 	add_custom_type("MultiScatterExclude", "Path3D", MultiScatterExclude, preload("iconExclude.png"))
-	add_custom_type("PlacmentMode", "Node", PlacementMode, preload("iconScatterItem.png"))
+	add_custom_type("PlacmentMode", "Node3D", PlacementMode, preload("iconScatterItem.png"))
 	add_custom_type("PMFloating", "PlacementMode", PMFloating, preload("iconScatterItem.png"))
 	add_custom_type("PMFlat", "PlacementMode", PMFlat, preload("iconScatterItem.png"))
 	add_custom_type("PMDropOnCollider", "PlacementMode", PMDropOnCollider, preload("iconScatterItem.png"))
@@ -66,7 +67,7 @@ func _exit_tree():
 	_gui_toolbar.visible = false
 	remove_control_from_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU, _gui_toolbar)
 	_gui_toolbar.queue_free()
-
+	
 
 # Plugin GUI (Toolbar) is visible when Scatter is selected.	
 func _handles(object) -> bool:
