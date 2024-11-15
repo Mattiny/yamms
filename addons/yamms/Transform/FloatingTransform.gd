@@ -1,5 +1,5 @@
 @tool
-extends PlaneBasedPlacement
+extends PlaneBasedTransform
 class_name FloatingTransform
 
 var min_max_height : float = 0
