@@ -21,11 +21,10 @@ func generate_rotation():
 	super.generate_rotation()
 	
 	normal_rotation = Vector3(
-		rad_to_deg(asin(deg_to_rad(normal_rotation.z))), 
-		0.0, 
-		-1.0 * rad_to_deg(asin(deg_to_rad(normal_rotation.x)))
+		asin(normal_rotation.z), 
+		asin(normal_rotation.x), 
+		0.0
 	) * normal_influence
-	
 
 	var rotation_quaternion = Quaternion().from_euler(rotation)
 	var normal_rotation_quaternion = Quaternion().from_euler(normal_rotation)
