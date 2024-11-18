@@ -27,6 +27,7 @@ class_name MultiScatterExclude
 
 # Check if the point is inside the polygon 
 func is_point_in_polygon(point : Vector2):
+
 	var global_pos = point - Vector2(global_position.x, global_position.z)
 	var nr_points = curve.get_point_count ()
 	var polygon = []

@@ -106,15 +106,18 @@ func generate_scale():
 		)
 	
 # interface function. Implementation in specific instance.
-func generate_transform():
+func generate_trasform():
 	pass
-	
+		
 # Helper function to create a transform for the MultiMesh instance.
 func create_transform(pos : Vector3, rotation : Vector3, scale : Vector3):
-	var transform = Transform3D(Basis(), Vector3())\
-		.rotated(Vector3.RIGHT, rotation.x)\
-		.rotated(Vector3.FORWARD, rotation.y)\
-		.rotated(Vector3.UP, rotation.z)\
-		.scaled(scale)\
-		.translated(pos)
+	var basis = Basis().rotated(Vector3.UP, rotation.z)\
+					.rotated(Vector3.RIGHT, rotation.x)\
+					.rotated(Vector3.FORWARD, rotation.y)\
+					.scaled(scale)
+	
+	#basis.scaled(scale)  # Skaliere die Rotationsbasis
+	
+	var transform = Transform3D(basis, pos)  # Setze die Basis und Position direkt
+	
 	return transform

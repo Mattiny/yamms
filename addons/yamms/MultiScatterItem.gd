@@ -88,7 +88,7 @@ func generate(
 	var placement = _get_placement()
 	if placement != null:
 
-		_debug("PlacementMode: " + placement.get_class())
+		_debug("PlacementMode found.")
 		_prepare_multimesh()
 
 		placement.debug_messages = debug_messages
@@ -100,18 +100,16 @@ func generate(
 		_debug("Setting global_position: %s" %global_position)
 		placement.ms_global_position = global_position
 		placement.space = space
-		_debug("---Exclude: %s" %excludes_list.size())
 		placement.exclude_list = excludes_list
 		placement.generate()
 	else:
-		_debug("No placement set")
+		_debug("No PlacementMode set")
 
 
 
 func _get_placement() -> PlacementMode:
 	for child in get_children():
 		if child is PlacementMode:
-			_debug("is PlacementMode")
 			return child
 	return null
 			

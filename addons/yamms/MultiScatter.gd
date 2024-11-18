@@ -67,8 +67,6 @@ func do_generate():
 	_debug("Starting to generate.")
 	_debug("Amount: %s" %amount)
 	_debug("Seed: %s" %seed)
-
-	_debug("Children: %s" % get_child_count())
 	
 	# init RandomNumberGenerator for placing the MultiMeshes randomly.
 	var random = RandomNumberGenerator.new()
@@ -77,7 +75,7 @@ func do_generate():
 
 	for child in self.get_children():
 		if child is MultiScatterItem:
-			_debug("is MultiScatterItem: " + child.get_class())
+			_debug("Found MultiScatterItem.")
 			child.debug_messages = debugMessages
 			child.amount = amount
 			child.random = random
@@ -99,7 +97,7 @@ func get_excludes() -> Array[MultiScatterExclude]:
 		if child is MultiScatterExclude:
 			excludes.append(child)
 			
-	_debug("---Exclude: %s" %excludes.size())
+	_debug("Exclude array contains  %s elements." %excludes.size())
 	return excludes
 	
 	# Iterate through each MultiScatterItem entry and generate
