@@ -2,6 +2,12 @@
 extends Node
 class_name MultiScatterTransform
 
+var global_position : Vector3
+
+var debug_messages : bool = false : set = _set_debug
+func _set_debug(debug) :
+	debug_messages = debug
+
 # Random rotation variables
 var random_rotation : bool = false : set = set_random_rotation
 func set_random_rotation(value : bool):
@@ -87,6 +93,17 @@ func generate_rotation():
 			generate_random(min_rotation.y, max_rotation.y),
 			generate_random(min_rotation.z, max_rotation.z)
 		)
+
+func do_transform(index : int, pos : Vector3, rot : Vector3, sc : Vector3):
+	var transform : Transform3D = create_transform(
+						pos,
+						rot,
+						sc
+					)
+					
+	multimesh_item.set_instance_transform(index, transform)
+
+
 		
 # Generate random scale in the bounds of min/max scale
 func generate_scale():

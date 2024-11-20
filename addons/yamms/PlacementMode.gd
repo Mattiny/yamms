@@ -87,7 +87,7 @@ func set_curve(crv : Curve3D):
 	
 
 var mstransform : MultiScatterTransform : set = _set_multiscatter_transform
-func _set_multiscatter_transform(value):
+func _set_multiscatter_transform(value : MultiScatterTransform):
 	mstransform = value
 	
 var ms_global_position : Vector3

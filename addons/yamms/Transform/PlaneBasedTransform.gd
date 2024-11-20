@@ -39,13 +39,8 @@ var current_index
 
 var exclude_list : Array[MultiScatterExclude]
 var specific_exclude_list : Array[MultiScatterExclude]
-var global_position : Vector3
+
 var normal_rotation : Vector3
-
-
-var debug_messages : bool = false : set = _set_debug
-func _set_debug(debug) :
-	debug_messages = debug
 
 func _debug(message):
 	if debug_messages:
@@ -159,15 +154,7 @@ func generate_plane_positions():
 					do_transform(index, position, rotation, scale)
 				
 					
-func do_transform(index : int, pos : Vector3, rot : Vector3, sc : Vector3):
-	var transform : Transform3D = create_transform(
-						pos,
-						rot,
-						sc
-					)
-					
-	multimesh_item.set_instance_transform(index, transform)
-	_debug("Done.")
+
 	
 	
 func generate_transform():
