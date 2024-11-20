@@ -41,6 +41,7 @@ func _enter_tree():
 	add_custom_type("PlacmentMode", "Node3D", PlacementMode, preload("iconScatterItem.png"))
 	add_custom_type("PMFloating", "PlacementMode", PMFloating, preload("iconScatterItem.png"))
 	add_custom_type("PMFlat", "PlacementMode", PMFlat, preload("iconScatterItem.png"))
+	add_custom_type("PMPolygon", "PlacementMode", PMPolygon, preload("iconScatterItem.png"))
 	add_custom_type("PMDropOnCollider", "PlacementMode", PMDropOnCollider, preload("iconScatterItem.png"))
 	
 	
@@ -62,6 +63,7 @@ func _exit_tree():
 	remove_custom_type("PMFloating")
 	remove_custom_type("PMFlat")
 	remove_custom_type("PMDropOnCollider")
+	remove_custom_type("PMPolygon")
 	remove_custom_type("PlacementMode")
 
 	_gui_toolbar.visible = false
