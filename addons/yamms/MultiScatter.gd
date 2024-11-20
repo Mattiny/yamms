@@ -45,22 +45,36 @@ var _sum_proportion = 0
 # shall be dropped on floor.
 
 # Physics Space to perform the raycast
-@onready var _space: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
+var _space: PhysicsDirectSpaceState3D = null
 
 
 
 @export_group("")
 @export var debugMessages : bool
-
+var shall_generate = false
 
 func _ready():
 	self.curve_changed.connect(_on_curve_changed)
-
+	
+func get_space_state() -> PhysicsDirectSpaceState3D:
+	if _space == null:
+		_space = get_world_3d().direct_space_state
+	return _space
+	
+	
 # Helper function for debugging.	
 func _debug(message):
 	if debugMessages:
 		print("YAMMS: MultiScatter:  %s"  %message)
 
+func _physics_process(delta):
+	if shall_generate:
+		do_generate()
+		shall_generate = false
+
+func generate():
+	shall_generate = true
+	
 
 # Generate the MultiScatter
 func do_generate():
@@ -84,7 +98,7 @@ func do_generate():
 
 			child.generate(
 				global_position,
-				_space
+				get_space_state()
 			)
 		else:
 			_debug("is Not MultiScatterItem: " + child.get_class())

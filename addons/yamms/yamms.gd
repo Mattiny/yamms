@@ -88,4 +88,4 @@ func _make_visible(visible : bool):
 # Toolbar generate button has been pressed. So: Generate	
 func _on_generate_button_pressed():
 	if _selected_scatter != null:
-		_selected_scatter.do_generate()
+		_selected_scatter.generate()
