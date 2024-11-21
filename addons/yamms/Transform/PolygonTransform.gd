@@ -2,11 +2,36 @@
 extends MultiScatterTransform
 class_name PolygonTransform
 
+var exclude_list : Array[MultiScatterExclude]
+var specific_exclude_list : Array[MultiScatterExclude]
+
+
 func _debug(message):
 	if debug_messages:
 		print("YAMMS: PolygonTransform:  " + message)
+		
+var rot_angle : float = 0.0
 
 var randomize_steps = false
+
+func align_rotation_to_curve(distance : float):
+	var tangent_offset : float = 0.01
+	var current_pos = position  # Position ist bereits der Punkt auf der Kurve
+	var step_ahead = curve.sample_baked(distance + tangent_offset)
+	
+	var forward = (step_ahead - current_pos).normalized()
+	
+	var up = curve.sample_baked_up_vector(distance).normalized()
+	
+	var sideways = up.cross(forward).normalized()
+	
+	basis = Basis(sideways, up, forward)
+#	basis.y = up
+#	basis.x = sideways
+#	basis.z = -forward
+	#rotation = basis.get_euler()
+	
+
 
 func generate_transform():
 	
@@ -15,28 +40,59 @@ func generate_transform():
 
 	var step = length / (amount - 1)
 	
-	for index in range(amount):
+	var valid_data : Array[Dictionary]  = []
 
-		# Distance determines the position of the spawned object on the polygon
-		# from the beginning (0) up to the end of the polybon (length).
-		# if Randomized: The object shall spawn randomly somewhere in between.
-		# if not rendomized: The object shall spawn and fixed position (steps)
-		var distance : float
-		if randomize_steps:
-			distance = generate_random(0, length)
-		else:
-			distance = step * index
+	for index in range(amount):
+		_debug("Setting position index %s" %index)
+		var distance = step * index
 		position = curve.sample_baked(distance)
 		
-		# Generate scale depending on the Placement mode settings.
-		scale = Vector3(1.0, 1.0, 1.0)
-		generate_scale()
-		
-		# Generate rotation depending on the Placement mode settings.
-		rotation = Vector3(0.0, 0.0, 0.0)
-		generate_rotation()
+		# Choose the exclude areas:
+		# If specific exclude areas are configured for this MultiScatterITem:
+		# use ist.
+		# Otherwise use all default exclude areas.
+		var my_exclude_array : Array[MultiScatterExclude]
+				
+		if specific_exclude_list.size() > 0:
+			my_exclude_array = specific_exclude_list
+			_debug("Specific exclude list")
+		else:
+			my_exclude_array = exclude_list 
+			_debug("Generel exclude list")
 
-		# position, scale and rotation has been generated. Set the transform
-		# for the multi-mesh instance.
-		_debug("Setting position on Polygon. Index = %s, Rotation = %s" %[index,rotation])
-		do_transform(index, position, rotation, scale)
+		var is_in_exclude : bool = false
+
+		for exclude_to_check:MultiScatterExclude in my_exclude_array:
+			if is_in_exclude == false:
+				var global_pos = Vector2(position.x, position.z) + Vector2(global_position.x, global_position.z)
+				is_in_exclude = exclude_to_check.is_point_in_polygon(global_pos)
+				_debug("Point is in exclude area: %s" %[is_in_exclude])
+
+		
+		if is_in_exclude == false:
+			
+			# Generate scale depending on the Placement mode settings.
+			scale = Vector3(1.0, 1.0, 1.0)
+			generate_scale()
+		
+			# Generate rotation depending on the Placement mode settings.
+			rotation = Vector3(0.0, 0.0, 0.0)
+			#generate_rotation()
+			
+			#align rotation to polygon curve
+			align_rotation_to_curve(distance)
+			
+			
+			var data = {
+				"position" :  position,
+				"basis" : basis
+			}
+			valid_data.append(data)
+	
+	multimesh_item.instance_count = valid_data.size()
+	for i in range(valid_data.size()):
+		var dict_entry = valid_data[i]
+		var pos = dict_entry["position"]
+		var bas = dict_entry["basis"]
+		do_transform(i, pos, bas)
+	

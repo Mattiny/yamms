@@ -37,7 +37,9 @@ func set_min_prop_scale(value : float):
 var scale_curve : Curve : set = set_scale_curve
 func set_scale_curve(value: Curve):
 	scale_curve = value
-
+	
+	
+var basis : Basis
 
 # Random unproportional scale variables
 var random_unprop_scale : bool = false : set = set_random_unprop_scale
@@ -94,14 +96,17 @@ func generate_rotation():
 			generate_random(min_rotation.z, max_rotation.z)
 		)
 
-func do_transform(index : int, pos : Vector3, rot : Vector3, sc : Vector3):
-	var transform : Transform3D = create_transform(
-						pos,
-						rot,
-						sc
+
+func do_transform(index : int, pos : Vector3, basis : Basis):
+	var transform : Transform3D = create_transform_by_basis(
+						basis,
+						pos
 					)
-					
 	multimesh_item.set_instance_transform(index, transform)
+
+func vector_to_basis():
+	basis = Basis().from_euler(rotation)
+	basis = basis.scaled(scale)
 
 
 		
@@ -123,18 +128,10 @@ func generate_scale():
 		)
 	
 # interface function. Implementation in specific instance.
-func generate_trasform():
-	pass
+#func generate_trasform():
+#	pass
 		
-# Helper function to create a transform for the MultiMesh instance.
-func create_transform(pos : Vector3, rotation : Vector3, scale : Vector3):
-	var basis = Basis().rotated(Vector3.UP, rotation.z)\
-					.rotated(Vector3.RIGHT, rotation.x)\
-					.rotated(Vector3.FORWARD, rotation.y)\
-					.scaled(scale)
-	
-	#basis.scaled(scale)  # Skaliere die Rotationsbasis
-	
-	var transform = Transform3D(basis, pos)  # Setze die Basis und Position direkt
-	
+func create_transform_by_basis(basis: Basis, position : Vector3):
+	var transform = Transform3D(basis, position)
 	return transform
+

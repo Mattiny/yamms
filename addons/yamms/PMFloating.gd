@@ -24,7 +24,7 @@ extends PlacementMode
 class_name PMFloating
 
 
-@export_group("Excludes")
+
 
 @export var min_max_height : float = 50
 

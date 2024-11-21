@@ -102,9 +102,9 @@ func generate(
 		placement.space = space
 		placement.exclude_list = excludes_list
 		placement.generate()
+
 	else:
 		_debug("No PlacementMode set")
-
 
 
 func _get_placement() -> PlacementMode:
@@ -113,15 +113,6 @@ func _get_placement() -> PlacementMode:
 			return child
 	return null
 			
-	
-
-# sets the transform of one instance of the multimesh
-# - index - The index of the mesh
-# - transform - The transform containing position, rotation and scale.
-#func do_transform(index : int, transform : Transform3D):
-
-#	self.multimesh.set_instance_transform(index, transform)
-	#self.multimesh.set_instance_transform(index, Transform3D(Basis(), pos))
 	
 func _get_configuration_warnings() -> PackedStringArray:
 	if not self.multimesh or not self.multimesh.mesh:

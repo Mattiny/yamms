@@ -2,7 +2,8 @@
 extends PlacementMode
 class_name PMPolygon
 
-@export var randomize_steps = true
+@export_group("Excludes")
+@export var exclude : Array[MultiScatterExclude] = []
 
 func _debug(message):
 	if debug_messages:
@@ -17,7 +18,8 @@ func generate() :
 	mstransform.random = random
 	mstransform.curve = curve
 	mstransform.amount =amount
-	mstransform.randomize_steps = randomize_steps
+	mstransform.exclude_list = exclude_list
+	mstransform.specific_exclude_list = exclude
 	
 	mstransform.random_rotation = randomize_rotation
 	mstransform.max_rotation = max_random_rotation

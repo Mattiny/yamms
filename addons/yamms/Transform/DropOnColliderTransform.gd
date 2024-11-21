@@ -22,13 +22,14 @@ func generate_rotation():
 	
 	normal_rotation = Vector3(
 		direction.y * -1 * asin(normal_rotation.z ),
-		direction.y * -1 * asin(normal_rotation.x ), 
-		0.0
+		0.0, 
+		direction.y * asin(normal_rotation.x )
 	) * normal_influence 
 	
 	var rotation_quaternion = Quaternion().from_euler(rotation)
 	var normal_rotation_quaternion = Quaternion().from_euler(normal_rotation)
 	var combined_quaternion = normal_rotation_quaternion * rotation_quaternion
+
 	rotation = Basis(combined_quaternion).get_euler()
 	
 func generate_height() -> bool:
