@@ -5,6 +5,7 @@ class_name PolygonTransform
 var exclude_list : Array[MultiScatterExclude]
 var specific_exclude_list : Array[MultiScatterExclude]
 var randomize_steps = false
+var thickness : float = 0
 
 
 func _debug(message):
@@ -108,6 +109,8 @@ func generate_transform():
 				#align rotation to polygon curve
 				align_rotation_to_curve(distance)
 				
+				if thickness > 0:
+					assign_thickness()
 				
 				var data = {
 					"position" :  position,
@@ -124,3 +127,7 @@ func generate_transform():
 		var bas = dict_entry["basis"]
 		do_transform(i, pos, bas)
 	
+func assign_thickness():
+	var axis_sideways = basis.x.normalized()
+	var actual_thickness = generate_random(-thickness, thickness)
+	position = position + (axis_sideways * actual_thickness)

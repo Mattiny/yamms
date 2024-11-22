@@ -3,6 +3,7 @@ extends PlacementMode
 class_name PMPolygon
 
 @export var random_steps = false
+@export_range(0, 5) var thickness : float = 0.3
 
 @export_group("Excludes")
 @export var exclude : Array[MultiScatterExclude] = []
@@ -21,6 +22,7 @@ func generate() :
 	mstransform.randomize_steps = random_steps
 	mstransform.curve = curve
 	mstransform.amount =amount
+	mstransform.thickness = thickness
 	mstransform.exclude_list = exclude_list
 	mstransform.specific_exclude_list = exclude
 	
