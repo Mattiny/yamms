@@ -9,8 +9,8 @@ var specific_exclude_list : Array[MultiScatterExclude]
 func _debug(message):
 	if debug_messages:
 		print("YAMMS: PolygonTransform:  " + message)
-		
-var rot_angle : float = 0.0
+	
+
 
 var randomize_steps = false
 
@@ -20,16 +20,12 @@ func align_rotation_to_curve(distance : float):
 	var step_ahead = curve.sample_baked(distance + tangent_offset)
 	
 	var forward = (step_ahead - current_pos).normalized()
-	
 	var up = curve.sample_baked_up_vector(distance).normalized()
-	
 	var sideways = up.cross(forward).normalized()
 	
-	basis = Basis(sideways, up, forward)
-#	basis.y = up
-#	basis.x = sideways
-#	basis.z = -forward
-	#rotation = basis.get_euler()
+	var alignment_basis = Basis(sideways, up, forward)
+
+	basis *= alignment_basis
 	
 
 
@@ -70,14 +66,13 @@ func generate_transform():
 
 		
 		if is_in_exclude == false:
+			basis = Basis()
 			
 			# Generate scale depending on the Placement mode settings.
-			scale = Vector3(1.0, 1.0, 1.0)
 			generate_scale()
 		
 			# Generate rotation depending on the Placement mode settings.
-			rotation = Vector3(0.0, 0.0, 0.0)
-			#generate_rotation()
+			generate_rotation()
 			
 			#align rotation to polygon curve
 			align_rotation_to_curve(distance)

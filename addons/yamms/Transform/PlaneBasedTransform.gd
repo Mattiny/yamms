@@ -143,14 +143,10 @@ func generate_plane_positions():
 				is_point_in_polygon = generate_height()
 				
 				if is_point_in_polygon:
-
-					scale = Vector3(1.0, 1.0, 1.0)
+					basis = Basis()
 					generate_scale()
 		
-					rotation = Vector3(0.0, 0.0, 0.0)
-
 					generate_rotation()
-					vector_to_basis()
 
 					do_transform(
 						index, position, basis

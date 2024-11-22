@@ -25,12 +25,9 @@ func generate_rotation():
 		0.0, 
 		direction.y * asin(normal_rotation.x )
 	) * normal_influence 
-	
-	var rotation_quaternion = Quaternion().from_euler(rotation)
-	var normal_rotation_quaternion = Quaternion().from_euler(normal_rotation)
-	var combined_quaternion = normal_rotation_quaternion * rotation_quaternion
 
-	rotation = Basis(combined_quaternion).get_euler()
+	var normal_rotation_quaternion = Quaternion().from_euler(normal_rotation)
+	basis = Basis(normal_rotation_quaternion) * basis
 	
 func generate_height() -> bool:
 	_debug("Raycasting for height information.")

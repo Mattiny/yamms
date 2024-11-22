@@ -55,14 +55,8 @@ func set_min_unprop_scale(value : Vector3):
 	min_unprop_scale = value
 
 
-
-
-
 # Actual position / scale / rotation
 var position : Vector3
-var scale : Vector3
-var rotation : Vector3
-	
 	
 # Sets the curve of the MultiScatter
 var curve : Curve3D : set = set_curve
@@ -89,13 +83,20 @@ func generate_random(min, max):
 
 # Generate random rotation in the bounds of min/max rotation	
 func generate_rotation():
+	var rotation : Vector3
 	if random_rotation:
 		rotation = Vector3(
 			generate_random(min_rotation.x, max_rotation.x),
 			generate_random(min_rotation.y, max_rotation.y),
 			generate_random(min_rotation.z, max_rotation.z)
 		)
-
+		
+			
+		var rotation_quaternion = Quaternion().from_euler(rotation)
+		basis *= Basis(rotation_quaternion)
+	
+		
+		
 
 func do_transform(index : int, pos : Vector3, basis : Basis):
 	var transform : Transform3D = create_transform_by_basis(
@@ -103,15 +104,10 @@ func do_transform(index : int, pos : Vector3, basis : Basis):
 						pos
 					)
 	multimesh_item.set_instance_transform(index, transform)
-
-func vector_to_basis():
-	basis = Basis().from_euler(rotation)
-	basis = basis.scaled(scale)
-
-
-		
+	
 # Generate random scale in the bounds of min/max scale
 func generate_scale():
+	var scale
 	if random_prop_scale:
 		if scale_curve == null:
 			var scale_nr :float = generate_random(min_prop_scale, max_prop_scale)
@@ -126,12 +122,9 @@ func generate_scale():
 			generate_random(min_unprop_scale.x, max_unprop_scale.x),
 			generate_random(min_unprop_scale.x, max_unprop_scale.x)
 		)
+	basis = basis.scaled(scale)
 	
-# interface function. Implementation in specific instance.
-#func generate_trasform():
-#	pass
 		
 func create_transform_by_basis(basis: Basis, position : Vector3):
 	var transform = Transform3D(basis, position)
 	return transform
-
