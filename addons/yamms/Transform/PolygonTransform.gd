@@ -4,6 +4,7 @@ class_name PolygonTransform
 
 var exclude_list : Array[MultiScatterExclude]
 var specific_exclude_list : Array[MultiScatterExclude]
+var randomize_steps = false
 
 
 func _debug(message):
@@ -11,8 +12,6 @@ func _debug(message):
 		print("YAMMS: PolygonTransform:  " + message)
 	
 
-
-var randomize_steps = false
 
 func align_rotation_to_curve(distance : float):
 	var tangent_offset : float = 0.01
@@ -40,7 +39,12 @@ func generate_transform():
 
 	for index in range(amount):
 		_debug("Setting position index %s" %index)
-		var distance = step * index
+		
+		var distance 
+		if randomize_steps:
+			distance = generate_random(0, length) # randomized position on curve
+		else:
+			distance = step * index # fix step position on curve
 		position = curve.sample_baked(distance)
 		
 		# Choose the exclude areas:
@@ -56,33 +60,62 @@ func generate_transform():
 			my_exclude_array = exclude_list 
 			_debug("Generel exclude list")
 
-		var is_in_exclude : bool = false
-
-		for exclude_to_check:MultiScatterExclude in my_exclude_array:
-			if is_in_exclude == false:
-				var global_pos = Vector2(position.x, position.z) + Vector2(global_position.x, global_position.z)
-				is_in_exclude = exclude_to_check.is_point_in_polygon(global_pos)
-				_debug("Point is in exclude area: %s" %[is_in_exclude])
-
+		var found_in_exclude : bool = false
+		var check_completed : bool = false
+		var attempts : int = 0 # Nr of attempts to place mesh inside of the polygon
 		
-		if is_in_exclude == false:
-			basis = Basis()
-			
-			# Generate scale depending on the Placement mode settings.
-			generate_scale()
+		while not found_in_exclude and not check_completed:
+			attempts += 1
+			_debug("Checking position. Attempt %s" %attempts)
+			if attempts == 100:
+				var message = "Cannot drop MultiMesh. Please check: " \
+					+ "1) Is the whole polygon hidden by an exclude area? " 
+				_debug(message)
+				push_warning(message)
+				return
+			else:
+				for exclude_to_check:MultiScatterExclude in my_exclude_array:
+					if found_in_exclude == false:
+						var global_pos = Vector2(position.x, position.z) + Vector2(global_position.x, global_position.z)
+						found_in_exclude = exclude_to_check.is_point_in_polygon(global_pos)
+				_debug("Found in exclude: %s" %found_in_exclude)
+				if not randomize_steps:
+					_debug("Fix step size. Check completed.")
+					check_completed = true
+				else:
+					if found_in_exclude:
+						_debug("Found in exclude list. Generating new random position")
+						distance = generate_random(0, length) # randomized position on curve
+						position = curve.sample_baked(distance)
+						check_completed = true
+					else:
+						_debug("Not found in exclude list. Position is valid.")
+				
+				# loop got through all excludes. this makes the check completed
+				check_completed = true
 		
-			# Generate rotation depending on the Placement mode settings.
-			generate_rotation()
+			if not found_in_exclude:
+				_debug("Setting valid position.")
+				
+				basis = Basis()
+				
+				# Generate scale depending on the Placement mode settings.
+				generate_scale()
 			
-			#align rotation to polygon curve
-			align_rotation_to_curve(distance)
-			
-			
-			var data = {
-				"position" :  position,
-				"basis" : basis
-			}
-			valid_data.append(data)
+				# Generate rotation depending on the Placement mode settings.
+				generate_rotation()
+				
+				#align rotation to polygon curve
+				align_rotation_to_curve(distance)
+				
+				
+				var data = {
+					"position" :  position,
+					"basis" : basis
+				}
+				valid_data.append(data)
+			else:
+				_debug("No valid position. Ommiting position.")
 	
 	multimesh_item.instance_count = valid_data.size()
 	for i in range(valid_data.size()):
