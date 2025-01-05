@@ -1,6 +1,6 @@
 # MIT License
 # 
-# Copyright (c) 2023 Mattiny
+# Copyright (c) 2025 Mattiny
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# PlaneBasedTransform - interface Class for all transform activities which spawns the
+# multimesh instances in space on different algorithms depending on a plane defined
+# by a polygon.
+# The specific algorithm extends this class and implements the algorithm.
 @tool
 extends MultiScatterTransform
 class_name PlaneBasedTransform
@@ -37,23 +41,31 @@ var _polygon = []
 
 var current_index
 
+# List of Exclude areas which are assigned to this transform.
 var exclude_list : Array[MultiScatterExclude]
-var specific_exclude_list : Array[MultiScatterExclude]
 
-var normal_rotation : Vector3
+# The actual exclude area which is applied to this transform.
+# If "exclude_list" is empty (not assigned) all exclude areas underneath the
+# MultiScatter item are passed to the "specific_exclude_list".
+# If "exclude_list" is set (not empty), then only the exclude ares in exclude_list
+# are applied and set to "specific_exclude_list".
+var specific_exclude_list : Array[MultiScatterExclude]
 
 func _debug(message):
 	if debug_messages:
 		print("YAMMS: PlaneBasedTransform:  " + message)
 
 
-
+# Generate height. Nothing to do. 
 func generate_height() -> bool:
 	return false
 	
 func _check_polygon_nr() -> bool:
 	return (curve.get_point_count() > 2)
 
+# Calculates the plane borders depending on the polygon.
+# The plane is defined by the min/max x and z coordinates
+# the plane height is the average y  value of all points of the polygon.
 func _calc_plane_min_max() :
 	_avg_height = 0.0
 	_nrOfPoints = curve.get_point_count()
@@ -75,13 +87,37 @@ func _calc_plane_min_max() :
 	_debug("Plane min_x = %s, max_x = %s, min_z = %s, max_z = %s" % [_min_x, _max_x, _min_z, _max_z])
 	_debug("Plane height average: %s" %_avg_height)
 
-
+# Generates all position of the multimesh instances.
+# 1) A position inside the previously generated plane (_calc_plane_min_max) is 
+#    randomly generated.
+#    This is a first good guess that it might be inside the polygon.
+# 2) It is checked wether 
+#      - the generated position is inside the polygon
+#      - and the generated position is NOT inside an exclude area
+#    If so: this is the position to spawn the instance.
+#    Otherwise: The position is ommited and a new position is going to be
+#    calculted. Hopefully it is inside the polygon now.
+# 3) On a high failure rate (missed to generate a valid position 100 times) the
+#    whole process is aborted: No valid area is available to spawn the objects.
 func generate_plane_positions():
 	_debug("Generating plane position for %s elements." %amount)
 	
 	_debug("Excludelist: %s" %exclude_list.size())
 	_debug("Specific exclude list: %s" %specific_exclude_list.size())
 	
+	
+	# Choose the exclude areas:
+	# If specific exclude areas are configured for this MultiScatterITem:
+	# use ist.
+	# Otherwise use all default exclude areas.
+	var my_exclude_array : Array[MultiScatterExclude]
+				
+	if specific_exclude_list.size() > 0:
+		my_exclude_array = specific_exclude_list
+	else:
+		my_exclude_array = exclude_list 
+	
+	# Loop for each element to be spawned.
 	for index in amount:
 		current_index = index
 		var is_point_in_polygon = false
@@ -90,6 +126,8 @@ func generate_plane_positions():
 		var pos : Vector2 
 		while not is_point_in_polygon:
 			attempts += 1
+			
+			# Abort if 100 failures occured.
 			if attempts == 100:
 				var message = "Cannot drop MultiMesh. Please check: " \
 					+ "1) Is the polygon area large enough? " \
@@ -113,16 +151,7 @@ func generate_plane_positions():
 				
 				# Check if the position is NOT inside an exclude Polygon
 				
-				# Choose the exclude areas:
-				# If specific exclude areas are configured for this MultiScatterITem:
-				# use ist.
-				# Otherwise use all default exclude areas.
-				var my_exclude_array : Array[MultiScatterExclude]
-				
-				if specific_exclude_list.size() > 0:
-					my_exclude_array = specific_exclude_list
-				else:
-					my_exclude_array = exclude_list 
+
 					
 				for exclude_to_check:MultiScatterExclude in my_exclude_array:
 					if is_point_in_polygon:
@@ -151,8 +180,6 @@ func generate_plane_positions():
 					do_transform(
 						index, position, basis
 					)
-				
-					
 
 	
 	

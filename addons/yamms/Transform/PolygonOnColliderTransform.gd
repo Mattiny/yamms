@@ -20,17 +20,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# DropOnColliderTransform - Class for all transform activities which drops the
-# multimesh instances on collision objects (Collider).
+# PolygonOnColliderTransform - Distributes multimesh instances along a polygon
+# and then projects the instances onto a collision object.
+
 @tool
-extends PlaneBasedTransform
-class_name DropOnColliderTransform
+extends PolygonTransform
+class_name PolygonOnColliderTransform
 
 # collision Mask for the ray cast to spawn the objects.
 var collisionMask
 
 # Direction of the ray cast to spawn objects on collision object.
-# This transform class is plane based, so possible directions are up and down.
 var direction : Vector3
 
 # 3D space for the ray cast to spawn the objects.
@@ -44,20 +44,12 @@ var space
 var normal_influence : float
 
 # rotation of the spawned multimesh instance after applying the normal influence.
-var normal_rotation : Vector3
-
+var normal_rotation
 
 func _debug(message):
 	if debug_messages:
-		print("YAMMS: DropOnColliderTransform:  " + message)
-
-
-# Overwrite rotation: Additionally the normal influence must be assigned
-# This means: During the raycast to get the height of the mesh instance, the
-# oriantation of the surface (normal) will be saved. The spawned mesh instance
-# then aligns to the normal orientation.
-# The factor "normal_influence" defines how strong the normal orientation influences
-# the MultiMesh instance. 0 = no alignment at all, 1.0 = align exactly to the surface.
+		print("YAMMS: PolygonOnColliderTransform:  " + message)
+		
 func generate_rotation():
 	super.generate_rotation()
 	
@@ -69,22 +61,21 @@ func generate_rotation():
 
 	var normal_rotation_quaternion = Quaternion().from_euler(normal_rotation)
 	basis = Basis(normal_rotation_quaternion) * basis
-
 	
-# Generate the height.
-# - Pass all required data to the ray caster
-# - Ray caster does it's work
-# - get the calculated height and normal data from ray caster.
 func generate_height() -> bool:
+	_debug("Generating height")
 	var ray_caster = RayCaster.new()
 	ray_caster.debug_messages = debug_messages
 	ray_caster.collisionMask = collisionMask
 	ray_caster.space = space
 	ray_caster.position = position
+	_debug("Position: %s" %position)
 	ray_caster.global_position = global_position
+	_debug("Global Pos: %s" %global_position)
 	ray_caster.direction = direction
 	var returnValue = ray_caster.generate_height()
 	position = ray_caster.hit_position 
 	normal_rotation = ray_caster.normal_rotation
 	ray_caster.queue_free()
 	return returnValue
+	
