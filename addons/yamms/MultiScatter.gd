@@ -19,11 +19,12 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-@tool
-extends Path3D
 
 # MultiScatter is the main node of this plugin. It provides a Path3D (Polygon)
 # to set up the area where the MultiMeshes shall spawn.
+@tool
+extends Path3D
+
 class_name  MultiScatter
 
 @export_group("MultiScatter Settings")
@@ -34,9 +35,6 @@ class_name  MultiScatter
 # Seed for the RandomNumberGenerator. Setting up the seed makes the generated
 # positions of each mesh deterministical.
 @export var seed : int = 0
-
-# the min-max value how high / deep the meshes are floating (if floating)
-###@export var floating_min_max_y : float = 50.0
 
 # helper to calculate the proportion percentage.
 var _sum_proportion = 0
@@ -87,6 +85,7 @@ func do_generate():
 	random.state = 0	
 	random.set_seed(seed)
 
+	# Loop through all children of type MultiScatterItem
 	for child in self.get_children():
 		if child is MultiScatterItem:
 			_debug("Found MultiScatterItem.")
@@ -102,8 +101,6 @@ func do_generate():
 			)
 		else:
 			_debug("is Not MultiScatterItem: " + child.get_class())
-	
-	# check if Placement mode is set
 
 func get_excludes() -> Array[MultiScatterExclude]:
 	var excludes : Array[MultiScatterExclude] = []
@@ -114,61 +111,6 @@ func get_excludes() -> Array[MultiScatterExclude]:
 	_debug("Exclude array contains  %s elements." %excludes.size())
 	return excludes
 	
-	# Iterate through each MultiScatterItem entry and generate
-	# the positions for the MultiMesh instances.
-#	for entry in entries:
-		
-		# Instantiate the required PlacementMode.
-#		var pm : PlacementMode
-#		var placement_mode = entry["PlacementMode"]
-#	#	if placement_mode == PlacementMode.Mode.FLAT:
-#			pm = PMFlat.new(self)
-#			_debug("PlacementMode: FLAT")	
-#		elif placement_mode == PlacementMode.Mode.FLOATING:
-#			pm = PMFloating.new(self)
-#			_debug("PlacementMode: FLOATING")	
-#		elif placement_mode == PlacementMode.Mode.DROP_ON_FLOOR:
-#			pm = PMDropOnFloor.new(self)
-#			_debug("PlacementMode: DROP_ON_FLOOR")
-#		elif placement_mode == PlacementMode.Mode.DROP_ON_CEILING:
-#			pm = PMDropOnCeiling.new(self)
-#			_debug("PlacementMode: DROP_ON_Ceiling")
-#		elif placement_mode == PlacementMode.Mode.POLYGON:
-#			pm = PMPolygon.new(self)
-#			_debug("PlacementMode: POLYGON")		
-#		_debug("Calling PlacementMode.init_placement")
-		
-		# Initialize PladementMode with data.
-#		pm.init_placement(
-#			curve,
-#			collisionMask,
-#			debugMessages,
-#			random
-#		)
-	
-		# ..and generated
-#		_debug("Calling PlacementMode.do_generate")
-#		pm.do_generate(
-#			entry,
-#			amount,
-#			_sum_proportion,
-#			_get_exclude_data(),
-#			global_position, 
-#			_space
-#		)
-
-
-# Create the transform of the Mesh
-# - apply rotation, scale and position		
-#func _create_transform(pos : Vector3, rotation : Vector3, scale : Vector3):
-#	var transform = Transform3D(Basis(), Vector3())\
-#		.rotated(Vector3.RIGHT, rotation.x)\
-#		.rotated(Vector3.FORWARD, rotation.y)\
-#		.rotated(Vector3.UP, rotation.z)\
-#		.scaled(scale)\
-#		.translated(pos)
-#	return transform
-
 	
 func _get_exclude_data():
 	var result = []
@@ -184,7 +126,6 @@ func _count_scatter_items():
 	for child in get_children():
 		if child is MultiScatterItem:
 			found += 1
-##	
 	return found
 #
 # Configuration check: Do I have at least one MultiScatterItem as child?

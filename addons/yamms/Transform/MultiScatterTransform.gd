@@ -1,7 +1,36 @@
+# MIT License
+# 
+# Copyright (c) 2025 Mattiny
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# MultiScatterTransform - interface Class for all transform activities which spawns the
+# multimesh instances in space on different algorithms.
+# The specific algorithm extends this class and implements the algorithm.
 @tool
 extends Node
 class_name MultiScatterTransform
 
+# Global space - the actual position of the Multiscatter object.
+# Node: the position of the spawned multimesh instance is relative to the
+# global_position of the multiscatter. Therefore the global_position is required
+# to be bassed to the MultiScatterTransform algorithm.
 var global_position : Vector3
 
 var debug_messages : bool = false : set = _set_debug
@@ -38,7 +67,7 @@ var scale_curve : Curve : set = set_scale_curve
 func set_scale_curve(value: Curve):
 	scale_curve = value
 	
-	
+# Transformation basis.
 var basis : Basis
 
 # Random unproportional scale variables
@@ -91,13 +120,12 @@ func generate_rotation():
 			generate_random(min_rotation.z, max_rotation.z)
 		)
 		
-			
 		var rotation_quaternion = Quaternion().from_euler(rotation)
 		basis *= Basis(rotation_quaternion)
 	
 		
-		
-
+# Do the transform. After calculating position, scale and rotation
+# assign the calculated transform to the specific multimesh instance.
 func do_transform(index : int, pos : Vector3, basis : Basis):
 	var transform : Transform3D = create_transform_by_basis(
 						basis,
@@ -122,9 +150,11 @@ func generate_scale():
 			generate_random(min_unprop_scale.x, max_unprop_scale.x),
 			generate_random(min_unprop_scale.x, max_unprop_scale.x)
 		)
+	else:
+		scale = Vector3(1, 1, 1)
 	basis = basis.scaled(scale)
 	
-		
+# Helper. Create the transformation object.
 func create_transform_by_basis(basis: Basis, position : Vector3):
 	var transform = Transform3D(basis, position)
 	return transform

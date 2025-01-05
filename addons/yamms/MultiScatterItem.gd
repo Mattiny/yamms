@@ -30,13 +30,8 @@ class_name MultiScatterItem
 
 
 
-# Proportion how many mesh instances shall be placed. This is useful if a
-# MultiScatter has more than one MultiScatterItem. 
-#
-# From the proportion of this MultiScatterItem and the proportion of other 
-# MultiScatterItem the percentage of each MultiScatterItem will be calculated. 
-# Then the percentage of the MultiScatter amount results in the actual amount 
-# for this MultiScatterItem
+# Percentage how many mesh instances of this MultiScatterItem shall be placed. 
+# This is useful if a MultiScatter has more than one MultiScatterItem. 
 @export_range(0, 100) var percentage : float = 100 :
 	set(value):
 		percentage = value
