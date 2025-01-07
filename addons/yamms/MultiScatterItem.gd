@@ -92,6 +92,13 @@ func generate(
 		placement.curve = curve
 		placement.multimesh_item = multimesh
 		
+		if enableAdditionalScene == true:
+			placement.enableAdditionalScene = true
+			placement.targetNode = targetNode
+			placement.additionalScene = additionalScene
+		else:
+			placement.enableAdditionalScene = false
+		
 		_debug("Setting global_position: %s" %global_position)
 		placement.ms_global_position = global_position
 		placement.space = space
@@ -120,3 +127,13 @@ func _get_configuration_warnings() -> PackedStringArray:
 		if (_get_placement() == null):
 			return ["No placement mode as child node."]
 		return []
+
+
+# Clear target node in case "Additional Scene" is enabled and target
+# node is set up.
+func clear_target_node():
+	if enableAdditionalScene == true && targetNode != null:
+		_debug("Clear targetNode")
+		for child in targetNode.get_children():
+			targetNode.remove_child(child)
+			child.queue_free()

@@ -85,11 +85,19 @@ func do_generate():
 	random.state = 0	
 	random.set_seed(seed)
 
-	# Loop through all children of type MultiScatterItem
+	# Loop through all children of type MultiScatterItem to clear
+	# target nodes if they are configured.
+	for child in self.get_children():
+		if child is MultiScatterItem:
+			child.debug_messages = debugMessages
+			child.clear_target_node()
+
+	# Loop through all children of type MultiScatterItem to generate
+	# the multimesh instance.
 	for child in self.get_children():
 		if child is MultiScatterItem:
 			_debug("Found MultiScatterItem.")
-			child.debug_messages = debugMessages
+
 			child.amount = amount
 			child.random = random
 			child.curve = curve

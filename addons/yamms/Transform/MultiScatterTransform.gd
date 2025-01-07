@@ -36,6 +36,10 @@ var global_position : Vector3
 var debug_messages : bool = false : set = _set_debug
 func _set_debug(debug) :
 	debug_messages = debug
+	
+func _debug(message):
+	if debug_messages:
+		print("YAMMS: MultiScatterTransform:  " + message)
 
 # Random rotation variables
 var random_rotation : bool = false : set = set_random_rotation
@@ -109,6 +113,18 @@ func _set_random(randomInstance):
 	
 func generate_random(min, max): 
 	return random.randf_range(min, max)
+	
+	
+# Additional scene Data.
+
+var enableAdditionalScene = false
+
+#  TargetNode where the additional scene is going to be placed.
+var targetNode: Node3D
+
+#  The scene which is going to be placed as additional scene to the same
+#  position where the multimesh item is going to be placed.
+var additionalScene: PackedScene
 
 # Generate random rotation in the bounds of min/max rotation	
 func generate_rotation():
@@ -132,6 +148,13 @@ func do_transform(index : int, pos : Vector3, basis : Basis):
 						pos
 					)
 	multimesh_item.set_instance_transform(index, transform)
+
+	if enableAdditionalScene == true:
+		var additional_transform : Transform3D = create_transform_by_basis(
+			basis,
+			pos + global_position,
+		)
+		_place_additional_scene(additionalScene, targetNode, additional_transform)
 	
 # Generate random scale in the bounds of min/max scale
 func generate_scale():
@@ -158,3 +181,19 @@ func generate_scale():
 func create_transform_by_basis(basis: Basis, position : Vector3):
 	var transform = Transform3D(basis, position)
 	return transform
+	
+	
+func _place_additional_scene(additionalScene, targetNode : Node3D, transform):
+	if (additionalScene != null and targetNode != null):
+		_debug("Placing Additional Scene")
+	
+		var instance = additionalScene.instantiate()
+		instance.transform  = transform
+		
+		targetNode.add_child(instance)
+		
+		var root = targetNode.get_tree().get_edited_scene_root()
+		instance.set_owner(root)
+		instance.set_name(targetNode.get_name())
+	else:
+		_debug("Not placing Additional Scene. No targetNode and/or additionalScene is set.")

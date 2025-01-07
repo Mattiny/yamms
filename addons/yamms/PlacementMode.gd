@@ -50,6 +50,15 @@ enum scale_type_enum {None, Proportional, Unproportional}
 @export var max_unproportional_scale : Vector3 = Vector3(1, 1, 1)
 @export var min_unproportional_scale : Vector3 = Vector3(0.5, 0.5, 0.5)
 
+# Additional scene Data.
+var enableAdditionalScene : bool = false
+
+#  TargetNode where the additional scene is going to be placed.
+var targetNode: Node3D
+
+#  The scene which is going to be placed as additional scene to the same
+#  position where the multimesh item is going to be placed.
+var additionalScene: PackedScene
 
 
 var exclude_list : Array[MultiScatterExclude]

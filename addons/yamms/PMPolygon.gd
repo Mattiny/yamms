@@ -50,6 +50,11 @@ func generate() :
 	
 	mstransform.multimesh_item = multimesh_item
 
+	if enableAdditionalScene ==  true:
+		mstransform.enableAdditionalScene = true
+		mstransform.additionalScene = additionalScene
+		mstransform.targetNode = targetNode
+		
 	# generate
 	mstransform.generate_transform()
 	
