@@ -63,6 +63,18 @@ func set_curve(crv : Curve3D):
 	
 var excludes_list : Array[MultiScatterExclude]
 
+#  Average height of the polygon curve
+var _avg_height : float = 0.0
+
+# Number of points in the polygon.
+var _nrOfPoints : int
+
+var polygon_min : Vector3
+var polygon_max : Vector3
+
+# Array with the points of the polygon.
+var _polygon = []
+
 func _ready():
 	pass
 	
@@ -91,6 +103,19 @@ func generate(
 		placement.random = random
 		placement.curve = curve
 		placement.multimesh_item = multimesh
+		
+
+		#  Average height of the polygon curve
+		placement._avg_height = _avg_height
+
+		# Number of points in the polygon.
+		placement._nrOfPoints = _nrOfPoints
+
+		placement.polygon_min = polygon_min
+		placement.polygon_max = polygon_max
+
+		# Array with the points of the polygon.
+		placement._polygon = _polygon
 		
 		if enableAdditionalScene == true:
 			placement.enableAdditionalScene = true

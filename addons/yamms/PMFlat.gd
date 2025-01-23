@@ -26,7 +26,19 @@ class_name PMFlat
 @export_group("Excludes")
 @export var exclude : Array[MultiScatterExclude] = []
 
+var density_map_node : MeshInstance3D = null
 
+func _ready() -> void:
+	if not Engine.is_editor_hint():
+		return
+	_update_visuals()
+	
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_ENTER_TREE and Engine.is_editor_hint():
+		_update_visuals()
+	elif what == NOTIFICATION_EXIT_TREE and Engine.is_editor_hint():
+		_remove_visuals()	
+	
 func _debug(message):
 	if debug_messages:
 		print("YAMMS: PMFLat:  " + message)
@@ -46,7 +58,20 @@ func generate() :
 	mstransform.exclude_list = exclude_list
 	mstransform.specific_exclude_list = exclude
 	mstransform.global_position = ms_global_position
+
+	#  Average height of the polygon curve
+	mstransform._avg_height = _avg_height
+
+	# Number of points in the polygon.
+	mstransform._nrOfPoints = _nrOfPoints
+
+	mstransform.polygon_min = polygon_min
+	mstransform.polygon_max = polygon_max
+
+	# Array with the points of the polygon.
+	mstransform.polygon = _polygon
 	
+
 	# Pass scale information to transform
 	if random_scale_type == scale_type_enum.Proportional:
 		mstransform.random_prop_scale= true
@@ -76,3 +101,22 @@ func generate() :
 	
 	# delete Floating Transform
 	mstransform.queue_free()
+	
+
+func _update_visuals():
+	if density_map_node == null:
+		density_map_node = MeshInstance3D.new()
+		density_map_node.mesh = PlaneMesh.new()
+		
+		var material = StandardMaterial3D.new()
+		material.albedo_color = Color(1, 1, 1)
+		material.cull_mode = BaseMaterial3D.CULL_DISABLED
+		
+		density_map_node.material_override = material
+		add_child(density_map_node)
+	
+func _remove_visuals():
+	if density_map_node and density_map_node.is_inside_tree():
+		density_map_node.get_parent().remove_child(density_map_node)
+		density_map_node.queue_free()
+		density_map_node = null

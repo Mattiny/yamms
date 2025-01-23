@@ -149,7 +149,7 @@ func generate_transform():
 			var calculated_height = generate_height()
 
 			if(calculated_height):
-				_debug("Setting valigenerate_scaled position.")
+				_debug("Found valid position. Setting scale and rotation.")
 					
 				# Generate scale depending on the Placement mode settings.
 				generate_scale()

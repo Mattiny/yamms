@@ -126,6 +126,18 @@ var targetNode: Node3D
 #  position where the multimesh item is going to be placed.
 var additionalScene: PackedScene
 
+#  Average height of the polygon curve
+var _avg_height : float = 0.0
+
+# Number of points in the polygon.
+var _nrOfPoints : int
+
+var polygon_min : Vector3
+var polygon_max : Vector3
+
+# Array with the points of the polygon.
+var polygon = []
+
 # Generate random rotation in the bounds of min/max rotation	
 func generate_rotation():
 	var rotation : Vector3

@@ -103,5 +103,19 @@ var ms_global_position : Vector3
 
 var space
 
+
+
+#  Average height of the polygon curve
+var _avg_height : float = 0.0
+
+# Number of points in the polygon.
+var _nrOfPoints : int
+
+var polygon_min : Vector3 
+var polygon_max : Vector3
+
+# Array with the points of the polygon.
+var _polygon = []
+
 func generate() :
 	_debug("Generating")

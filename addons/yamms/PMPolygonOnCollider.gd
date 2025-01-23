@@ -48,6 +48,19 @@ func generate() :
 	mstransform.min_rotation = min_random_rotation
 	mstransform.global_position = ms_global_position
 	
+	#  Average height of the polygon curve
+	mstransform._avg_height = _avg_height
+
+	# Number of points in the polygon.
+	mstransform._nrOfPoints = _nrOfPoints
+
+	mstransform.polygon_min = polygon_min
+	mstransform.polygon_max = polygon_max
+
+	# Array with the points of the polygon.
+	mstransform.polygon = _polygon
+	
+	
 	if placement_direction == direction.Up:
 		ray_cast_direction = Vector3.UP
 	elif placement_direction == direction.Down:

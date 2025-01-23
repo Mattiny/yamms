@@ -47,6 +47,21 @@ var _space: PhysicsDirectSpaceState3D = null
 
 
 
+# Data about the polygon curve.
+
+#  Average height of the polygon curve
+var _avg_height : float = 0.0
+
+# Number of points in the polygon.
+var _nrOfPoints : int
+
+var polygon_min : Vector3 = Vector3(0, 0, 0)
+var polygon_max : Vector3 = Vector3(0, 0, 0)
+
+# Array with the points of the polygon.
+var _polygon = []
+
+
 @export_group("")
 @export var debugMessages : bool
 var shall_generate = false
@@ -80,6 +95,8 @@ func do_generate():
 	_debug("Amount: %s" %amount)
 	_debug("Seed: %s" %seed)
 	
+	_calc_plane_min_max()
+	
 	# init RandomNumberGenerator for placing the MultiMeshes randomly.
 	var random = RandomNumberGenerator.new()
 	random.state = 0	
@@ -92,6 +109,7 @@ func do_generate():
 			child.debug_messages = debugMessages
 			child.clear_target_node()
 
+			
 	# Loop through all children of type MultiScatterItem to generate
 	# the multimesh instance.
 	for child in self.get_children():
@@ -102,6 +120,19 @@ func do_generate():
 			child.random = random
 			child.curve = curve
 			child.excludes_list = get_excludes()
+			
+			#  Average height of the polygon curve
+			child._avg_height = _avg_height
+
+			# Number of points in the polygon.
+			child._nrOfPoints = _nrOfPoints
+
+			child.polygon_min = polygon_min
+			child.polygon_max = polygon_max
+
+			# Array with the points of the polygon.
+			child._polygon = _polygon
+
 
 			child.generate(
 				global_position,
@@ -156,3 +187,37 @@ func _get_configuration_warnings() -> PackedStringArray:
 		return_value.append("At least one MultiScatterItem is required.")
 		
 	return return_value
+
+
+# Calculates the plane borders depending on the polygon.
+# The plane is defined by the min/max x and z coordinates
+# the plane height is the average y  value of all points of the polygon.
+func _calc_plane_min_max() :
+	_nrOfPoints = curve.get_point_count()
+	
+	# set the initinal min max values.
+	if _nrOfPoints > 0:
+		polygon_min = Vector3(curve.get_point_position(0))
+		polygon_max = Vector3(curve.get_point_position(0))
+	
+	_polygon = []
+	for i in _nrOfPoints:
+		var point : Vector3 = curve.get_point_position(i)
+		_avg_height += point.y
+		_polygon.append(Vector2(point.x, point.z))
+		if point.x < polygon_min.x:
+			polygon_min.x = point.x
+		if point.x > polygon_max.x:
+			polygon_max.x = point.x
+		if point.z < polygon_min.z:
+			polygon_min.z = point.z
+		if point.z > polygon_max.z:
+			polygon_max.z = point.z
+		
+		if point.y < polygon_min.y:
+			polygon_min.y = point.y
+		if point.y > polygon_max.y:
+			polygon_max.y = point.y
+		
+		
+	_avg_height = _avg_height / _nrOfPoints

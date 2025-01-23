@@ -28,17 +28,6 @@
 extends MultiScatterTransform
 class_name PlaneBasedTransform
 
-# used for calculating the initial plane.
-var _min_x : float = 0.0
-var _max_x : float = 0.0
-var _min_z : float = 0.0
-var _max_z : float = 0.0
-var _avg_height : float = 0.0
-var _nrOfPoints :int = 0
-
-#Polygon
-var _polygon = []
-
 var current_index
 
 # List of Exclude areas which are assigned to this transform.
@@ -62,30 +51,6 @@ func generate_height() -> bool:
 	
 func _check_polygon_nr() -> bool:
 	return (curve.get_point_count() > 2)
-
-# Calculates the plane borders depending on the polygon.
-# The plane is defined by the min/max x and z coordinates
-# the plane height is the average y  value of all points of the polygon.
-func _calc_plane_min_max() :
-	_avg_height = 0.0
-	_nrOfPoints = curve.get_point_count()
-	_polygon = []
-	for i in _nrOfPoints:
-		var point : Vector3 = curve.get_point_position(i)
-		_avg_height += point.y
-		_polygon.append(Vector2(point.x, point.z))
-		if point.x < _min_x:
-			_min_x = point.x
-		if point.x > _max_z:
-			_max_x = point.x
-		if point.z < _min_z:
-			_min_z = point.z
-		if point.z > _max_z:
-			_max_z = point.z
-		
-	_avg_height = _avg_height / _nrOfPoints
-	_debug("Plane min_x = %s, max_x = %s, min_z = %s, max_z = %s" % [_min_x, _max_x, _min_z, _max_z])
-	_debug("Plane height average: %s" %_avg_height)
 
 # Generates all position of the multimesh instances.
 # 1) A position inside the previously generated plane (_calc_plane_min_max) is 
@@ -124,6 +89,9 @@ func generate_plane_positions():
 				
 		var attempts : int = 0 # Nr of attempts to place mesh inside of the polygon
 		var pos : Vector2 
+		
+		_debug("Polygon: %s" %polygon.size())
+			
 		while not is_point_in_polygon:
 			attempts += 1
 			
@@ -140,12 +108,13 @@ func generate_plane_positions():
 				return
 				
 			# Generate random 2D coordinates in the range of min max
-			var x = generate_random(_min_x, _max_x)
-			var z = generate_random(_min_z, _max_z)
-			pos = Vector2(x ,z)
+			var x = generate_random(polygon_min.x, polygon_max.x)
+			var z = generate_random(polygon_min.z, polygon_max.z)
+
+			pos = Vector2(x ,z) 
 			
 			# Check if the position is inside the polygon of the multiscatter.
-			is_point_in_polygon = Geometry2D.is_point_in_polygon(pos, _polygon)
+			is_point_in_polygon = Geometry2D.is_point_in_polygon(pos, polygon)
 			if is_point_in_polygon:
 				_debug("Point is in MultiScatter Polygon. Checking for excludes.")
 				
@@ -186,7 +155,6 @@ func generate_plane_positions():
 func generate_transform():
 	if _check_polygon_nr():
 		_debug("Generating Plane")
-		_calc_plane_min_max()
 		generate_plane_positions()
 		
 	else:
