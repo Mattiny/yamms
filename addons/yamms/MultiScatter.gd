@@ -132,6 +132,8 @@ func do_generate():
 
 			# Array with the points of the polygon.
 			child._polygon = _polygon
+			
+			child.ms_position = global_position
 
 
 			child.generate(

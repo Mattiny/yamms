@@ -37,16 +37,19 @@ func generate() :
 	mstransform.debug_messages = debug_messages
 	mstransform.random = random
 	mstransform.randomize_steps = random_steps
-	mstransform.curve = curve
 	mstransform.amount =amount
 	mstransform.thickness = thickness
 	mstransform.exclude_list = exclude_list
 	mstransform.specific_exclude_list = exclude
+	mstransform.curve = curve
 	
 	mstransform.random_rotation = randomize_rotation
 	mstransform.max_rotation = max_random_rotation
 	mstransform.min_rotation = min_random_rotation
-	mstransform.global_position = ms_global_position
+	
+	mstransform.ms_position = ms_position
+	mstransform.ms_item_position = ms_item_pos
+	mstransform.ms_pm_position = position
 	
 	#  Average height of the polygon curve
 	mstransform._avg_height = _avg_height

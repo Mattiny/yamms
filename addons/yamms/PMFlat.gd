@@ -26,18 +26,9 @@ class_name PMFlat
 @export_group("Excludes")
 @export var exclude : Array[MultiScatterExclude] = []
 
-var density_map_node : MeshInstance3D = null
 
-func _ready() -> void:
-	if not Engine.is_editor_hint():
-		return
-	_update_visuals()
+
 	
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_ENTER_TREE and Engine.is_editor_hint():
-		_update_visuals()
-	elif what == NOTIFICATION_EXIT_TREE and Engine.is_editor_hint():
-		_remove_visuals()	
 	
 func _debug(message):
 	if debug_messages:
@@ -47,17 +38,21 @@ func generate() :
 	_debug("Generating")
 	# create Flat Transform
 	mstransform = FlatTransform.new()
+	mstransform.placement = self
 	mstransform.debug_messages = debug_messages
 	mstransform.random = random
-	mstransform.curve = curve
 	mstransform.amount =amount
+	mstransform.curve = curve
 	
 	mstransform.random_rotation = randomize_rotation
 	mstransform.max_rotation = max_random_rotation
 	mstransform.min_rotation = min_random_rotation
 	mstransform.exclude_list = exclude_list
 	mstransform.specific_exclude_list = exclude
-	mstransform.global_position = ms_global_position
+
+	mstransform.ms_position = ms_position
+	mstransform.ms_item_position = ms_item_pos
+	mstransform.ms_pm_position = position
 
 	#  Average height of the polygon curve
 	mstransform._avg_height = _avg_height
@@ -102,21 +97,38 @@ func generate() :
 	# delete Floating Transform
 	mstransform.queue_free()
 	
-
-func _update_visuals():
-	if density_map_node == null:
-		density_map_node = MeshInstance3D.new()
-		density_map_node.mesh = PlaneMesh.new()
-		
-		var material = StandardMaterial3D.new()
-		material.albedo_color = Color(1, 1, 1)
-		material.cull_mode = BaseMaterial3D.CULL_DISABLED
-		
-		density_map_node.material_override = material
-		add_child(density_map_node)
 	
-func _remove_visuals():
-	if density_map_node and density_map_node.is_inside_tree():
-		density_map_node.get_parent().remove_child(density_map_node)
-		density_map_node.queue_free()
-		density_map_node = null
+func create_density_map_node():
+	density_map_node = MeshInstance3D.new()
+	density_map_node.mesh = PlaneMesh.new()
+		
+	var material = StandardMaterial3D.new()
+	if density_map:
+		material.albedo_texture = density_map
+	else:
+		material.albedo_color = Color(1, 1, 1)  # Standardfarbe (z. B. weiß)
+
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	
+	density_map_node.material_override = material
+	add_child(density_map_node)
+	
+	
+func remove_density_map():
+	density_map_node.get_parent().remove_child(density_map_node)
+	density_map_node.queue_free()
+	density_map_node = null
+	
+	
+func _update_material():
+	if not density_map_node:
+		return  # Falls das Mesh noch nicht existiert, gibt es nichts zu aktualisieren
+	var material = density_map_node.get_active_material(0)
+	if not material or not material is StandardMaterial3D:
+		material = StandardMaterial3D.new()
+		density_map_node.material_override = material
+	if density_map:
+		material.albedo_texture = density_map
+	else:
+		material.albedo_texture = null
+		material.albedo_color = Color(1, 1, 1)  # Standardfarbe

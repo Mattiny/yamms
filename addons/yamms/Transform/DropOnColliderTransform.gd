@@ -81,7 +81,7 @@ func generate_height() -> bool:
 	ray_caster.collisionMask = collisionMask
 	ray_caster.space = space
 	ray_caster.position = position
-	ray_caster.global_position = global_position
+	ray_caster.global_position = ms_position
 	ray_caster.direction = direction
 	var returnValue = ray_caster.generate_height()
 	position = ray_caster.hit_position 

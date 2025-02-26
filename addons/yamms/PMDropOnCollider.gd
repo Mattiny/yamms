@@ -48,16 +48,19 @@ func generate() :
 	_debug("Generating")
 	# create Flat Transform
 	mstransform = DropOnColliderTransform.new()
+	mstransform.placement = self
 	mstransform.debug_messages = debug_messages
 	mstransform.random = random
-	mstransform.curve = curve
 	mstransform.amount =amount
 	
 	mstransform.random_rotation = randomize_rotation
 	mstransform.max_rotation = max_random_rotation
 	mstransform.min_rotation = min_random_rotation
 	
-	mstransform.global_position = ms_global_position
+	mstransform.ms_position = ms_position
+	mstransform.ms_item_position = ms_item_pos
+	mstransform.ms_pm_position = position
+
 	mstransform.exclude_list = exclude_list
 	mstransform.specific_exclude_list = exclude
 	
@@ -112,3 +115,37 @@ func generate() :
 	
 	# delete Floating Transform
 	mstransform.queue_free()
+	
+	
+func create_density_map_node():
+	density_map_node = Decal.new()
+	density_map_node.texture_albedo = density_map if density_map else _create_white_texture()
+	#density_map_node.transform = Transform3D(Basis(Vector3(1, 0, 0), deg_to_rad(-90)), Vector3(0, 0, 0))  # Nach unten projizieren
+	add_child(density_map_node)
+	
+func _create_white_texture() -> Texture2D:
+	var img := Image.create(1, 1, false, Image.FORMAT_RGBA8)
+	img.fill(Color.FIREBRICK)
+	var tex := ImageTexture.create_from_image(img)
+	return tex
+	
+func remove_density_map():
+	density_map_node.get_parent().remove_child(density_map_node)
+	density_map_node.queue_free()
+	density_map_node = null
+	
+func get_plane_size() -> Vector2:
+	_debug("---Getting Plane size.")
+	if density_map_node is Decal:
+		var returnValue = Vector2(density_map_node.size.x, density_map_node.size.z)
+		_debug("---Plane size: %s" %[returnValue])
+		return returnValue
+	return Vector2.ZERO
+	
+		
+func _update_material():
+	if density_map_node == null:
+		return
+
+	# Setze die richtige Textur (falls keine da ist, verwende eine weiße Textur)
+	density_map_node.texture_albedo = density_map if density_map else _create_white_texture()

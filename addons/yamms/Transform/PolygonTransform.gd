@@ -139,10 +139,12 @@ func generate_transform():
 		
 		for exclude_to_check:MultiScatterExclude in my_exclude_array:
 			if found_in_exclude == false:
-				var global_pos = Vector2(position.x, position.z) + Vector2(global_position.x, global_position.z)
+				var global_pos = Vector2(position.x, position.z) + Vector2(ms_position.x, ms_position.z)
 				found_in_exclude = exclude_to_check.is_point_in_polygon(global_pos)
 		_debug("Found in exclude: %s" %found_in_exclude)
 
+		var itemPos = placement.ms_item_position
+		position = Vector3(position.x - itemPos.x, position.y, position.z -itemPos.z)
 		if not found_in_exclude:
 
 			# Check if a valid height can be calculated.

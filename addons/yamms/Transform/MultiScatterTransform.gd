@@ -31,7 +31,9 @@ class_name MultiScatterTransform
 # Node: the position of the spawned multimesh instance is relative to the
 # global_position of the multiscatter. Therefore the global_position is required
 # to be bassed to the MultiScatterTransform algorithm.
-var global_position : Vector3
+var ms_position : Vector3
+var ms_item_position : Vector3
+var ms_pm_position : Vector3
 
 var debug_messages : bool = false : set = _set_debug
 func _set_debug(debug) :
@@ -71,6 +73,8 @@ var scale_curve : Curve : set = set_scale_curve
 func set_scale_curve(value: Curve):
 	scale_curve = value
 	
+var curve : Curve3D
+	
 # Transformation basis.
 var basis : Basis
 
@@ -91,10 +95,6 @@ func set_min_unprop_scale(value : Vector3):
 # Actual position / scale / rotation
 var position : Vector3
 	
-# Sets the curve of the MultiScatter
-var curve : Curve3D : set = set_curve
-func set_curve(crv : Curve3D):
-	curve = crv
 
 # amount of items to be generated
 var amount : int : set = _set_amount 
@@ -138,6 +138,8 @@ var polygon_max : Vector3
 # Array with the points of the polygon.
 var polygon = []
 
+var placement : PlacementMode
+
 # Generate random rotation in the bounds of min/max rotation	
 func generate_rotation():
 	var rotation : Vector3
@@ -164,7 +166,7 @@ func do_transform(index : int, pos : Vector3, basis : Basis):
 	if enableAdditionalScene == true:
 		var additional_transform : Transform3D = create_transform_by_basis(
 			basis,
-			pos + global_position,
+			pos ,
 		)
 		_place_additional_scene(additionalScene, targetNode, additional_transform)
 	

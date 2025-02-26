@@ -50,10 +50,10 @@ func generate_height() -> bool:
 	return false
 	
 func _check_polygon_nr() -> bool:
-	return (curve.get_point_count() > 2)
+	return (polygon.size() > 2)
 
 # Generates all position of the multimesh instances.
-# 1) A position inside the previously generated plane (_calc_plane_min_max) is 
+# 1) A position inside the priviously generated plane (_calc_plane_min_max) is 
 #    randomly generated.
 #    This is a first good guess that it might be inside the polygon.
 # 2) It is checked wether 
@@ -110,6 +110,7 @@ func generate_plane_positions():
 			# Generate random 2D coordinates in the range of min max
 			var x = generate_random(polygon_min.x, polygon_max.x)
 			var z = generate_random(polygon_min.z, polygon_max.z)
+			
 
 			pos = Vector2(x ,z) 
 			
@@ -119,15 +120,21 @@ func generate_plane_positions():
 				_debug("Point is in MultiScatter Polygon. Checking for excludes.")
 				
 				# Check if the position is NOT inside an exclude Polygon
+				var rotated_pos = pos.rotated(deg_to_rad(placement.rotation_degrees.y))
 				
-
-					
+				var global_pos = rotated_pos# + Vector2(ms_position.x, ms_position.z)
 				for exclude_to_check:MultiScatterExclude in my_exclude_array:
 					if is_point_in_polygon:
-						var global_pos = pos + Vector2(global_position.x, global_position.z)
 						var is_in_exclude = exclude_to_check.is_point_in_polygon(global_pos)
 						_debug("Point is in exclude area: %s on attempt %s." %[is_in_exclude, attempts])
 						is_point_in_polygon = not is_in_exclude
+				
+				# check if item is going to be placed according to density map.
+				if is_point_in_polygon:
+					
+					is_point_in_polygon = placement.should_spawn_at(pos.x , pos.y )
+					_debug("Density Map: %s : %s -> %s" %[global_pos.x, global_pos.y, is_point_in_polygon])
+					
 
 			else:
 				_debug("Point is not in MultiScatter Polygon on attempt %s. Check for excludes skipped." %attempts)
@@ -136,7 +143,8 @@ func generate_plane_positions():
 				_debug("Position: x=%s, y=%s is in polygon: %s" %[pos.x, pos.y, is_point_in_polygon])
 		
 				# Set up the the 3 required transform parameters:
-				position = Vector3(pos.x, _avg_height, pos.y)
+				var itemPos = placement.ms_item_position
+				position = Vector3(pos.x - itemPos.x, _avg_height, pos.y -itemPos.z)
 		
 				is_point_in_polygon = generate_height()
 				
@@ -150,7 +158,6 @@ func generate_plane_positions():
 						index, position, basis
 					)
 
-	
 	
 func generate_transform():
 	if _check_polygon_nr():

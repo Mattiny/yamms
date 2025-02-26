@@ -41,6 +41,8 @@ class_name MultiScatterItem
 @export var targetNode: Node3D
 @export var additionalScene: PackedScene
 
+var ms_position : Vector3
+
 # Debug messages on/off
 var debug_messages : bool = false : set = set_debug
 func set_debug(debug : bool):
@@ -101,10 +103,10 @@ func generate(
 		placement.debug_messages = debug_messages
 		placement.amount = actual_amount
 		placement.random = random
-		placement.curve = curve
 		placement.multimesh_item = multimesh
+		placement.ms_item_pos = global_position
 		
-
+		placement.curve = curve
 		#  Average height of the polygon curve
 		placement._avg_height = _avg_height
 
@@ -124,8 +126,10 @@ func generate(
 		else:
 			placement.enableAdditionalScene = false
 		
-		_debug("Setting global_position: %s" %global_position)
-		placement.ms_global_position = global_position
+		placement.ms_position = ms_position
+		placement.ms_item_position = position
+		
+		
 		placement.space = space
 		placement.exclude_list = excludes_list
 		placement.generate()
