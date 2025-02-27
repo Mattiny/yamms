@@ -39,11 +39,12 @@ func _enter_tree():
 	add_custom_type("MultiScatterItem", "MultiMeshInstance3D", MultiScatterItem, preload("iconScatterItem.png"))
 	add_custom_type("MultiScatterExclude", "Path3D", MultiScatterExclude, preload("iconExclude.png"))
 	add_custom_type("PlacmentMode", "Node3D", PlacementMode, preload("iconScatterItem.png"))
-	add_custom_type("PMFloating", "PlacementMode", PMFloating, preload("iconScatterItem.png"))
-	add_custom_type("PMFlat", "PlacementMode", PMFlat, preload("iconScatterItem.png"))
+	add_custom_type("PlanedBasedPM", "PlacementMode", PMFlat, preload("iconScatterItem.png"))
+	add_custom_type("PMFloating", "PlaneBasedPM", PMFloating, preload("iconScatterItem.png"))
+	add_custom_type("PMFlat", "PlaneBasedPM", PMFlat, preload("iconScatterItem.png"))
 	add_custom_type("PMPolygon", "PlacementMode", PMPolygon, preload("iconScatterItem.png"))
 	add_custom_type("PMPolygonOnCollider", "PlacementMode", PMPolygon, preload("iconScatterItem.png"))
-	add_custom_type("PMDropOnCollider", "PlacementMode", PMDropOnCollider, preload("iconScatterItem.png"))
+	add_custom_type("PMDropOnCollider", "PlaneBasedPM", PMDropOnCollider, preload("iconScatterItem.png"))
 	
 	
 	# Set up the toolbar and hide it. (Toolbar = the generate button)

@@ -41,7 +41,31 @@ class_name MultiScatterItem
 @export var targetNode: Node3D
 @export var additionalScene: PackedScene
 
+
+func _ready() -> void:
+	if not Engine.is_editor_hint():
+		return
+		
+	if Engine.is_editor_hint():
+		set_notify_transform(true)  # Aktiviert Transform-Änderungsbenachrichtigungen		
+func _set(property: StringName, value) -> bool:
+	if property == "rotation":
+		var new_value = value as Vector3
+		new_value.x = 0
+		new_value.z = 0
+		new_value.y = 0
+		return true  # Gibt an, dass die Eigenschaft gesetzt wurde
+	return false  # Standardverhalten für andere Properties beibehalten
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSFORM_CHANGED:
+		rotation.x = 0
+		rotation.y = 0
+		rotation.z = 0
+		
 var ms_position : Vector3
+var ms_rotation : float
 
 # Debug messages on/off
 var debug_messages : bool = false : set = set_debug
@@ -77,8 +101,6 @@ var polygon_max : Vector3
 # Array with the points of the polygon.
 var _polygon = []
 
-func _ready():
-	pass
 	
 func _debug(message):
 	if debug_messages:
@@ -104,7 +126,6 @@ func generate(
 		placement.amount = actual_amount
 		placement.random = random
 		placement.multimesh_item = multimesh
-		placement.ms_item_pos = global_position
 		
 		placement.curve = curve
 		#  Average height of the polygon curve
@@ -128,7 +149,8 @@ func generate(
 		
 		placement.ms_position = ms_position
 		placement.ms_item_position = position
-		
+		placement.ms_rotation = ms_rotation
+		placement.ms_item_rotation = rotation_degrees.y
 		
 		placement.space = space
 		placement.exclude_list = excludes_list

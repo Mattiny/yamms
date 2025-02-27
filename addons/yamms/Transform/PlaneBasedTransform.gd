@@ -120,9 +120,12 @@ func generate_plane_positions():
 				_debug("Point is in MultiScatter Polygon. Checking for excludes.")
 				
 				# Check if the position is NOT inside an exclude Polygon
-				var rotated_pos = pos.rotated(deg_to_rad(placement.rotation_degrees.y))
+				var rotation_offset = -placement.ms_rotation
+
+				var rotated_pos = pos.rotated(deg_to_rad(rotation_offset))
+	
 				
-				var global_pos = rotated_pos + Vector2(ms_position.x, ms_position.z)
+				var global_pos = pos + Vector2(ms_position.x, ms_position.z)
 				for exclude_to_check:MultiScatterExclude in my_exclude_array:
 					if is_point_in_polygon:
 						var is_in_exclude = exclude_to_check.is_point_in_polygon(global_pos)
@@ -132,7 +135,7 @@ func generate_plane_positions():
 				# check if item is going to be placed according to density map.
 				if is_point_in_polygon:
 					
-					is_point_in_polygon = placement.should_spawn_at(pos.x , pos.y )
+					is_point_in_polygon = placement.should_spawn_at(rotated_pos.x , rotated_pos.y )
 					_debug("Density Map: %s : %s -> %s" %[global_pos.x, global_pos.y, is_point_in_polygon])
 					
 
@@ -144,7 +147,9 @@ func generate_plane_positions():
 		
 				# Set up the the 3 required transform parameters:
 				var itemPos = placement.ms_item_position
-				position = Vector3(pos.x - itemPos.x, _avg_height, pos.y -itemPos.z)
+				var rotation_offset = placement.ms_item_rotation
+				var rotated_pos = pos.rotated(deg_to_rad(rotation_offset))
+				position = Vector3(rotated_pos.x - itemPos.x, _avg_height, rotated_pos.y -itemPos.z)
 		
 				is_point_in_polygon = generate_height()
 				

@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 @tool
-extends PlacementMode
+extends PlaneBasedPM
 class_name PMFloating
 
 
@@ -53,7 +53,7 @@ func generate() :
 	mstransform.specific_exclude_list = exclude
 	
 	mstransform.ms_position = ms_position
-	mstransform.ms_item_position = ms_item_pos
+	mstransform.ms_item_position = ms_item_position
 	mstransform.ms_pm_position = position
 	
 	#  Average height of the polygon curve

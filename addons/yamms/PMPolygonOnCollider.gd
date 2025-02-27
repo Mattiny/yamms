@@ -48,7 +48,7 @@ func generate() :
 	mstransform.min_rotation = min_random_rotation
 	
 	mstransform.ms_position = ms_position
-	mstransform.ms_item_position = ms_item_pos
+	mstransform.ms_item_position = ms_item_position
 	mstransform.ms_pm_position = position
 	
 	#  Average height of the polygon curve
