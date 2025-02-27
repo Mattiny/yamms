@@ -122,7 +122,7 @@ func generate_plane_positions():
 				# Check if the position is NOT inside an exclude Polygon
 				var rotated_pos = pos.rotated(deg_to_rad(placement.rotation_degrees.y))
 				
-				var global_pos = rotated_pos# + Vector2(ms_position.x, ms_position.z)
+				var global_pos = rotated_pos + Vector2(ms_position.x, ms_position.z)
 				for exclude_to_check:MultiScatterExclude in my_exclude_array:
 					if is_point_in_polygon:
 						var is_in_exclude = exclude_to_check.is_point_in_polygon(global_pos)
