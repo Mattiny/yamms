@@ -34,6 +34,7 @@ func generate() :
 
 	# create Flat Transform
 	mstransform = PolygonOnColliderTransform.new()
+	mstransform.placement = self
 	mstransform.debug_messages = debug_messages
 	mstransform.random = random
 	mstransform.randomize_steps = random_steps
