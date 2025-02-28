@@ -144,7 +144,7 @@ func generate_transform():
 		_debug("Found in exclude: %s" %found_in_exclude)
 
 		var itemPos = placement.ms_item_position
-		position = Vector3(position.x - itemPos.x, position.y, position.z -itemPos.z)
+		position = Vector3(position.x - itemPos.x, position.y- itemPos.y, position.z -itemPos.z)
 		if not found_in_exclude:
 
 			# Check if a valid height can be calculated.
