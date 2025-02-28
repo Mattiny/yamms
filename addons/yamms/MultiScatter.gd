@@ -45,9 +45,6 @@ var _sum_proportion = 0
 # Physics Space to perform the raycast
 var _space: PhysicsDirectSpaceState3D = null
 
-var last_rotation := Vector3.ZERO 
-
-
 # Data about the polygon curve.
 
 #  Average height of the polygon curve
@@ -75,19 +72,24 @@ func _ready():
 		
 	if Engine.is_editor_hint():
 		set_notify_transform(true)  # Aktiviert Transform-Änderungsbenachrichtigungen
-		last_rotation = rotation  # Anfangswert speichern
+
+
+
+func _set(property: StringName, value) -> bool:
+	if property == "rotation":
+		var new_value = value as Vector3
+		new_value.x = 0
+		new_value.z = 0
+		new_value.y = 0
+		return true  # Gibt an, dass die Eigenschaft gesetzt wurde
+	return false  # Standardverhalten für andere Properties beibehalten
 
 
 func _notification(what: int) -> void:
-
 	if what == NOTIFICATION_TRANSFORM_CHANGED:
-		var new_rotation = rotation
-		# Prüfen, ob sich die Rotation verändert hat
-		if not last_rotation.is_equal_approx(new_rotation):
-			new_rotation.x = 0
-			new_rotation.z = 0
-			rotation = new_rotation  # Korrigierte Rotation setzen
-			last_rotation = new_rotation  # Aktualisierten Wert speichern	
+		rotation.x = 0
+		rotation.y = 0
+		rotation.z = 0
 	
 	
 func get_space_state() -> PhysicsDirectSpaceState3D:
@@ -109,18 +111,7 @@ func _physics_process(delta):
 func generate():
 	shall_generate = true
 	
-func _set(property: StringName, value) -> bool:
-	if property == "rotation":
-		var new_value = value as Vector3
-		new_value.x = 0
-		new_value.z = 0
-		new_value.y = value.y
-		rotation = new_value  # Direkt den Setter aufrufen
-		last_rotation = new_value  # Aktualisiert den gespeicherten Wert
-		return true  # Gibt an, dass die Eigenschaft gesetzt wurde
-	return false  # Standardverhalten für andere Properties beibehalten
-	
-	
+
 # Generate the MultiScatter
 func do_generate():
 	_debug("Starting to generate.")
