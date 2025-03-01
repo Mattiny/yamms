@@ -19,6 +19,14 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+# PMDropOnCollider - a plane based placement which puts the objects onto a
+# collision object.
+#
+# The position is calculated on a 2D-plane according to the MultiScatter polygon,
+# exclude area and density map.
+# Then the position is projected from this plane up or down until it reaches
+# a collision object.
 @tool
 extends PlaneBasedPM
 class_name PMDropOnCollider
@@ -29,24 +37,33 @@ class_name PMDropOnCollider
 	get: return collision_mask
 	set(value):
 		collision_mask = value
-		
+
+# Direction of the projection (raycast) direction: up or down.
 enum direction {Up, Down}
 @export var placement_direction : direction = direction.Down
+var ray_cast_direction : Vector3
 
+# Normal influence: How strong shall the object oriantation be aligned to the
+# surface it is projected to.
+# 0 = No orientation at all
+# 1 = The exact orientation of the surface.
 @export var normal_influence : float = 1.0 
 
+
+# Assign exclude areas.
 @export_group("Excludes")
 @export var exclude : Array[MultiScatterExclude] = []
 
-var ray_cast_direction : Vector3
-
+# debug message
 func _debug(message):
 	if debug_messages:
 		print("YAMMS: PMDropOnCollider:  " + message)
 
+# Generate the Multimesh instances.
 func generate() :
 	_debug("Generating")
-	# create Flat Transform
+
+	# Create the DropOnColliderTransform and pass all required data.
 	mstransform = DropOnColliderTransform.new()
 	mstransform.placement = self
 	mstransform.debug_messages = debug_messages
@@ -56,26 +73,17 @@ func generate() :
 	mstransform.random_rotation = randomize_rotation
 	mstransform.max_rotation = max_random_rotation
 	mstransform.min_rotation = min_random_rotation
-	
 	mstransform.ms_position = ms_position
 	mstransform.ms_item_position = ms_item_position
 	mstransform.ms_pm_position = position
-
 	mstransform.exclude_list = exclude_list
 	mstransform.specific_exclude_list = exclude
 	
-	#  Average height of the polygon curve
 	mstransform._avg_height = _avg_height
-
-	# Number of points in the polygon.
 	mstransform._nrOfPoints = _nrOfPoints
-
 	mstransform.polygon_min = polygon_min
 	mstransform.polygon_max = polygon_max
-
-	# Array with the points of the polygon.
 	mstransform.polygon = _polygon
-	
 	
 	# Pass scale information to transform
 	if random_scale_type == scale_type_enum.Proportional:
@@ -92,7 +100,8 @@ func generate() :
 	else:
 		mstransform.random_unprop_scale = false
 		mstransform.random_prop_scale = false
-
+	
+	# Raycast direction up or down.
 	if placement_direction == direction.Up:
 		ray_cast_direction = Vector3.UP
 	elif placement_direction == direction.Down:
@@ -100,7 +109,8 @@ func generate() :
 	mstransform.direction = ray_cast_direction
 
 	mstransform.collisionMask = collision_mask
-
+	
+	# Pass normal influence settings.
 	mstransform.normal_influence = normal_influence
 	mstransform.space = space
 	mstransform.multimesh_item = multimesh_item
@@ -116,19 +126,21 @@ func generate() :
 	# delete Floating Transform
 	mstransform.queue_free()
 	
-	
+
+# Create density Map node: A decal which projects the density up/down.
 func create_density_map_node():
 	density_map_node = Decal.new()
 	density_map_node.texture_albedo = density_map if density_map else _create_white_texture()
-	#density_map_node.transform = Transform3D(Basis(Vector3(1, 0, 0), deg_to_rad(-90)), Vector3(0, 0, 0))  # Nach unten projizieren
 	add_child(density_map_node)
-	
+
+# If no density map is set: it shall project just a white area.
 func _create_white_texture() -> Texture2D:
 	var img := Image.create(1, 1, false, Image.FORMAT_RGBA8)
 	img.fill(Color.FIREBRICK)
 	var tex := ImageTexture.create_from_image(img)
 	return tex
-	
+
+# Remove the density map.
 func remove_density_map():
 	density_map_node.get_parent().remove_child(density_map_node)
 	density_map_node.queue_free()
@@ -142,7 +154,7 @@ func get_plane_size() -> Vector2:
 		return returnValue
 	return Vector2.ZERO
 	
-		
+# 
 func _update_material():
 	if density_map_node == null:
 		return

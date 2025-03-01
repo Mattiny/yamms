@@ -19,6 +19,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+# MultiScatterExclude spans another polygon which defines an area in which
+# no MultiMesh Instances shall be drawns -> excluded
+
 @tool
 extends Path3D
 
@@ -26,6 +30,9 @@ class_name MultiScatterExclude
 
 
 # Check if the point is inside the polygon 
+# TODO: This is called for each position. So the array of points is generated
+# for each position again and again. Make it more efficient: Generate the array
+# just once for each generation attempt.
 func is_point_in_polygon(point : Vector2):
 
 	var global_pos = point - Vector2(global_position.x, global_position.z)

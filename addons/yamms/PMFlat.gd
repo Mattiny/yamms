@@ -19,6 +19,11 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+# PMFlat - A plane based placement mode generates objects on a 2D Plane set up
+# by the MultiScatter polygon, the exclude areas and density map.
+# It places the MultiMesh instances just on a plane at the average height of the
+# polygone nodes.
 @tool
 extends PlaneBasedPM
 class_name PMFlat
@@ -26,10 +31,7 @@ class_name PMFlat
 @export_group("Excludes")
 @export var exclude : Array[MultiScatterExclude] = []
 
-
-
-	
-	
+# debug message.
 func _debug(message):
 	if debug_messages:
 		print("YAMMS: PMFLat:  " + message)

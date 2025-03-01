@@ -26,9 +26,7 @@ class_name MultiScatterItem
 # The MultiScatterItem is a MultiMesh3D.
 # 
 # Additionally it holds some parameters how the mesh instances shall be placed.
-# Placing the mesh instances then is done by MultiScatter.
-
-
+# Placing the mesh instances then is done by the child placement mode.
 
 # Percentage how many mesh instances of this MultiScatterItem shall be placed. 
 # This is useful if a MultiScatter has more than one MultiScatterItem. 
@@ -42,12 +40,15 @@ class_name MultiScatterItem
 @export var additionalScene: PackedScene
 
 
+# ready: Add notification on transform changes to overwrite rotation to 0
+# Because the MultiScatterItem is not supposed to be rotated.
 func _ready() -> void:
 	if not Engine.is_editor_hint():
 		return
-		
 	if Engine.is_editor_hint():
-		set_notify_transform(true)  # Aktiviert Transform-Änderungsbenachrichtigungen		
+		set_notify_transform(true) 
+
+# set - overwrite rotation to 0 when changed in editor inspector.
 func _set(property: StringName, value) -> bool:
 	if property == "rotation":
 		var new_value = value as Vector3
@@ -57,14 +58,19 @@ func _set(property: StringName, value) -> bool:
 		return true  # Gibt an, dass die Eigenschaft gesetzt wurde
 	return false  # Standardverhalten für andere Properties beibehalten
 
-
+# notification - overwrite rotation to 0 when changed by gizmo in editor.
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSFORM_CHANGED:
 		rotation.x = 0
 		rotation.y = 0
 		rotation.z = 0
-		
+
+# Multiscatter position. Required to keep track of the position of each item in
+# the MultiScatter setup.
 var ms_position : Vector3
+
+# Multiscatter rotation. Required to keep track of the position of each item in
+# the MultiScatter setup.
 var ms_rotation : float
 
 # Debug messages on/off
@@ -87,6 +93,7 @@ var curve : Curve3D : set = set_curve
 func set_curve(crv : Curve3D):
 	curve = crv
 	
+# Exclude list.
 var excludes_list : Array[MultiScatterExclude]
 
 #  Average height of the polygon curve
@@ -95,49 +102,50 @@ var _avg_height : float = 0.0
 # Number of points in the polygon.
 var _nrOfPoints : int
 
+# Min Max position of the points of the MultiScatter polygon.
 var polygon_min : Vector3
 var polygon_max : Vector3
 
 # Array with the points of the polygon.
 var _polygon = []
 
-	
+# Write a debug message.
 func _debug(message):
 	if debug_messages:
 		print("YAMMS: MultiScatterItem:  " + message)
 
+# Preparation of the MultiMesh generating process.
+# Done once before each time generating.
 func _prepare_multimesh():
 	multimesh.instance_count = amount
-	
+
+# Generate the MultiMesh instances.
 func generate(
 			global_position : Vector3,
 			space
 ):
+	# Calculate the actual amount of MultiMesh instances depending on the 
+	# percentage of the amount.
 	var actual_amount :int = amount * (percentage /100)
 	_debug("Generating %s percent of %s items: %s items" %[percentage, amount, actual_amount])
 	
+	# Get the placement mode.
 	var placement = _get_placement()
 	if placement != null:
 
 		_debug("PlacementMode found.")
 		_prepare_multimesh()
 
+		# Pass all required data to the placement mode.
 		placement.debug_messages = debug_messages
 		placement.amount = actual_amount
 		placement.random = random
 		placement.multimesh_item = multimesh
-		
 		placement.curve = curve
-		#  Average height of the polygon curve
 		placement._avg_height = _avg_height
-
-		# Number of points in the polygon.
 		placement._nrOfPoints = _nrOfPoints
-
 		placement.polygon_min = polygon_min
 		placement.polygon_max = polygon_max
-
-		# Array with the points of the polygon.
 		placement._polygon = _polygon
 		
 		if enableAdditionalScene == true:
@@ -154,19 +162,24 @@ func generate(
 		
 		placement.space = space
 		placement.exclude_list = excludes_list
+		
+		# All set up. Now generate.
 		placement.generate()
 
 	else:
 		_debug("No PlacementMode set")
 
 
+# Gets the first child of type "PlacementMode".
+# All other PlacementMode instances are ignored.
 func _get_placement() -> PlacementMode:
 	for child in get_children():
 		if child is PlacementMode:
 			return child
 	return null
 			
-	
+
+# Show warning in editor in case set up is not complete.
 func _get_configuration_warnings() -> PackedStringArray:
 	if not self.multimesh or not self.multimesh.mesh:
 		return ["No MultiMesh is set up."]

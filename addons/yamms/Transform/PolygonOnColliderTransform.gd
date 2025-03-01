@@ -61,18 +61,24 @@ func generate_rotation():
 
 	var normal_rotation_quaternion = Quaternion().from_euler(normal_rotation)
 	basis = Basis(normal_rotation_quaternion) * basis
-	
+
+# Generate the height.
+# - Pass all required data to the ray caster
+# - Ray caster does it's work
+# - get the calculated height and normal data from ray caster.
 func generate_height() -> bool:
 	_debug("Generating height")
+	
+	# Create Raycaster.
 	var ray_caster = RayCaster.new()
 	ray_caster.debug_messages = debug_messages
 	ray_caster.collisionMask = collisionMask
 	ray_caster.space = space
 	ray_caster.position = position
-	_debug("Position: %s" %position)
 	ray_caster.global_position =  ms_item_position + ms_position
-	_debug("Global Pos: %s" %ms_position)
 	ray_caster.direction = direction
+	
+	# Do the raycast and get the hit position
 	var returnValue = ray_caster.generate_height()
 	position = ray_caster.hit_position 
 	normal_rotation = ray_caster.normal_rotation

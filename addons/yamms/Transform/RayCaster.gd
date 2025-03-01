@@ -59,7 +59,7 @@ var hit_position : Vector3
 var normal_rotation : Vector3
 
 
-
+# Output of debug messages.
 func _debug(message):
 	if debug_messages:
 		print("YAMMS: RayCaster:  " + message)

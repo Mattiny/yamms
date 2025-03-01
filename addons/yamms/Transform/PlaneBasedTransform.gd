@@ -28,6 +28,7 @@
 extends MultiScatterTransform
 class_name PlaneBasedTransform
 
+# current index of the spawned object.
 var current_index
 
 # List of Exclude areas which are assigned to this transform.
@@ -40,21 +41,24 @@ var exclude_list : Array[MultiScatterExclude]
 # are applied and set to "specific_exclude_list".
 var specific_exclude_list : Array[MultiScatterExclude]
 
+# Output of debug message.
 func _debug(message):
 	if debug_messages:
 		print("YAMMS: PlaneBasedTransform:  " + message)
 
 
-# Generate height. Nothing to do. 
+# Generate height. Nothing to do. It is already a plane.
 func generate_height() -> bool:
 	return false
-	
+
+# consistency check. The polygon requires at least  3 points to set up
+# an area in which the MultiMeshInstances shall be spawned.
 func _check_polygon_nr() -> bool:
 	return (polygon.size() > 2)
 
 # Generates all position of the multimesh instances.
-# 1) A position inside the priviously generated plane (_calc_plane_min_max) is 
-#    randomly generated.
+# 1) A position inside the priviously generated plane (min- max- coordinates of
+#    the multiscatter polygon) is randomly generated.
 #    This is a first good guess that it might be inside the polygon.
 # 2) It is checked wether 
 #      - the generated position is inside the polygon
@@ -66,17 +70,15 @@ func _check_polygon_nr() -> bool:
 #    whole process is aborted: No valid area is available to spawn the objects.
 func generate_plane_positions():
 	_debug("Generating plane position for %s elements." %amount)
-	
 	_debug("Excludelist: %s" %exclude_list.size())
 	_debug("Specific exclude list: %s" %specific_exclude_list.size())
-	
 	
 	# Choose the exclude areas:
 	# If specific exclude areas are configured for this MultiScatterITem:
 	# use ist.
 	# Otherwise use all default exclude areas.
 	var my_exclude_array : Array[MultiScatterExclude]
-				
+	
 	if specific_exclude_list.size() > 0:
 		my_exclude_array = specific_exclude_list
 	else:
@@ -163,7 +165,7 @@ func generate_plane_positions():
 						index, position, basis
 					)
 
-	
+# generate transform data of the spawned object.
 func generate_transform():
 	if _check_polygon_nr():
 		_debug("Generating Plane")

@@ -36,6 +36,16 @@ class_name  MultiScatter
 # positions of each mesh deterministical.
 @export var seed : int = 0
 
+# Flag to enable / disable debug messages.
+@export_group("")
+@export var debugMessages : bool
+
+# Shall generate: A flag to indicate if the user clicked the generate button.
+# Note: Generating the MultiMesh instances cannot be done in the same thread.
+# Therefore this flag will be set to true by clicking the "Generate" button
+# and the thread in "physics_process" will take over when this flag is set.
+var shall_generate = false
+
 # helper to calculate the proportion percentage.
 var _sum_proportion = 0
 
@@ -53,6 +63,9 @@ var _avg_height : float = 0.0
 # Number of points in the polygon.
 var _nrOfPoints : int
 
+# min max position of the multiscatter polygon
+# it spans a plane in which the random positions 
+# of the MultiMeshInstances are being generated.
 var polygon_min : Vector3 = Vector3(0, 0, 0)
 var polygon_max : Vector3 = Vector3(0, 0, 0)
 
@@ -60,21 +73,23 @@ var polygon_max : Vector3 = Vector3(0, 0, 0)
 var _polygon = []
 
 
-@export_group("")
-@export var debugMessages : bool
-var shall_generate = false
 
+# Ready - called when instantiated.
 func _ready():
+	
+	# React to changes of the polygon curve.
 	self.curve_changed.connect(_on_curve_changed)
 
+	# To disable rotation in editor: notify on transform if in editor mode.
 	if not Engine.is_editor_hint():
 		return
-		
 	if Engine.is_editor_hint():
 		set_notify_transform(true)  # Aktiviert Transform-Änderungsbenachrichtigungen
 
 
-
+# Set function - overwrites the setter for transform: Rotation set back to 0.
+# MultiScatter shall not be rotated.
+# This disables the rotation in the Inspector.
 func _set(property: StringName, value) -> bool:
 	if property == "rotation":
 		var new_value = value as Vector3
@@ -84,14 +99,16 @@ func _set(property: StringName, value) -> bool:
 		return true  # Gibt an, dass die Eigenschaft gesetzt wurde
 	return false  # Standardverhalten für andere Properties beibehalten
 
-
+# Notification on transformation. Set rotation back to 0.
+# MultiScatter shall not be rotated.
+# This disables the rotation on the gizmo.
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSFORM_CHANGED:
 		rotation.x = 0
 		rotation.y = 0
 		rotation.z = 0
 	
-	
+# Get space. Required for Raycasts.
 func get_space_state() -> PhysicsDirectSpaceState3D:
 	if _space == null:
 		_space = get_world_3d().direct_space_state
@@ -103,11 +120,20 @@ func _debug(message):
 	if debugMessages:
 		print("YAMMS: MultiScatter:  %s"  %message)
 
+# Process. Generate the MultiMesh instances if the flag "shall_generate" is
+# set.
+# Note: Generating the MultiMesh instances cannot be done in the same thread.
+# Therefore the flag "shall_generate" will be set to true by clicking the "Generate" button
+# and the thread in "physics_process" will take over when this flag is set.
 func _physics_process(delta):
 	if shall_generate:
 		do_generate()
 		shall_generate = false
 
+# generate() is called when the button "Generate" is clicked.
+# Note: Generating the MultiMesh instances cannot be done in the same thread.
+# Therefore the flag "shall_generate" will be set to true by clicking the "Generate" button
+# and the thread in "physics_process" will take over when this flag is set.
 func generate():
 	shall_generate = true
 	
@@ -139,27 +165,20 @@ func do_generate():
 		if child is MultiScatterItem:
 			_debug("Found MultiScatterItem.")
 
+			# Pass all data to the child.
 			child.amount = amount
 			child.random = random
 			child.curve = curve
 			child.excludes_list = get_excludes()
-			
-			#  Average height of the polygon curve
 			child._avg_height = _avg_height
-
-			# Number of points in the polygon.
 			child._nrOfPoints = _nrOfPoints
-
 			child.polygon_min = polygon_min
 			child.polygon_max = polygon_max
-
-			# Array with the points of the polygon.
 			child._polygon = _polygon
-			
 			child.ms_position = global_position
 			child.ms_rotation = rotation_degrees.y
 
-
+			# Data set. Now generate:
 			child.generate(
 				global_position,
 				get_space_state()
@@ -167,6 +186,7 @@ func do_generate():
 		else:
 			_debug("is Not MultiScatterItem: " + child.get_class())
 
+# Get all excludes that are placed underneath the MultiScatter.
 func get_excludes() -> Array[MultiScatterExclude]:
 	var excludes : Array[MultiScatterExclude] = []
 	for child in get_children():
@@ -176,14 +196,6 @@ func get_excludes() -> Array[MultiScatterExclude]:
 	_debug("Exclude array contains  %s elements." %excludes.size())
 	return excludes
 	
-	
-func _get_exclude_data():
-	var result = []
-	for child in get_children():
-		if child is MultiScatterExclude:
-			var exclude = child as MultiScatterExclude
-			result.append(exclude)
-	return result
 	
 # Count number of scatter items
 func _count_scatter_items():

@@ -19,17 +19,38 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+
+# PlaneBasedPM is an abstract PlacmentMode based on a plane which is defined by Polygon
+# of the MultiScatter.
+#
+# This plane lays flat in 3D Space (looking from top) at the average height of
+# the polygon.
+#
+# All random positions will be generated inside this plane. Then the height will
+# will be generated depending on the specific PlacementMode.
+#
+# For a plane based PlacmentMode a density map can be configured to set up
+# areas with a high number of MultiMesh instance or areas with a low number or
+# none at all.
 @tool
 extends PlacementMode
 class_name PlaneBasedPM
 
+# The density map.
+var density_map_node : Node3D = null
 
+# interface function to create a density map node.
+# will be implemented in subclass.
 func create_density_map_node():
 	pass
 	
+# interface function to remove a density map node.
+# will be implemented in subclass.	
 func remove_density_map():
 	pass
 
+# Update visuals. Density map might have been added or removed.
+# so show or hide the density map.
 func _update_visuals():
 	if density_map_node == null:
 		create_density_map_node()
@@ -64,77 +85,79 @@ func _notification(what: int) -> void:
 		
 		
 
-		
+# Should spawn - takes a position (2D plane position)
+# and determines depending on the density map if the object shall spawn
+# here or not.
+# The gray scale value gives the percentage of the chance wether the object
+# shall spawn or not.
+# If the density shows white color: It should spawn at 100%
+# If the density shows black color: It should spawn at 0%
 func should_spawn_at(global_x: float, global_z: float) -> bool:
 	if not density_map or not density_map.get_image():
 		return true  # Keine Textur → Immer true
 
+	# Get the density map image.
 	var image: Image = density_map.get_image()
 	if image == null:
-		density_map = density_map.duplicate()  # Erzwingt das Laden der Textur
+		density_map = density_map.duplicate()
 		image = density_map.get_image()
 
-	# Falls die Textur komprimiert ist, dekomprimieren
+	# Decompress if compressed.
+	# TODO: This is done for every position. Should be just once when generating.
 	if image.is_compressed():
 		image.decompress()
 
-	# Globale Position in lokale umwandeln
-	
+	# global to local.
 	var local_pos = to_local(Vector3(global_x, 0, global_z) + ms_position) 
 
-
-	# Plane-Größe abrufen (unabhängig von Typ)
+	# Get the plane size of the density map.
 	var plane_size = get_plane_size()
-
 	if plane_size == Vector2.ZERO:
-		return false  # Falls keine Größe bestimmt werden kann, nichts spawnen
+		return false  # no size - no spawn
 
-	var scale = density_map_node.scale  # Skalierung
-
-	# Skalierung berücksichtigen
+	# Take care of the scale of the density map.
+	var scale = density_map_node.scale  
 	local_pos.x /= scale.x
 	local_pos.z /= scale.z
 
-	# Rotation um Y-Achse bestimmen (nur 90°-Schritte)
-	var rotation_y = int(rotation_degrees.y) % 360  # Nur 0, 90, 180, 270 erlaubt
+	# Rotation around y axis only.
+	var rotation_y = int(rotation_degrees.y) % 360
+	
+	# uv - the coordinates at the density map.
 	var uv_x = 0.0
 	var uv_y = 0.0
 	
 	uv_x = (local_pos.x / plane_size.x) + 0.5
 	uv_y = (local_pos.z / plane_size.y) + 0.5
-	
-#	match rotation_y:
-#		0:
-#			_debug("-----Rotation 0")
-#			uv_x = (local_pos.x / plane_size.x) + 0.5
-#			uv_y = (local_pos.z / plane_size.y) + 0.5
-#		90:
-#			_debug("-----Rotation 90")
-#			uv_x = (local_pos.z / plane_size.y) + 0.5
-#			uv_y = 1.0 - ((local_pos.x / plane_size.x) + 0.5)
-#		180:
-#			_debug("-----Rotation 180")
-#			uv_x = 1.0 - ((local_pos.x / plane_size.x) + 0.5)
-#			uv_y = 1.0 - ((local_pos.z / plane_size.y) + 0.5)
-#		270:
-#			_debug("-----Rotation 270")
-#			uv_x = 1.0 - ((local_pos.z / plane_size.y) + 0.5)
-#			uv_y = (local_pos.x / plane_size.x) + 0.5
-#
 
-	# UV-Koordinaten auf Texturgröße umrechnen
+
+	# Map uv coordinates to texture size.
 	var tex_width = image.get_width()
 	var tex_height = image.get_height()
 	var pixel_x = int(uv_x * tex_width)
 	var pixel_y = int(uv_y * tex_height)
 
 
-	# Sicherstellen, dass die Pixel-Koordinaten im gültigen Bereich liegen
+	# Take care that pixel coordinates are within valid range.
 	pixel_x = clamp(pixel_x, 0, tex_width - 1)
 	pixel_y = clamp(pixel_y, 0, tex_height - 1)
-	# Rot-Wert des Pixels als Wahrscheinlichkeit (0.0 bis 1.0)
+	
+	# Get the gray scale value. Actually: get the red value
+	# Could be any other of the base color because gray means: all base colors
+	# are equal.
 	var red_value = image.get_pixel(pixel_x, pixel_y).r
 	var probability = image.get_pixel(pixel_x, pixel_y).r
 
-	# Zufallsentscheidung basierend auf der Wahrscheinlichkeit
+	# Randomize the result with the probability.
 	return randf() < probability
+
+
+# Returns the size of the density map or Vector2.ZERO if no density map
+# is set up.
+func get_plane_size() -> Vector2:
+	if density_map_node is MeshInstance3D and density_map_node.mesh is PlaneMesh:
+		var plane_mesh: PlaneMesh = density_map_node.mesh
+		var returnValue = Vector2(plane_mesh.size.x, plane_mesh.size.y)
+		return returnValue
+	return Vector2.ZERO
+	

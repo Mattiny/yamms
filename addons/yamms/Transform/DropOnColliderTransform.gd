@@ -46,7 +46,7 @@ var normal_influence : float
 # rotation of the spawned multimesh instance after applying the normal influence.
 var normal_rotation : Vector3
 
-
+# Output of debug message
 func _debug(message):
 	if debug_messages:
 		print("YAMMS: DropOnColliderTransform:  " + message)
@@ -76,15 +76,17 @@ func generate_rotation():
 # - Ray caster does it's work
 # - get the calculated height and normal data from ray caster.
 func generate_height() -> bool:
+	
+	# Create Raycaster.
 	var ray_caster = RayCaster.new()
 	ray_caster.debug_messages = debug_messages
 	ray_caster.collisionMask = collisionMask
 	ray_caster.space = space
 	ray_caster.position = position 
-	
-
 	ray_caster.global_position = ms_item_position + ms_position
 	ray_caster.direction = direction
+	
+	# Do the raycast and get the hit position
 	var returnValue = ray_caster.generate_height()
 	position = ray_caster.hit_position 
 	normal_rotation = ray_caster.normal_rotation

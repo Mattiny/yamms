@@ -43,7 +43,7 @@ var randomize_steps = false
 # randomly moved sideways. The max distance to the polygon is the thickness.
 var thickness : float = 0
 
-
+# Output of the debug message.
 func _debug(message):
 	if debug_messages:
 		print("YAMMS: PolygonTransform:  " + message)
