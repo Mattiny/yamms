@@ -162,11 +162,13 @@ func do_transform(index : int, pos : Vector3, basis : Basis):
 						pos
 					)
 	multimesh_item.set_instance_transform(index, transform)
+	
+	
 
 	if enableAdditionalScene == true:
 		var additional_transform : Transform3D = create_transform_by_basis(
 			basis,
-			pos ,
+			pos + placement.ms_position + placement.ms_item_position,
 		)
 		_place_additional_scene(additionalScene, targetNode, additional_transform)
 	
