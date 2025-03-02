@@ -184,10 +184,11 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if not self.multimesh or not self.multimesh.mesh:
 		return ["No MultiMesh is set up."]
 	else:
-		if (targetNode == null and additionalScene != null):
-			return ["Additional scene is set up, but no target node."]	
-		if (targetNode != null and additionalScene == null):
-			return ["Target node is set up, but no additional scene."]	
+		if (enableAdditionalScene):
+			if (targetNode == null and additionalScene != null):
+				return ["Additional scene is set up, but no target node."]	
+			if (targetNode != null and additionalScene == null):
+				return ["Target node is set up, but no additional scene."]	
 		if (_get_placement() == null):
 			return ["No placement mode as child node."]
 		return []
