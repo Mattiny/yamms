@@ -69,6 +69,17 @@ The MultiScatterItem keeps information about one type of meshes in the MultiMesh
 	- **Target Node**: References the node where the scenes are placed in the scene tree. **Note** Don't place any other relevant Nodes of your scene underneath the referenced node. Whenever the MultiMeshInstance3D positions are generated, the target node will be deleted (without question).
 	- **Additional scene**: Reference to a PackedScene which will be instantiated and placed at the same position as the MultiMeshInstance3D.
 
+### PlacementMode
+The PlacementMode sets up the algorythm to generate the position of the MultiMeshInstances. Add a placement mode as child element to the MultiScatterItem. **Note** Do not the "PlacementMode" itself to the MultiScatterItem. Instead add the specific
+placement mode. The following placement modes are available:
+
+#### PMFlat
+PMFlat - PlacementMode Flat - distributes the MultiMeshInstances on a flat plane. The height is the average height of the polygon nodes.
+
+- **Exclude**: List of MultiScatterExcludes which apply to the parent MultiScatterItem. If left empty, automatically all MultiScatterExclude attached to the MultiScatter apply.
+- **Density Map**: Assign a black&white image as density map for instance distribution. White = 100% distribution, Black = 0% distribution. If left empty it uses 100% distribution for the whole area. Scale, rotate and position the PMFlat instance in order to position the density map. The density map is only shown in the editor mode, not when the game is running. To remove the density from the editor view, hide it in the editor.
+
+
 ### MultiScatterExclude
 The MultiScatterExclude defines a sub area which is left empty without any mesh generated in it. It is expected to be 
 a child node of MultiScatter. There can be more than one MultiScatterExclude in one MultiScatter.
