@@ -23,16 +23,15 @@ Yamms (Yet another multimesh scatter) is a plugin for Godot to place MultiMesh m
 Author: Mattiny
 Youtube: https://youtu.be/k5mwwakNHU4
 
-Note: This plugin is only compatible with Godot 4.0 and following Godot versions.
+Note: This plugin is only compatible with Godot 4.3 and following Godot versions.
 ![Screenshot_01](https://user-images.githubusercontent.com/127634166/224740362-c7ddbf76-da05-48d6-a1a2-7aacbeb36a8a.png)
 ## Features
 
 - Place MultiMeshInstances of different types into your scene.
-- Configure the proportions of how many meshes of each type shall be placed into your scene.
-- Configure random rotation and scale individually for each item.
+- Configure the proportions (percentage) of how many meshes of each type shall be placed into your scene.
 - Set up an area via Path3D polygon in which the meshes shall placed.
 - Set up exclusion areas via Path3D polygons (inside your area definition) to leave these areas empty (for some or all items).
-- Configure the height of the generated meshes: "Flat", "Floating", "Dropped on floor", "Dropped on ceiling".
+- Set up different placement algorythms for the MultiMeshInstances.
 - Add additional scenes (e.g. collision objects) at the same position as the MultiMeshInstance3D instances.
 
 ## Installation
@@ -46,11 +45,9 @@ The MultiScatter is the main node of the whole MultiMesh scatter set up.
 - Whenever the MultiScatter node is selected: The Editor shows buttons to set up a polygon. Add at least 3 point which span an area which is large enough to hold the meshes. Best practice: Change to orthogonal top view of your scene (key "7").
 ![01-Initial-MultiScatter](https://github.com/Mattiny/yamms/assets/127634166/934aa284-2341-4b17-8b8b-2f2bbd2984e7)
 - In Inspector set up properties:
+	- **Debug messages**: Write additional output messages when generating the MultiMeshInstance3D positions. (as the name says: for debug purposes, when something does not work as expected)
 	- **Amount**: the amount of meshes which are generated into the scene.
 	- **Seed**: The random number generator seed. Using a seed makes the pattern of randomly generated meshes reproducible. Change the seed until you are satisfied with the result.
-	- **Collision mask**: When using "Dropped on floor": set up which collision detection mask shall be used to identify the floor.
-	- **Floating min max**: Set up the min- max- range of the mesh's height when floating.
- 	- **Debug messages**: Write additional output messages when generating the MultiMeshInstance3D positions. (as the name says: for debug purposes, when something does not work as expected)
 
 ### MultiScatterItem
 The MultiScatterItem keeps information about one type of meshes in the MultiMesh set up. It needs to be a child node underneath the MultiScatter node. There can be multiple MultiScatterItems in one MultiScatter.
@@ -67,18 +64,10 @@ The MultiScatterItem keeps information about one type of meshes in the MultiMesh
 ![02-SetUp-ScatterItem](https://github.com/Mattiny/yamms/assets/127634166/edaa6298-b01e-4ef7-a0c6-c9af46057575)
 
 #### Set up parameters
-- **Proportion**: The amount proportion for this mesh. The exact amount depends on the "Amount" property of the parent MultiScatter and the proportion of sibling MultiScatterItems.
-- **Placement mode**: Specifies how the meshes are placed into your scene.
-	- **Flat**: all meshes are generated on a flat simple plane.
-	- **Floating**: all meshes are generated floating in 3D space
-	- **Dropped on floor**: all meshes are generated on the floor. This requires a sufficiently large object with collision shape underneath. Note: The whole polygon (MultiScatter) must be hovering ABOVE the ground.
-   	- **Dropped on ceiling**: all meshes are generated on the ceiling. This requires a sufficiently large object with collision shape above. Note: The whole polygon (MultiScatter) must be hovering UNDERNEATH the collision object.
-- **Random Rotation**: if activated: The max angle of the random rotation of each mesh.
-- **Random Scale**: if activated: The max random scale of each mesh.
+- **Percentage**: The percentage proportion for this mesh. The exact amount depends on the "Amount" property of the parent MultiScatter and the proportion of sibling MultiScatterItems.
 - **Additional Scene**: Places an additional scene (PackedScene) at the same position as the scattered item. Can be used e.g. to put collision objects at the same position. **Note** It is a real scene, not a primitive MultiScatterItem3D. So it uses more resources at runtime than MultiMeshInstances. It is not supposed to be used with too many instances.
 	- **Target Node**: References the node where the scenes are placed in the scene tree. **Note** Don't place any other relevant Nodes of your scene underneath the referenced node. Whenever the MultiMeshInstance3D positions are generated, the target node will be deleted (without question).
 	- **Additional scene**: Reference to a PackedScene which will be instantiated and placed at the same position as the MultiMeshInstance3D.
-- **Excludes**: is an array of references to MultiScatterExclude instances. If left empty (default) all MultiScatterExclude areas underneath the MultiScatter element are considered when generating the MultiMeshInstance3D positions. But if at least one exclude-area refrence is put into the array of "excludes", then only the referenced exclude-areas are active for this MultiScatterItem.  
 
 ### MultiScatterExclude
 The MultiScatterExclude defines a sub area which is left empty without any mesh generated in it. It is expected to be 
