@@ -50,11 +50,19 @@ func set_random_rotation(value : bool):
 	
 var max_rotation : Vector3 = Vector3(0, 0, 0) : set = set_max_rotation
 func set_max_rotation(value : Vector3):
-	max_rotation = value
+	max_rotation = Vector3(
+		deg_to_rad(value.x),
+		deg_to_rad(value.y),
+		deg_to_rad(value.z)
+	)
 	
 var min_rotation : Vector3 = Vector3(0, 0, 0) : set = set_min_rotation
 func set_min_rotation(value : Vector3):
-	min_rotation = value
+	min_rotation = Vector3(
+		deg_to_rad(value.x),
+		deg_to_rad(value.y),
+		deg_to_rad(value.z)
+	)
 	
 # Random proportional scale variables
 var random_prop_scale : bool = false : set = set_random_prop_scale
