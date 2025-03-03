@@ -30,7 +30,7 @@ Author: Mattiny
 Youtube: https://youtu.be/k5mwwakNHU4
 
 Note: This plugin is only compatible with Godot 4.3 and following Godot versions.
-![SC-01](https://github.com/user-attachments/assets/7e67b31c-60d0-4dce-9e62-4475855574d7)
+
 
 ## Features
 
@@ -50,7 +50,7 @@ Note: This plugin is only compatible with Godot 4.3 and following Godot versions
 The MultiScatter is the main node of the whole MultiMesh scatter set up.
 - In your Scene: Add the node "MultiScatter"
 - Whenever the MultiScatter node is selected: The Editor shows buttons to set up a polygon. Add at least 3 point which span an area which is large enough to hold the meshes. Best practice: Change to orthogonal top view of your scene (key "7").
-![01-Initial-MultiScatter](https://github.com/Mattiny/yamms/assets/127634166/934aa284-2341-4b17-8b8b-2f2bbd2984e7)
+![SC-01](https://github.com/user-attachments/assets/7e67b31c-60d0-4dce-9e62-4475855574d7)
 - In Inspector set up properties:
 	- **Debug messages**: Write additional output messages when generating the MultiMeshInstance3D positions. (as the name says: for debug purposes, when something does not work as expected)
 	- **Amount**: the amount of meshes which are generated into the scene.
