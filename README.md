@@ -96,6 +96,10 @@ To adjust the position of the plane, change the position of the MultiScatter.
 - **Unproportional random scale**: The object to be spawned is scaled proportionally with different scale factors for each axis. This doesn't keep the object's proportion.
 	- **Max unproportional scale**: The maximum scale factor for each axis.
  	- **Min unproportional scale**: The minimum scale factor for each axis.
+- **Rotation**:
+	- **Randomize Rotation**: Enable random rotation for the spawned instances.
+ 	- **Max random rotation**: Set up the maximum angle for each rotation axis.
+  	- **Min random rotation**: Set up the minum angle for each rotation axis.
  
   
 #### PMFloating
@@ -114,6 +118,10 @@ PMFloating - PlacementMode Floating - distributes the MultiMeshInstances floatin
 - **Unproportional random scale**: The object to be spawned is scaled proportionally with different scale factors for each axis. This doesn't keep the object's proportion.
 	- **Max unproportional scale**: The maximum scale factor for each axis.
  	- **Min unproportional scale**: The minimum scale factor for each axis.
+- **Rotation**:
+	- **Randomize Rotation**: Enable random rotation for the spawned instances.
+ 	- **Max random rotation**: Set up the maximum angle for each rotation axis.
+  	- **Min random rotation**: Set up the minum angle for each rotation axis.
  
 #### PMDropOnCollider
 PMDropOnCollider - PlacementMode drop on collider - distributes the MultiMeshInstances dropped onto an object with a collision shape. First (like PMFlat) the MuliMesh position is the plane set up by the MultiScatter polygon. Then a raycast into the specified direction (up or down) takes place to determine the position on the y-axis. Once the raycast hits an object identified by it's collision mask, it places the object at that position.
@@ -135,7 +143,10 @@ Therefore: For direction "Down", the MultiScatter polygon area mus be located ab
 - **Unproportional random scale**: The object to be spawned is scaled proportionally with different scale factors for each axis. This doesn't keep the object's proportion.
 	- **Max unproportional scale**: The maximum scale factor for each axis.
  	- **Min unproportional scale**: The minimum scale factor for each axis.
-
+- **Rotation**:
+	- **Randomize Rotation**: Enable random rotation for the spawned instances.
+ 	- **Max random rotation**: Set up the maximum angle for each rotation axis.
+  	- **Min random rotation**: Set up the minum angle for each rotation axis.
  
 #### PMPolygon
 PMPolygon - PlacementMode polygon - distributes the MultiMeshInstances all along the MultiScatter's polygon. 
@@ -156,7 +167,11 @@ PMPolygon - PlacementMode polygon - distributes the MultiMeshInstances all along
 - **Unproportional random scale**: The object to be spawned is scaled proportionally with different scale factors for each axis. This doesn't keep the object's proportion.
 	- **Max unproportional scale**: The maximum scale factor for each axis.
  	- **Min unproportional scale**: The minimum scale factor for each axis.
- 
+- **Rotation**:
+	- **Randomize Rotation**: Enable random rotation for the spawned instances.
+ 	- **Max random rotation**: Set up the maximum angle for each rotation axis.
+  	- **Min random rotation**: Set up the minum angle for each rotation axis.
+  	   
 #### PMPolygonOnCollider
 PMPolygonOnCollider - PlacementMode polygon - distributes the MultiMeshInstances all along the MultiScatter's polygon and drops them onto an object with a collision object. First (like PMPolygon) the MuliMesh position is the MultiScatter's polygon. Then a raycast into the specified direction (up or down) takes place to determine the position on the y-axis. Once the raycast hits an object identified by it's collision mask, it places the object at that position.
 - **Collision Mask**: specifies the collision mask onto which the MultiMesh instances shall be dropped.
@@ -176,7 +191,11 @@ PMPolygonOnCollider - PlacementMode polygon - distributes the MultiMeshInstances
 - **Unproportional random scale**: The object to be spawned is scaled proportionally with different scale factors for each axis. This doesn't keep the object's proportion.
 	- **Max unproportional scale**: The maximum scale factor for each axis.
  	- **Min unproportional scale**: The minimum scale factor for each axis.
-  - 
+- **Rotation**:
+	- **Randomize Rotation**: Enable random rotation for the spawned instances.
+ 	- **Max random rotation**: Set up the maximum angle for each rotation axis.
+  	- **Min random rotation**: Set up the minum angle for each rotation axis.
+ 
 ### MultiScatterExclude
 The MultiScatterExclude defines a sub area which is left empty without any mesh generated in it. It is expected to be 
 a child node of MultiScatter. There can be more than one MultiScatterExclude in one MultiScatter.
