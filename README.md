@@ -134,7 +134,27 @@ Therefore: For direction "Down", the MultiScatter polygon area mus be located ab
 	- **Max unproportional scale**: The maximum scale factor for each axis.
  	- **Min unproportional scale**: The minimum scale factor for each axis.
 
+ 
+#### PMPolygon
+PMPolygon - PlacementMode Polygin - distributes the MultiMeshInstances all along the MultiScatter's polygon.
 
+- **Random steps**: Enable or disable random steps when positioning the MultiMesh  instances at the polygon.
+	- **enabled**: The distance between the MultiMesh instances at the polygon are random.
+ 	- **disabled**: All MultiMesh instances have the same distance to the next instance. The length of the steps between the instances depends on the amount of items to be placed onto the polygon.
+- **Thickness**: Sets up a maximum random offset of the MultiMesh instance sideways.
+- **Exclude**: List of MultiScatterExcludes which apply to the parent MultiScatterItem. If left empty, automatically all MultiScatterExclude attached to the MultiScatter apply.
+- **Random scale type**: Selects the type random scale for the spawned objects
+	- **None**: Random scale is deactivated
+ 	- **Proportional**: Uses proportional random scale.
+  	- **Unproportional**: Uses unproportional scale.
+- **Proportional random scale**: The object to be spawned is scaled proportionally with the same value on each axis so that the object's proportion remain intact.
+	- **Max Random scale**: The maximum scale factor.
+ 	- **Min Random scale**: The minimum scale factor.
+  	- **Scale curve**: Set up a curve to adjust the scale factor distribution. 
+- **Unproportional random scale**: The object to be spawned is scaled proportionally with different scale factors for each axis. This doesn't keep the object's proportion.
+	- **Max unproportional scale**: The maximum scale factor for each axis.
+ 	- **Min unproportional scale**: The minimum scale factor for each axis.
+  - 
 ### MultiScatterExclude
 The MultiScatterExclude defines a sub area which is left empty without any mesh generated in it. It is expected to be 
 a child node of MultiScatter. There can be more than one MultiScatterExclude in one MultiScatter.
