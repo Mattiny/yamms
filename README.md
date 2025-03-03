@@ -68,7 +68,8 @@ The MultiScatterItem keeps information about one type of meshes in the MultiMesh
 - set "Transform Format" to "3D"
 - Drag & Drop a mesh from your file system into the inspector property "Mesh"
 - If necessary: Drag & Drop a material for this mesh to inspector property "Geometry / Material override"
-![02-SetUp-ScatterItem](https://github.com/Mattiny/yamms/assets/127634166/edaa6298-b01e-4ef7-a0c6-c9af46057575)
+![SC-02](https://github.com/user-attachments/assets/73272d7e-8da0-45ca-be93-9ba40aed403e)
+
 
 #### Set up parameters
 - **Percentage**: The percentage proportion for this mesh. The exact amount depends on the "Amount" property of the parent MultiScatter and the proportion of sibling MultiScatterItems.
@@ -83,6 +84,8 @@ placement mode. The following placement modes are available:
 #### PMFlat
 PMFlat - PlacementMode Flat - distributes the MultiMeshInstances on a flat plane. The height is the average height of the polygon nodes.
 To adjust the position of the plane, change the position of the MultiScatter.
+
+![SC-03](https://github.com/user-attachments/assets/35289119-dd6e-42d3-91c1-df65de9e1e86)
 
 - **Exclude**: List of MultiScatterExcludes which apply to the parent MultiScatterItem. If left empty, automatically all MultiScatterExclude attached to the MultiScatter apply.
 - **Density Map**: Assign a black&white image as density map for instance distribution. White = 100% distribution, Black = 0% distribution. If left empty it uses 100% distribution for the whole area. Scale, rotate and position the PMFlat instance in order to position the density map. The density map is only shown in the editor mode, not when the game is running. To remove the density from the editor view, hide it in the editor.
