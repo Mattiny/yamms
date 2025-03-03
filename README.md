@@ -232,7 +232,9 @@ Once the MultiScatter set up has been completed, select the MultiScatter node ag
 Hit the generate button and all meshes are generated and placed into your scene.
 
 You still can edit your set up (move polygons, add/remove points to polygons, add MultiScatterItems, etc). But remember: to make these changes effective you need to hit the "Generate" button again.
-![04-Generate](https://github.com/Mattiny/yamms/assets/127634166/1df229f7-18e3-4bcf-9162-ce68de0f7078)
+
+![SC-10](https://github.com/user-attachments/assets/fa844f3a-d8cd-4291-8de4-cd3c5d9913b6)
+
 
 ### Common use cases
 #### Different types of MultiScatterItems
