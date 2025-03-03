@@ -14,6 +14,8 @@
   		- [PMFlat](#pmflat)
   		- [PMFloating](#pmfloating)
   		- [PMDropOnCollider](#pmdroponcollider)
+  	 	- [PMPolygon](#pmpolygon)
+  	  	- [PMPolygonOnCollider](#pmpolygononcollider)
   	- [MultiScatterExclude](#multiscatterexclude)
   	- [Generate](#generate)
   	- [Common use cases](#common-use-cases)
@@ -136,9 +138,29 @@ Therefore: For direction "Down", the MultiScatter polygon area mus be located ab
 
  
 #### PMPolygon
-PMPolygon - PlacementMode Polygin - distributes the MultiMeshInstances all along the MultiScatter's polygon.
+PMPolygon - PlacementMode polygon - distributes the MultiMeshInstances all along the MultiScatter's polygon. 
 
-- **Random steps**: Enable or disable random steps when positioning the MultiMesh  instances at the polygon.
+- **Random steps**: Enable or disable random steps when positioning the MultiMesh instances at the polygon.
+	- **enabled**: The distance between the MultiMesh instances at the polygon are random.
+ 	- **disabled**: All MultiMesh instances have the same distance to the next instance. The length of the steps between the instances depends on the amount of items to be placed onto the polygon.
+- **Thickness**: Sets up a maximum random offset of the MultiMesh instance sideways.
+- **Exclude**: List of MultiScatterExcludes which apply to the parent MultiScatterItem. If left empty, automatically all MultiScatterExclude attached to the MultiScatter apply.
+- **Random scale type**: Selects the type random scale for the spawned objects
+	- **None**: Random scale is deactivated
+ 	- **Proportional**: Uses proportional random scale.
+  	- **Unproportional**: Uses unproportional scale.
+- **Proportional random scale**: The object to be spawned is scaled proportionally with the same value on each axis so that the object's proportion remain intact.
+	- **Max Random scale**: The maximum scale factor.
+ 	- **Min Random scale**: The minimum scale factor.
+  	- **Scale curve**: Set up a curve to adjust the scale factor distribution. 
+- **Unproportional random scale**: The object to be spawned is scaled proportionally with different scale factors for each axis. This doesn't keep the object's proportion.
+	- **Max unproportional scale**: The maximum scale factor for each axis.
+ 	- **Min unproportional scale**: The minimum scale factor for each axis.
+ 
+#### PMPolygonOnCollider
+PMPolygonOnCollider - PlacementMode polygon - distributes the MultiMeshInstances all along the MultiScatter's polygon and drops them onto an object with a collision object. First (like PMPolygon) the MuliMesh position is the MultiScatter's polygon. Then a raycast into the specified direction (up or down) takes place to determine the position on the y-axis. Once the raycast hits an object identified by it's collision mask, it places the object at that position.
+- **Collision Mask**: specifies the collision mask onto which the MultiMesh instances shall be dropped.
+- **Random steps**: Enable or disable random steps when positioning the MultiMesh instances at the polygon.
 	- **enabled**: The distance between the MultiMesh instances at the polygon are random.
  	- **disabled**: All MultiMesh instances have the same distance to the next instance. The length of the steps between the instances depends on the amount of items to be placed onto the polygon.
 - **Thickness**: Sets up a maximum random offset of the MultiMesh instance sideways.
