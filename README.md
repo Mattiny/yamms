@@ -73,12 +73,12 @@ The MultiScatterItem keeps information about one type of meshes in the MultiMesh
 
 #### Set up parameters
 - **Percentage**: The percentage proportion for this mesh. The exact amount depends on the "Amount" property of the parent MultiScatter and the proportion of sibling MultiScatterItems.
-- **Additional Scene**: Places an additional scene (PackedScene) at the same position as the scattered item. Can be used e.g. to put collision objects at the same position. **Note** It is a real scene, not a primitive MultiScatterItem3D. So it uses more resources at runtime than MultiMeshInstances. It is not supposed to be used with too many instances.
+- **Additional Scene**: Places an additional scene (PackedScene) at the same position as the scattered item. Can be used e.g. to put collision objects at the same position. **Note:** It is a real scene, not a primitive MultiScatterItem3D. So it uses more resources at runtime than MultiMeshInstances. It is not supposed to be used with too many instances.
 	- **Target Node**: References the node where the scenes are placed in the scene tree. **Note** Don't place any other relevant Nodes of your scene underneath the referenced node. Whenever the MultiMeshInstance3D positions are generated, the target node will be deleted (without question).
 	- **Additional scene**: Reference to a PackedScene which will be instantiated and placed at the same position as the MultiMeshInstance3D.
 
 ### PlacementMode
-The PlacementMode sets up the algorythm to generate the position of the MultiMeshInstances. Add a placement mode as child element to the MultiScatterItem. **Note** Do not the "PlacementMode" itself to the MultiScatterItem. Instead add the specific
+The PlacementMode sets up the algorythm to generate the position of the MultiMeshInstances. Add a placement mode as child element to the MultiScatterItem. **Note*:* Do not the "PlacementMode" itself to the MultiScatterItem. Instead add the specific
 placement mode. The following placement modes are available:
 
 #### PMFlat
@@ -89,7 +89,7 @@ To adjust the position of the plane, change the position of the MultiScatter.
 
 
 - **Exclude**: List of MultiScatterExcludes which apply to the parent MultiScatterItem. If left empty, automatically all MultiScatterExclude attached to the MultiScatter apply.
-- **Density Map**: Assign a black&white image as density map for instance distribution. White = 100% distribution, Black = 0% distribution. If left empty it uses 100% distribution for the whole area. Scale, rotate and position the PMFlat instance in order to position the density map. The density map is only shown in the editor mode, not when the game is running. To remove the density from the editor view, hide it in the editor. **Note** Optionally: Instead of an exclude area, a density map  with black areas can be used as well.
+- **Density Map**: Assign a black&white image as density map for instance distribution. White = 100% distribution, Black = 0% distribution. If left empty it uses 100% distribution for the whole area. Scale, rotate and position the PMFlat instance in order to position the density map. The density map is only shown in the editor mode, not when the game is running. To remove the density from the editor view, hide it in the editor. **Note:** Optionally: Instead of an exclude area, a density map  with black areas can be used as well.
 - **Random scale type**: Selects the type random scale for the spawned objects
 	- **None**: Random scale is deactivated
  	- **Proportional**: Uses proportional random scale.
@@ -115,7 +115,7 @@ PMFloating - PlacementMode Floating - distributes the MultiMeshInstances floatin
 
 - **Min Max Height**: the minimum and maximum height calculated from the average height of the polygon's average height.
 - **Exclude**: List of MultiScatterExcludes which apply to the parent MultiScatterItem. If left empty, automatically all MultiScatterExclude attached to the MultiScatter apply.
-- **Density Map**: Assign a black&white image as density map for instance distribution. White = 100% distribution, Black = 0% distribution. If left empty it uses 100% distribution for the whole area. Scale, rotate and position the PMFloating instance in order to position the density map. The density map is only shown in the editor mode, not when the game is running. To remove the density from the editor view, hide it in the editor. **Note** Optionally: Instead of an exclude area, a density map  with black areas can be used as well.
+- **Density Map**: Assign a black&white image as density map for instance distribution. White = 100% distribution, Black = 0% distribution. If left empty it uses 100% distribution for the whole area. Scale, rotate and position the PMFloating instance in order to position the density map. The density map is only shown in the editor mode, not when the game is running. To remove the density from the editor view, hide it in the editor. **Note:** Optionally: Instead of an exclude area, a density map  with black areas can be used as well.
 - **Random scale type**: Selects the type random scale for the spawned objects
 	- **None**: Random scale is deactivated
  	- **Proportional**: Uses proportional random scale.
@@ -143,7 +143,9 @@ Therefore: For direction "Down", the MultiScatter polygon area mus be located ab
 - **Placement Direction**: From the MultiScatter's polygon plane: Up or down.
 - **Normal Influence**: Set up how strong the surface orientation of the collision object affects the orientation of the spawned MultiMesh instance. 0 = no influence at all, 1 = exact orientation of the surface.
 - **Exclude**: List of MultiScatterExcludes which apply to the parent MultiScatterItem. If left empty, automatically all MultiScatterExclude attached to the MultiScatter apply.
-- **Density Map**: Assign a black&white image as density map for instance distribution. White = 100% distribution, Black = 0% distribution. If left empty it uses 100% distribution for the whole area. Scale, rotate and position the PMDropOnCollider instance in order to position the density map. The density map is only shown in the editor mode, not when the game is running. To remove the density from the editor view, hide it in the editor. **Note** Optionally: Instead of an exclude area, a density map  with black areas can be used as well.
+- **Density Map**: Assign a black&white image as density map for instance distribution. White = 100% distribution, Black = 0% distribution. If left empty it uses 100% distribution for the whole area. Scale, rotate and position the PMDropOnCollider instance in order to position the density map. The density map is only shown in the editor mode, not when the game is running. To remove the density from the editor view, hide it in the editor. **Note:** The density map for the PMDropOnCollider node is projected onto the collision objects (Decal). So it must be large enough to be visible.
+
+  **Note** Optionally: Instead of an exclude area, a density map  with black areas can be used as well.
 - **Random scale type**: Selects the type random scale for the spawned objects
 	- **None**: Random scale is deactivated
  	- **Proportional**: Uses proportional random scale.
