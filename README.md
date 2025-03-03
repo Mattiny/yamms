@@ -30,7 +30,8 @@ Author: Mattiny
 Youtube: https://youtu.be/k5mwwakNHU4
 
 Note: This plugin is only compatible with Godot 4.3 and following Godot versions.
-![Screenshot_01](https://user-images.githubusercontent.com/127634166/224740362-c7ddbf76-da05-48d6-a1a2-7aacbeb36a8a.png)
+![SC-01](https://github.com/user-attachments/assets/7e67b31c-60d0-4dce-9e62-4475855574d7)
+
 ## Features
 
 - Place MultiMeshInstances of different types into your scene.
