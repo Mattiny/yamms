@@ -135,10 +135,10 @@ PMFloating - PlacementMode Floating - distributes the MultiMeshInstances floatin
 #### PMDropOnCollider
 PMDropOnCollider - PlacementMode drop on collider - distributes the MultiMeshInstances dropped onto an object with a collision shape. First (like PMFlat) the MuliMesh position is the plane set up by the MultiScatter polygon. Then a raycast into the specified direction (up or down) takes place to determine the position on the y-axis. Once the raycast hits an object identified by it's collision mask, it places the object at that position.
 
+Therefore: For direction "Down", the MultiScatter polygon area mus be located above the collision object. For the direction "Up", the MultiScatter polygon must be located underneath the collision object.
+
 ![SC-05](https://github.com/user-attachments/assets/f9b8514e-0655-4546-ae47-ae5b35129ae8)
 
-
-Therefore: For direction "Down", the MultiScatter polygon area mus be located above the collision object. For the direction "Up", the MultiScatter polygon must be located underneath the collision object.
 - **Collision Mask**: specifies the collision mask onto which the MultiMesh instances shall be dropped.
 - **Placement Direction**: From the MultiScatter's polygon plane: Up or down.
 - **Normal Influence**: Set up how strong the surface orientation of the collision object affects the orientation of the spawned MultiMesh instance. 0 = no influence at all, 1 = exact orientation of the surface.
@@ -163,6 +163,8 @@ Therefore: For direction "Down", the MultiScatter polygon area mus be located ab
 #### PMPolygon
 PMPolygon - PlacementMode polygon - distributes the MultiMeshInstances all along the MultiScatter's polygon. 
 
+![SC-06](https://github.com/user-attachments/assets/b8c9b7b2-6d73-49dd-82f4-ca0aa474f06d)
+
 - **Random steps**: Enable or disable random steps when positioning the MultiMesh instances at the polygon.
 	- **enabled**: The distance between the MultiMesh instances at the polygon are random.
  	- **disabled**: All MultiMesh instances have the same distance to the next instance. The length of the steps between the instances depends on the amount of items to be placed onto the polygon.
@@ -186,6 +188,9 @@ PMPolygon - PlacementMode polygon - distributes the MultiMeshInstances all along
   	   
 #### PMPolygonOnCollider
 PMPolygonOnCollider - PlacementMode polygon - distributes the MultiMeshInstances all along the MultiScatter's polygon and drops them onto an object with a collision object. First (like PMPolygon) the MuliMesh position is the MultiScatter's polygon. Then a raycast into the specified direction (up or down) takes place to determine the position on the y-axis. Once the raycast hits an object identified by it's collision mask, it places the object at that position.
+
+![SC-07](https://github.com/user-attachments/assets/ff38466b-d7a6-4ae4-b6c5-b4b68a7a5080)
+
 - **Collision Mask**: specifies the collision mask onto which the MultiMesh instances shall be dropped.
 - **Random steps**: Enable or disable random steps when positioning the MultiMesh instances at the polygon.
 	- **enabled**: The distance between the MultiMesh instances at the polygon are random.
