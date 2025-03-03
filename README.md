@@ -241,7 +241,9 @@ You still can edit your set up (move polygons, add/remove points to polygons, ad
 You can set up multiple MultiScatterItems for one MultiScatter. 
 Each MultiScatterItem can have a different configuration (PlacementModes) which gives you a maximum control how these items will be placed into your scene.
 Rename the items in the scene tree to get a better overview of you scene.
-![05-MultipleScatterItems](https://github.com/Mattiny/yamms/assets/127634166/4b2ea495-5e03-4870-81c4-c2ac88b9d579)
+
+![SC-11](https://github.com/user-attachments/assets/ad7c0831-c1b8-47af-9a1d-a809bc7a9a21)
+
 
 #### Exclude areas for specific MultiScatterItems only
 You have set up a complex scene with several MultiScatterItems (e.g.: grass, flowers and some trees) and you have set up multiple exclude areas (e.g.: pathways and some houses). Now you have some areas where you want to have some of the MultiScatterItems, but not all of them (e.g.: no trees between the houses, but there shall be grass).
