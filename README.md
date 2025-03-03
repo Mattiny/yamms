@@ -135,6 +135,9 @@ PMFloating - PlacementMode Floating - distributes the MultiMeshInstances floatin
 #### PMDropOnCollider
 PMDropOnCollider - PlacementMode drop on collider - distributes the MultiMeshInstances dropped onto an object with a collision shape. First (like PMFlat) the MuliMesh position is the plane set up by the MultiScatter polygon. Then a raycast into the specified direction (up or down) takes place to determine the position on the y-axis. Once the raycast hits an object identified by it's collision mask, it places the object at that position.
 
+![SC-05](https://github.com/user-attachments/assets/f9b8514e-0655-4546-ae47-ae5b35129ae8)
+
+
 Therefore: For direction "Down", the MultiScatter polygon area mus be located above the collision object. For the direction "Up", the MultiScatter polygon must be located underneath the collision object.
 - **Collision Mask**: specifies the collision mask onto which the MultiMesh instances shall be dropped.
 - **Placement Direction**: From the MultiScatter's polygon plane: Up or down.
