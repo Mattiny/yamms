@@ -109,6 +109,10 @@ To adjust the position of the plane, change the position of the MultiScatter.
   
 #### PMFloating
 PMFloating - PlacementMode Floating - distributes the MultiMeshInstances floating in space. To adjust the position of the base plane, change the position of the MultiScatter.
+
+![SC-04](https://github.com/user-attachments/assets/08cdb0fb-55ca-44a3-b819-dddf1ad53bff)
+
+
 - **Min Max Height**: the minimum and maximum height calculated from the average height of the polygon's average height.
 - **Exclude**: List of MultiScatterExcludes which apply to the parent MultiScatterItem. If left empty, automatically all MultiScatterExclude attached to the MultiScatter apply.
 - **Density Map**: Assign a black&white image as density map for instance distribution. White = 100% distribution, Black = 0% distribution. If left empty it uses 100% distribution for the whole area. Scale, rotate and position the PMFloating instance in order to position the density map. The density map is only shown in the editor mode, not when the game is running. To remove the density from the editor view, hide it in the editor. **Note** Optionally: Instead of an exclude area, a density map  with black areas can be used as well.
