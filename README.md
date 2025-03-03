@@ -13,6 +13,7 @@
   	- [PlacementMode](#placementmode)
   		- [PMFlat](#pmflat)
   		- [PMFloating](#pmfloating)
+  		- [PMDropOnCollider](#pmdroponcollider)
   	- [MultiScatterExclude](#multiscatterexclude)
   	- [Generate](#generate)
   	- [Common use cases](#common-use-cases)
@@ -99,7 +100,7 @@ To adjust the position of the plane, change the position of the MultiScatter.
 PMFloating - PlacementMode Floating - distributes the MultiMeshInstances floating in space. To adjust the position of the base plane, change the position of the MultiScatter.
 - **Min Max Height**: the minimum and maximum height calculated from the average height of the polygon's average height.
 - **Exclude**: List of MultiScatterExcludes which apply to the parent MultiScatterItem. If left empty, automatically all MultiScatterExclude attached to the MultiScatter apply.
-- **Density Map**: Assign a black&white image as density map for instance distribution. White = 100% distribution, Black = 0% distribution. If left empty it uses 100% distribution for the whole area. Scale, rotate and position the PMFlat instance in order to position the density map. The density map is only shown in the editor mode, not when the game is running. To remove the density from the editor view, hide it in the editor.
+- **Density Map**: Assign a black&white image as density map for instance distribution. White = 100% distribution, Black = 0% distribution. If left empty it uses 100% distribution for the whole area. Scale, rotate and position the PMFloating instance in order to position the density map. The density map is only shown in the editor mode, not when the game is running. To remove the density from the editor view, hide it in the editor.
 - **Random scale type**: Selects the type random scale for the spawned objects
 	- **None**: Random scale is deactivated
  	- **Proportional**: Uses proportional random scale.
@@ -111,6 +112,28 @@ PMFloating - PlacementMode Floating - distributes the MultiMeshInstances floatin
 - **Unproportional random scale**: The object to be spawned is scaled proportionally with different scale factors for each axis. This doesn't keep the object's proportion.
 	- **Max unproportional scale**: The maximum scale factor for each axis.
  	- **Min unproportional scale**: The minimum scale factor for each axis.
+ 
+#### PMDropOnCollider
+PMDropOnCollider - PlacementMode drop on collider - distributes the MultiMeshInstances dropped onto an object with a collision shape. First (like PMFlat) the MuliMesh position is the plane set up by the MultiScatter polygon. Then a raycast into the specified direction (up or down) takes place to determine the position on the y-axis. Once the raycast hits an object identified by it's collision mask, it places the object at that position.
+
+Therefore: For direction "Down", the MultiScatter polygon area mus be located above the collision object. For the direction "Up", the MultiScatter polygon must be located underneath the collision object.
+- **Collision Mask**: specifies the collision mask onto which the MultiMesh instances shall be dropped.
+- **Placement Direction**: From the MultiScatter's polygon plane: Up or down.
+- **Normal Influence**: Set up how strong the surface orientation of the collision object affects the orientation of the spawned MultiMesh instance. 0 = no influence at all, 1 = exact orientation of the surface.
+- **Exclude**: List of MultiScatterExcludes which apply to the parent MultiScatterItem. If left empty, automatically all MultiScatterExclude attached to the MultiScatter apply.
+- **Density Map**: Assign a black&white image as density map for instance distribution. White = 100% distribution, Black = 0% distribution. If left empty it uses 100% distribution for the whole area. Scale, rotate and position the PMDropOnCollider instance in order to position the density map. The density map is only shown in the editor mode, not when the game is running. To remove the density from the editor view, hide it in the editor.
+- **Random scale type**: Selects the type random scale for the spawned objects
+	- **None**: Random scale is deactivated
+ 	- **Proportional**: Uses proportional random scale.
+  	- **Unproportional**: Uses unproportional scale.
+- **Proportional random scale**: The object to be spawned is scaled proportionally with the same value on each axis so that the object's proportion remain intact.
+	- **Max Random scale**: The maximum scale factor.
+ 	- **Min Random scale**: The minimum scale factor.
+  	- **Scale curve**: Set up a curve to adjust the scale factor distribution. 
+- **Unproportional random scale**: The object to be spawned is scaled proportionally with different scale factors for each axis. This doesn't keep the object's proportion.
+	- **Max unproportional scale**: The maximum scale factor for each axis.
+ 	- **Min unproportional scale**: The minimum scale factor for each axis.
+
 
 ### MultiScatterExclude
 The MultiScatterExclude defines a sub area which is left empty without any mesh generated in it. It is expected to be 
