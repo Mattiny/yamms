@@ -203,7 +203,7 @@ a child node of MultiScatter. There can be more than one MultiScatterExclude in 
 As done for MultiScatter: set up points of the area polygon. It only makes sense to place the polygon inside (or at least overlap) the area of the MultiScatter.
 - Do not place a MultiScatterExclude completely outside the MultiScatter area (Well, if you want to: do it. But it won't have any effect then.)
 - Do not cover the whole MultiScatter area with MultiScatterExclude areas. This way no meshes will be generated because there is no room for the meshes.
-- MultiScatterItems can refer to specific MultiScatterExclude instances. This can be set up in the MultiScatterItem. Then only the selected MultiScatterExclude instances apply to that MultiScatterItem.
+- MultiScatterItems can refer to specific MultiScatterExclude instances. This can be set up in the PlacementMode. Then only the selected MultiScatterExclude instances apply to that MultiScatterItem.
 ![03-ExcludeArea](https://github.com/Mattiny/yamms/assets/127634166/6333f979-e797-48a2-aaa9-e073eb04d352)
 
 ### Generate
@@ -216,7 +216,7 @@ You still can edit your set up (move polygons, add/remove points to polygons, ad
 ### Common use cases
 #### Different types of MultiScatterItems
 You can set up multiple MultiScatterItems for one MultiScatter. 
-Each MultiScatterItem can have a different configuration (Proportion, Random scale and rotation, etc) which gives you a maximum control how these items will be placed into your scene.
+Each MultiScatterItem can have a different configuration (PlacementModes) which gives you a maximum control how these items will be placed into your scene.
 Rename the items in the scene tree to get a better overview of you scene.
 ![05-MultipleScatterItems](https://github.com/Mattiny/yamms/assets/127634166/4b2ea495-5e03-4870-81c4-c2ac88b9d579)
 
