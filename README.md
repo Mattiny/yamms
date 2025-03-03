@@ -250,13 +250,13 @@ You have set up a complex scene with several MultiScatterItems (e.g.: grass, flo
 
 To get this done add another MultiScatterExclude and set up the polygon for the area in which shall be excluded for some MultiScatterItems. 
 
-After that edit the MultiScatterItems:
-- If only some MultiScatterExclude areas apply for a MultiScatterItem (e.g.: the grass, which shall ignore the tree's exclude area): add an element in the exclude list and select the MultiScatterExclude which shall be effictive for this MultiScatterItem.
-- If all MultiScatterExclude areas apply for a MultiScatterItem: leave it as it is. By default all MultiScatterExclude areas are applicable.
+After that edit the placement mode of MultiScatterItems:
+- If only some MultiScatterExclude areas apply for a placement mode (e.g.: the grass, which shall ignore the tree's exclude area): add an element in the exclude list and select the MultiScatterExclude which shall be effictive for this placement mode.
+- If all MultiScatterExclude areas apply for a placement mode: leave it as it is. By default all MultiScatterExclude areas are applicable.
 - Select the MultiScatter element and hit "generate" button again and the changes will be effective.
   
-![06-Exclude01](https://github.com/Mattiny/yamms/assets/127634166/2c5f0b7b-cbd8-4b74-9aba-efaac5f47eac)
-![06-Exclude02](https://github.com/Mattiny/yamms/assets/127634166/24e1176a-c6a6-4029-b796-8c155da3e799)
+![SC-12](https://github.com/user-attachments/assets/aa71f192-c662-46d4-921c-87fae88adb42)
+![SC-13](https://github.com/user-attachments/assets/6f018b7c-e83f-4273-8d14-33e4f850c56c)
 
 #### Collision objects
 You can assign an additional scene (containing a collision object) to a MultiScatterItem. This additional scene will be placed at the same position as the MultiScatterItem.
