@@ -29,7 +29,8 @@ Yamms (Yet another multimesh scatter) is a plugin for Godot to place MultiMesh m
 Author: Mattiny
 Youtube: https://youtu.be/k5mwwakNHU4
 
-Note: This plugin is only compatible with Godot 4.3 and following Godot versions.
+- This plugin is only compatible with Godot 4.3 and following Godot versions.
+- Version 1.2.0 of this plugin is NOT backwards compatible to previous plugin version.
 
 
 ## Features
@@ -56,11 +57,17 @@ The MultiScatter is the main node of the whole MultiMesh scatter set up.
 	- **Amount**: the amount of meshes which are generated into the scene.
 	- **Seed**: The random number generator seed. Using a seed makes the pattern of randomly generated meshes reproducible. Change the seed until you are satisfied with the result.
 
+
+ To prevent miscalculations of MultiMesh instance's position: Rotation of the MultiScatter object is not recommended. Therefore rotation is deactivated in the editor.
+
 ### MultiScatterItem
 The MultiScatterItem keeps information about one type of meshes in the MultiMesh set up. It needs to be a child node underneath the MultiScatter node. There can be multiple MultiScatterItems in one MultiScatter.
 
+To prevent miscalculations of MultiMesh instance's position: Rotation of the MultiScatterItem object is not recommended. Therefore rotation is deactivated in the editor.
+
 - In your scene: Add the node "MultiScatterItem" as a child node to a MultiScatter node.
 - Select the MultiScatterItem.
+
 
 #### Set up a MultiMeshInstance3D
 - In the inspector: Paramter "MultiMesh": Create a new MultiMesh
@@ -78,8 +85,9 @@ The MultiScatterItem keeps information about one type of meshes in the MultiMesh
 	- **Additional scene**: Reference to a PackedScene which will be instantiated and placed at the same position as the MultiMeshInstance3D.
 
 ### PlacementMode
-The PlacementMode sets up the algorythm to generate the position of the MultiMeshInstances. Add a placement mode as child element to the MultiScatterItem. **Note*:* Do not the "PlacementMode" itself to the MultiScatterItem. Instead add the specific
-placement mode. The following placement modes are available:
+The PlacementMode sets up the algorythm to generate the position of the MultiMeshInstances. Add a placement mode as child element to the MultiScatterItem to set up and configure the algorythm. Some placement modes can contain a density map which can be adjusted by scaling, rotating and positioning the PlacementMode in the 3D scene. Because the placement mode algorythm is based on the plane it is only recommended to rotate the placement mode around the y-axis. Rotation around any other axis is not recommended. Therefore rotation around the x- and z-axis has been disabled in the editor.
+
+Keep in mind the class "PlacementMode" is an abstract class and cannot be instantiated directly. Do not attach the "PlacementMode" itself to the MultiScatterItem. Instead add the specific placement mode. The following placement modes are available:
 
 #### PMFlat
 PMFlat - PlacementMode Flat - distributes the MultiMeshInstances on a flat plane. The height is the average height of the polygon nodes.
