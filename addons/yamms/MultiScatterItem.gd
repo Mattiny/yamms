@@ -116,8 +116,10 @@ func _debug(message):
 
 # Preparation of the MultiMesh generating process.
 # Done once before each time generating.
+# Set to 0 to remove all previously generated instance.
+# The actual instance_count will be set by the MultiScatterTransform
 func _prepare_multimesh():
-	multimesh.instance_count = amount
+	multimesh.instance_count = 0
 
 # Generate the MultiMesh instances.
 func generate(

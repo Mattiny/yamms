@@ -169,6 +169,7 @@ func generate_plane_positions():
 func generate_transform():
 	if _check_polygon_nr():
 		_debug("Generating Plane")
+		multimesh_item.instance_count = amount
 		generate_plane_positions()
 		
 	else:
