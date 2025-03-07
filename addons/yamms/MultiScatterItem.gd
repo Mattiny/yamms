@@ -119,8 +119,12 @@ func _debug(message):
 # Set to 0 to remove all previously generated instance.
 # The actual instance_count will be set by the MultiScatterTransform
 func _prepare_multimesh():
+	clear()
+	
+# Delete all previously generated multi mesh instances.
+func clear():
 	multimesh.instance_count = 0
-
+	
 # Generate the MultiMesh instances.
 func generate(
 			global_position : Vector3,

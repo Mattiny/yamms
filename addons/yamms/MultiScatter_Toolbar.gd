@@ -23,4 +23,4 @@
 extends HBoxContainer
 
 @onready var generate_button := $Generate as Button
-
+@onready var clear_button := $Clear as Button

@@ -53,7 +53,7 @@ func _enter_tree():
 	# Add the toolbar to the Editor view.
 	add_control_to_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU, _gui_toolbar)
 	_gui_toolbar.generate_button.pressed.connect(_on_generate_button_pressed)
-
+	_gui_toolbar.clear_button.pressed.connect(_on_clear_button_pressed)
 
 func _exit_tree():
 	remove_custom_type("MultiScatter")
@@ -91,3 +91,8 @@ func _make_visible(visible : bool):
 func _on_generate_button_pressed():
 	if _selected_scatter != null:
 		_selected_scatter.generate()
+		
+# Toolbar clear button has been pressed. So: clear
+func _on_clear_button_pressed():
+	if _selected_scatter != null:
+		_selected_scatter.clear()

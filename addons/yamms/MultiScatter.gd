@@ -136,6 +136,14 @@ func _physics_process(delta):
 # and the thread in "physics_process" will take over when this flag is set.
 func generate():
 	shall_generate = true
+
+# is called when the clear button is pressed.
+# removes all previously generated mesh instances.
+func clear():
+	_debug("Clear")
+	for child in self.get_children():
+		if child is MultiScatterItem:
+			child.clear()
 	
 
 # Generate the MultiScatter
