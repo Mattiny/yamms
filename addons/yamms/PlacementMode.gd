@@ -29,12 +29,6 @@ class_name PlacementMode
 enum scale_type_enum {None, Proportional, Unproportional}
 @export var random_scale_type : scale_type_enum = scale_type_enum.None
 
-# TODO: Max Rotation maximum is 3.1415 (PI = 1 complete rotation,  min  = 0
-# TODO: Min Rotation minimum is -3.1415, max = 0
-@export_group("Rotation")
-@export var randomize_rotation : bool = false
-@export var max_random_rotation : Vector3 = Vector3(0,0,0)
-@export var min_random_rotation : Vector3 = Vector3(0,0,0) 
 
 # TODO: Scale shall always be larger than 0
 # TODO: Scale max shall be larger than min
@@ -48,6 +42,16 @@ enum scale_type_enum {None, Proportional, Unproportional}
 @export_group("Unproportional Random Scale")
 @export var max_unproportional_scale : Vector3 = Vector3(1, 1, 1)
 @export var min_unproportional_scale : Vector3 = Vector3(0.5, 0.5, 0.5)
+		
+
+# TODO: Max Rotation maximum is 3.1415 (PI = 1 complete rotation,  min  = 0
+# TODO: Min Rotation minimum is -3.1415, max = 0
+@export_group("Rotation")
+@export var randomize_rotation : bool = false
+@export var max_random_rotation : Vector3 = Vector3(0,0,0)
+@export var min_random_rotation : Vector3 = Vector3(0,0,0) 
+
+
 
 var curve : Curve3D
 
