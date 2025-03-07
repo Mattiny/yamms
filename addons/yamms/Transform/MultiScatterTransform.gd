@@ -194,8 +194,8 @@ func generate_scale():
 	elif random_unprop_scale:
 		scale = Vector3(
 			generate_random(min_unprop_scale.x, max_unprop_scale.x),
-			generate_random(min_unprop_scale.x, max_unprop_scale.x),
-			generate_random(min_unprop_scale.x, max_unprop_scale.x)
+			generate_random(min_unprop_scale.y, max_unprop_scale.y),
+			generate_random(min_unprop_scale.z, max_unprop_scale.z)
 		)
 	else:
 		scale = Vector3(1, 1, 1)
