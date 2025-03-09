@@ -22,6 +22,7 @@
   		- [Different types of MultiScatterItems](#different-types-of-multiscatteritems)
   	 	- [Exclude areas for specific MultiScatterItems only](#exclude-areas-for-specific-multiscatteritems-only)
   	  	- [Collision objects](#collision-objects)
+  	  	- [Density map](#density-map)
   	  
 ## What is it?
 Yamms (Yet another multimesh scatter) is a plugin for Godot to place MultiMesh meshes into the game world.
@@ -283,5 +284,16 @@ You can assign an additional scene (containing a collision object) to a MultiSca
 ![SC-14](https://github.com/user-attachments/assets/1e73f835-a466-4fbd-839c-368aa13b8382)
 ![SC-15](https://github.com/user-attachments/assets/9cdde5fd-bcd3-4360-b175-4a5d77f3bc66)
 ![SC-16](https://github.com/user-attachments/assets/fc090d17-9379-4434-a067-c2cfa7ac4c09)
+
+
+#### Density Map
+The density map gives you more control of the density of the generated instances for plane based placement modes (PMFlat, PMFloating, PMDropOnCollider). Just add a black and white image as a density map to the placement mode. For the placement modes PMFlat and PMFloating the density map is shown as a plane image in 3D space. For the PMDropOnCollider mode it is projected up- and downwards onto the objects in the scene. The image is only shown in editor mode and not when your game is running. But also it can be hidden in the editor just by hiding the placement mode.
+
+Position, rotate and scale the placement mode so that it matches your need.
+
+When generating the MultiMesh instances the density map defines how tight the instances are generated to each other. Areas with white colour provide a density of 100% (very tight), areas with black colour provide a density of 0% (no instance at all). Any gray colour provides a density in between. So a density map with black areas are an alternative to exclude areas.
+![SC-17](https://github.com/user-attachments/assets/634afd4d-705d-4011-b9fc-dd56367c106b)
+![SC-18](https://github.com/user-attachments/assets/1461045f-0398-4dd1-8da7-37354379410e)
+
 
 
