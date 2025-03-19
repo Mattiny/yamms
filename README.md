@@ -29,6 +29,8 @@ Yamms (Yet another multimesh scatter) is a plugin for Godot to place MultiMesh m
 
 Author: Mattiny
 
+Youtube: https://youtu.be/2B_2qKIVYSs 
+
 - This plugin is only compatible with Godot 4.3 and following Godot versions.
 - Version 1.2.0 of this plugin is NOT backwards compatible to previous plugin version.
 
